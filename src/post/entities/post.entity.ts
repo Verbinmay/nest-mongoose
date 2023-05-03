@@ -133,7 +133,11 @@ PostSchema.statics = {
 export type PostsDocument = HydratedDocument<Post>;
 
 export type PostsModelStaticType = {
-  createBlog: (inputModel: CreatePostBlogDto | CreatePostDto) => PostsDocument;
+  createBlog: (
+    blogName: string,
+    inputModel: CreatePostBlogDto | CreatePostDto,
+    blogId?: string,
+  ) => PostsDocument;
 };
 export type PostsModelMethodsType = {
   updateInfo: (inputModel: UpdatePostDto, blogName: string) => Post;

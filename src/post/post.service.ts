@@ -7,7 +7,15 @@ import { Blog } from 'src/blog/entities/blog.entity';
 import { Post } from './entities/post.entity';
 import { PaginationQuery } from 'src/pagination/base-pagination';
 import { ViewPostDto } from './dto/view-post.dto';
-import { PaginatorPost } from 'src/pagination/paginatorType';
+import {
+  PaginatorCommentWithLikeViewModel,
+  PaginatorPost,
+} from 'src/pagination/paginatorType';
+import { ViewCommentDto } from 'src/comment/dto/view-comment.dto';
+import { Comment } from 'src/comment/entities/comment.entity';
+import { CommentRepository } from 'src/comment/comment.repository';
+import { User } from 'src/user/entities/user.entity';
+import { UserRepository } from 'src/user/user.repository';
 
 @Injectable()
 export class PostService {
@@ -15,6 +23,7 @@ export class PostService {
     private readonly postRepository: PostRepository,
     private readonly blogRepository: BlogRepository,
     private readonly commentRepository: CommentRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async createPost(inputModel: CreatePostDto) {
@@ -31,7 +40,7 @@ export class PostService {
     return result.getViewModel(userId);
   }
 
-  async getPosts(query: PaginationQuery) {
+  async getPosts(query: PaginationQuery, userId: string) {
     const filter: object = {};
 
     const filterSort: { [x: string]: number } = query.sortFilter();
@@ -46,8 +55,6 @@ export class PostService {
       skip: query.skip(),
       limit: query.pageSize,
     });
-    //User
-    const userId = '';
 
     const posts: ViewPostDto[] = postsFromDB.map((m) => m.getViewModel(userId));
 
@@ -62,12 +69,11 @@ export class PostService {
     return result;
   }
 
-  async getPostById(id: string) {
+  async getPostById(id: string, userId: string) {
     const post = await this.postRepository.findPostById(id);
     if (!post) {
       throw new NotFoundException();
     }
-    const userId = '';
     return post.getViewModel(userId);
   }
 
@@ -93,7 +99,7 @@ export class PostService {
     return await this.postRepository.delete(id);
   }
 
-  async getCommentsByPostId(postId, query) {
+  async getCommentsByPostId(postId: string, query: any, userId: string) {
     const filter: { postId: string } = { postId: postId };
 
     const filterSort: any = query.sortFilter();
@@ -110,8 +116,8 @@ export class PostService {
         limit: query.pageSize,
       });
 
-    const comments: CommentWithLikeViewModel[] = commentsFromDb.map((m) =>
-      m.getViewModel(),
+    const comments: ViewCommentDto[] = commentsFromDb.map((m) =>
+      m.getViewModel(userId),
     );
 
     const result: PaginatorCommentWithLikeViewModel = {
@@ -123,5 +129,24 @@ export class PostService {
     };
 
     return result;
+  }
+
+  async createCommentByPostId(a: {
+    content: string;
+    userId: string;
+    postId: string;
+  }) {
+    const user: User | null = await this.userRepository.findUserById(a.userId);
+    if (!user) {
+      throw new NotFoundException();
+    }
+    const comment = Comment.createComment({
+      content: a.content,
+      userId: a.userId,
+      userLogin: user.login,
+      postId: a.postId,
+    });
+    const result = await this.commentRepository.save(comment);
+    return result.getViewModel(a.userId);
   }
 }

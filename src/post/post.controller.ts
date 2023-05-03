@@ -8,15 +8,23 @@ import {
   Query,
   Put,
   HttpCode,
+  NotFoundException,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginationQuery } from 'src/pagination/base-pagination';
+import { CreateCommentDto } from 'src/comment/dto/create-comment.dto';
+import { Tokens } from 'src/decorator/tokens.decorator';
+import { ViewPostDto } from './dto/view-post.dto';
+import { JWTService } from 'src/jwt/jwt.service';
 
 @Controller('posts')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly jwtService: JWTService,
+  ) {}
 
   @Post()
   createPost(@Body() inputModel: CreatePostDto) {
@@ -24,13 +32,19 @@ export class PostController {
   }
 
   @Get()
-  findPosts(@Query() query: PaginationQuery) {
-    return this.postService.getPosts(query);
+  async findPosts(@Query() query: PaginationQuery, @Tokens() tokens) {
+    const userId = await this.jwtService.getUserIdFromAccessToken(
+      tokens.accessToken,
+    );
+    return this.postService.getPosts(query, userId);
   }
 
   @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.postService.getPostById(id);
+  async findById(@Param('id') id: string, @Tokens() tokens) {
+    const userId = await this.jwtService.getUserIdFromAccessToken(
+      tokens.accessToken,
+    );
+    return this.postService.getPostById(id, userId);
   }
 
   @Put(':id')
@@ -45,11 +59,40 @@ export class PostController {
     return this.postService.deletePost(id);
   }
   //COMMENTS
-  @Get(':postId')
-  findCommentsByPostId(
+  @Get(':postId/comments')
+  async findCommentsByPostId(
     @Param('postId') postId: string,
     @Query() query: PaginationQuery,
+    @Tokens() tokens,
   ) {
-    return this.postService.getCommentsByPostId(postId, query);
+    const userId = await this.jwtService.getUserIdFromAccessToken(
+      tokens.accessToken,
+    );
+    return this.postService.getCommentsByPostId(postId, query, userId);
+  }
+
+  @Post(':postId/comments')
+  async createCommentByPostId(
+    @Param('postId') postId: string,
+    @Body() inputModel: CreateCommentDto,
+    @Tokens() tokens,
+  ) {
+    const userId = await this.jwtService.getUserIdFromAccessToken(
+      tokens.accessToken,
+    );
+    const post: ViewPostDto | null = await this.postService.getPostById(
+      postId,
+      userId,
+    );
+
+    if (!post) {
+      throw new NotFoundException();
+    }
+
+    return await this.postService.createCommentByPostId({
+      content: inputModel.content,
+      userId: userId,
+      postId: post.id,
+    });
   }
 }

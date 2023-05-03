@@ -1,5 +1,7 @@
 import { ViewBlogDto } from 'src/blog/dto/view-blog.dto';
+import { ViewCommentDto } from 'src/comment/dto/view-comment.dto';
 import { ViewPostDto } from 'src/post/dto/view-post.dto';
+import { ViewUserDto } from 'src/user/dto/view-user.dto';
 
 export type PaginatorEnd = {
   pagesCount: number;
@@ -17,13 +19,9 @@ export type PaginatorPost = PaginatorEnd & {
 };
 
 export type PaginatorUser = PaginatorEnd & {
-  items: Array<UserViewModel>;
-};
-
-export type PaginatorCommentViewModel = PaginatorEnd & {
-  items: Array<CommentViewModel>;
+  items: Array<ViewUserDto>;
 };
 
 export type PaginatorCommentWithLikeViewModel = PaginatorEnd & {
-  items: Array<CommentWithLikeViewModel>;
+  items: Array<ViewCommentDto>;
 };

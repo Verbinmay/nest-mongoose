@@ -1,34 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { CommentService } from './comment.service';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { CommentService } from './comment.service';
+import { Tokens } from 'src/decorator/tokens.decorator';
+import { JWTService } from 'src/jwt/jwt.service';
 
-@Controller('comment')
-export class CommentController {
-  constructor(private readonly commentService: CommentService) {}
-
-  @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
-  }
+@Controller('comments')
+export class CommentsController {
+  constructor(
+    private readonly commentService: CommentService,
+    private readonly jwtService: JWTService,
+  ) {}
 
   @Get()
-  findAll() {
-    return this.commentService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+  async findById(@Param('id') id: string, @Tokens() tokens) {
+    const userId = await this.jwtService.getUserIdFromAccessToken(
+      tokens.accessToken,
+    );
+    return this.commentService.findById(id, userId);
   }
 }
