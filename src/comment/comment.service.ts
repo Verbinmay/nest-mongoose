@@ -1,6 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
 import { CommentRepository } from './comment.repository';
 
 @Injectable()
@@ -13,5 +11,9 @@ export class CommentService {
       throw new NotFoundException();
     }
     return comment.getViewModel(userId);
+  }
+
+  async updateComment(a: { commentId: string; content: string }) {
+    return await this.commentRepository.updateComment(a);
   }
 }

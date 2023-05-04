@@ -40,4 +40,18 @@ export class CommentRepository {
     const commentModel = new this.CommentModel(comment);
     return commentModel.save();
   }
+
+  async updateComment(a: { commentId: string; content: string }) {
+    try {
+      const result = await this.CommentModel.findById(a.commentId);
+
+      if (!result) return false;
+      result.content = a.content;
+      result.save();
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
