@@ -40,4 +40,79 @@ export class PostRepository {
       return null;
     }
   }
+
+  async updatePostLikeStatus(a: {
+    postId: string;
+    likeStatus: string;
+    likeInfo: any;
+  }) {
+    try {
+      const result = await this.PostModel.findById(a.postId);
+
+      if (!result) return false;
+
+      let likeArr = 0;
+      let dislikeArr = 0;
+
+      switch (a.likeStatus) {
+        case 'None':
+          likeArr = result.extendedLikesInfo.likesCount.findIndex(
+            (b) => b.userId === a.likeInfo.userId,
+          );
+
+          if (likeArr > -1) {
+            result.extendedLikesInfo.likesCount.splice(likeArr, 1);
+          }
+
+          dislikeArr = result.extendedLikesInfo.dislikesCount.findIndex(
+            (b) => b.userId === a.likeInfo.userId,
+          );
+
+          if (dislikeArr > -1) {
+            result.extendedLikesInfo.dislikesCount.splice(dislikeArr, 1);
+          }
+
+          break;
+        case 'Like':
+          dislikeArr = result.extendedLikesInfo.dislikesCount.findIndex(
+            (b) => b.userId === a.likeInfo.userId,
+          );
+
+          if (dislikeArr > -1) {
+            result.extendedLikesInfo.dislikesCount.splice(dislikeArr, 1);
+          }
+          likeArr = result.extendedLikesInfo.likesCount.findIndex(
+            (b) => b.userId === a.likeInfo.userId,
+          );
+
+          if (likeArr <= -1) {
+            result.extendedLikesInfo.likesCount.push(a.likeInfo);
+          }
+
+          break;
+        case 'Dislike':
+          likeArr = result.extendedLikesInfo.likesCount.findIndex(
+            (b) => b.userId === a.likeInfo.userId,
+          );
+
+          if (likeArr > -1) {
+            result.extendedLikesInfo.likesCount.splice(likeArr, 1);
+          }
+          dislikeArr = result.extendedLikesInfo.dislikesCount.findIndex(
+            (b) => b.userId === a.likeInfo.userId,
+          );
+
+          if (dislikeArr <= -1) {
+            result.extendedLikesInfo.dislikesCount.push(a.likeInfo);
+          }
+          break;
+      }
+
+      result.save();
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }

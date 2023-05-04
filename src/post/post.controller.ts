@@ -18,6 +18,7 @@ import { CreateCommentDto } from 'src/comment/dto/create-comment.dto';
 import { Tokens } from 'src/decorator/tokens.decorator';
 import { ViewPostDto } from './dto/view-post.dto';
 import { JWTService } from 'src/jwt/jwt.service';
+import { LikeDto } from 'src/dto/like.dto';
 
 @Controller('posts')
 export class PostController {
@@ -57,6 +58,42 @@ export class PostController {
   @HttpCode(204)
   deletePost(@Param('id') id: string) {
     return this.postService.deletePost(id);
+  }
+
+  @Put(':postId/like-status')
+  @HttpCode(204)
+  async updateLikeStatus(
+    @Param('postId') postId: string,
+    @Tokens() tokens,
+    @Body() inputModel: LikeDto,
+  ) {
+    const userId = await this.jwtService.getUserIdFromAccessToken(
+      tokens.accessToken,
+    );
+    if (userId === '') throw new NotFoundException();
+
+    const postFind: ViewPostDto | null = await this.postService.getPostById(
+      postId,
+      userId,
+    );
+    if (!postFind) {
+      throw new NotFoundException();
+    }
+    if (postFind.extendedLikesInfo.myStatus === inputModel.likeStatus) {
+      return true;
+    }
+
+    const LikeStatusUpdated: boolean =
+      await this.postService.updatePostLikeStatus({
+        postId: postId,
+        likeStatus: inputModel.likeStatus,
+        userId: userId,
+      });
+
+    if (!LikeStatusUpdated) {
+      throw new NotFoundException();
+    }
+    return true;
   }
   //COMMENTS
   @Get(':postId/comments')

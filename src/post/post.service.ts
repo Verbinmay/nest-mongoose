@@ -26,6 +26,28 @@ export class PostService {
     private readonly userRepository: UserRepository,
   ) {}
 
+  async updatePostLikeStatus(a: {
+    postId: string;
+    likeStatus: string;
+    userId: string;
+  }) {
+    const user = await this.userRepository.findUserById(a.userId);
+    if (!user) {
+      return false;
+    }
+    const likeInfo = {
+      addedAt: new Date().toISOString(),
+      userId: a.userId,
+      login: user.login,
+    };
+
+    return await this.postRepository.updatePostLikeStatus({
+      postId: a.postId,
+      likeStatus: a.likeStatus,
+      likeInfo: likeInfo,
+    });
+  }
+
   async createPost(inputModel: CreatePostDto) {
     const blog: Blog | null = await this.blogRepository.findBlogById(
       inputModel.blogId,

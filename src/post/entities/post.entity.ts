@@ -6,26 +6,25 @@ import { CreatePostBlogDto } from 'src/blog/dto/create-post-in-blog.dto';
 import { CreatePostDto } from '../dto/create-post.dto';
 
 @Schema()
-export class likeInfo {
+export class like {
   @Prop() addedAt: string;
   @Prop() userId: string;
   @Prop() login: string;
 }
-export const likeInfoSchema = SchemaFactory.createForClass(likeInfo);
+export const likeSchema = SchemaFactory.createForClass(like);
 
 @Schema()
 export class extendedLikesInfo {
-  @Prop({ default: [], type: [likeInfoSchema] })
-  likesCount: Array<likeInfo>;
-  @Prop({ default: [], type: [likeInfoSchema] })
-  dislikesCount: Array<likeInfo>;
+  @Prop({ default: [], type: [likeSchema] })
+  likesCount: Array<like>;
+  @Prop({ default: [], type: [likeSchema] })
+  dislikesCount: Array<like>;
   @Prop({ default: 'NaN', required: true })
   myStatus: string;
-  @Prop({ default: [], type: [likeInfoSchema] })
-  newestLikes: Array<likeInfo>;
+  @Prop({ default: [], type: [likeSchema] })
+  newestLikes: Array<like>;
 }
-export const extendedLikesInfoSchema =
-  SchemaFactory.createForClass(extendedLikesInfo);
+export const likesInfoSchema = SchemaFactory.createForClass(extendedLikesInfo);
 
 @Schema()
 export class Post {
@@ -49,7 +48,7 @@ export class Post {
   @Prop({ default: new Date().toISOString() })
   public updatedAt: string = new Date().toISOString();
 
-  @Prop({ default: {}, type: extendedLikesInfoSchema })
+  @Prop({ default: {}, type: likesInfoSchema })
   public extendedLikesInfo: extendedLikesInfo;
 
   updateInfo(inputModel: UpdatePostDto, blogName: string) {

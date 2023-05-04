@@ -14,7 +14,7 @@ import { Tokens } from 'src/decorator/tokens.decorator';
 import { JWTService } from 'src/jwt/jwt.service';
 
 @Controller('comments')
-export class CommentsController {
+export class CommentController {
   constructor(
     private readonly commentService: CommentService,
     private readonly jwtService: JWTService,

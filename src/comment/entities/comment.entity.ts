@@ -3,16 +3,25 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 import { ViewCommentDto } from '../dto/view-comment.dto';
 
 @Schema()
-export class LikesInfo {
-  @Prop({ required: true })
-  likesCount: string[];
-  @Prop({ required: true })
-  dislikesCount: string[];
-  @Prop({ required: true })
-  myStatus: string;
+export class like {
+  @Prop() addedAt: string;
+  @Prop() userId: string;
+  @Prop() login: string;
 }
+export const likeSchema = SchemaFactory.createForClass(like);
 
-export const LikesInfoSchema = SchemaFactory.createForClass(LikesInfo);
+@Schema()
+export class likesInfo {
+  @Prop({ default: [], type: [likeSchema] })
+  likesCount: Array<like>;
+  @Prop({ default: [], type: [likeSchema] })
+  dislikesCount: Array<like>;
+  @Prop({ default: 'NaN', required: true })
+  myStatus: string;
+  @Prop({ default: [], type: [likeSchema] })
+  newestLikes: Array<like>;
+}
+export const likesInfoSchema = SchemaFactory.createForClass(likesInfo);
 
 @Schema()
 export class CommentatorInfo {
@@ -45,8 +54,8 @@ export class Comment {
   @Prop({ required: true })
   public postId: string;
 
-  @Prop({ type: LikesInfoSchema, required: true })
-  public likesInfo: LikesInfo;
+  @Prop({ default: {}, type: likesInfoSchema })
+  public likesInfo: likesInfo;
 
   // updateInfo(inputModel: BlogInputModel) {
   //   this.name = inputModel.name;
@@ -57,8 +66,12 @@ export class Comment {
   // }
 
   getViewModel(userId: string): ViewCommentDto {
-    const likeArr = this.likesInfo.likesCount.indexOf(userId);
-    const dislikeArr = this.likesInfo.dislikesCount.indexOf(userId);
+    const likeArr = this.likesInfo.likesCount.filter(
+      (m) => m?.userId === userId,
+    ).length;
+    const dislikeArr = this.likesInfo.dislikesCount.filter(
+      (m) => m?.userId === userId,
+    ).length;
 
     let status = '';
     if (likeArr === dislikeArr) {
