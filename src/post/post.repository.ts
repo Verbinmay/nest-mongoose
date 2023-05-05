@@ -98,6 +98,7 @@ export class PostRepository {
           if (likeArr > -1) {
             result.extendedLikesInfo.likesCount.splice(likeArr, 1);
           }
+
           dislikeArr = result.extendedLikesInfo.dislikesCount.findIndex(
             (b) => b.userId === a.likeInfo.userId,
           );

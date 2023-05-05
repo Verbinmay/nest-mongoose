@@ -57,14 +57,6 @@ export class Comment {
   @Prop({ default: {}, type: likesInfoSchema })
   public likesInfo: likesInfo;
 
-  // updateInfo(inputModel: BlogInputModel) {
-  //   this.name = inputModel.name;
-  //   this.description = inputModel.description;
-  //   this.websiteUrl = inputModel.websiteUrl;
-  //   this.updatedAt = new Date().toISOString();
-  //   return this;
-  // }
-
   getViewModel(userId: string): ViewCommentDto {
     const likeArr = this.likesInfo.likesCount.filter(
       (m) => m?.userId === userId,
@@ -118,7 +110,6 @@ export class Comment {
 export const CommentSchema = SchemaFactory.createForClass(CommentatorInfo);
 
 CommentSchema.methods = {
-  // updateInfo: Blog.prototype.updateInfo,
   getViewModel: Comment.prototype.getViewModel,
 };
 
@@ -137,7 +128,6 @@ export type CommentModelStaticType = {
   }) => CommentDocument;
 };
 export type CommentModelMethodsType = {
-  // updateInfo: (inputModel: BlogInputModel) => Blog;
   getViewModel: () => ViewCommentDto;
 };
 
