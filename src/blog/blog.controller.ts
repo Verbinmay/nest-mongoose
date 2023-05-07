@@ -2,18 +2,18 @@ import {
   Controller,
   Get,
   Post,
-  Body,
   Param,
   Delete,
   Query,
   Put,
   HttpCode,
+  Body,
 } from '@nestjs/common';
-import { BlogService } from './blog.service';
+import { PaginationQuery } from '../pagination/base-pagination';
 import { CreateBlogDto } from './dto/create-blog.dto';
-import { UpdateBlogDto } from './dto/update-blog.dto';
-import { PaginationQuery } from 'src/pagination/base-pagination';
 import { CreatePostBlogDto } from './dto/create-post-in-blog.dto';
+import { UpdateBlogDto } from './dto/update-blog.dto';
+import { BlogService } from './blog.service';
 
 @Controller('blogs')
 export class BlogController {

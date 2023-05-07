@@ -131,6 +131,6 @@ export type CommentModelMethodsType = {
   getViewModel: () => ViewCommentDto;
 };
 
-export type CommentModelType = Model<CommentDocument> &
+export type CommentsModelType = Model<CommentDocument> &
   CommentModelStaticType &
   CommentModelMethodsType;

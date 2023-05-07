@@ -1,14 +1,16 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { validateOrReject } from 'class-validator';
-import { UserRepository } from './user.repository';
 import { randomUUID } from 'crypto';
 import add from 'date-fns/add';
-import { User } from './entities/user.entity';
-import { PaginationQuery } from 'src/pagination/base-pagination';
+
+import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { PaginationQuery } from '../pagination/base-pagination';
+import { PaginatorUser } from '../pagination/paginatorType';
+import { CreateUserDto } from './dto/create-user.dto';
 import { ViewUserDto } from './dto/view-user.dto';
-import { PaginatorUser } from 'src/pagination/paginatorType';
+import { User } from './entities/user.entity';
+import { UserRepository } from './user.repository';
 
 async function validateOrRejectModel(
   inputModel: any,

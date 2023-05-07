@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { UserRepository } from '../user/user.repository';
 import { CommentRepository } from './comment.repository';
-import { UserRepository } from 'src/user/user.repository';
 
 @Injectable()
 export class CommentService {

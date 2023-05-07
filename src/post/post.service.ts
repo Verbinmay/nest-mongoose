@@ -1,21 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
-import { PostRepository } from './post.repository';
-import { BlogRepository } from 'src/blog/blog.repository';
-import { Blog } from 'src/blog/entities/blog.entity';
-import { Post } from './entities/post.entity';
-import { PaginationQuery } from 'src/pagination/base-pagination';
-import { ViewPostDto } from './dto/view-post.dto';
 import {
   PaginatorCommentWithLikeViewModel,
   PaginatorPost,
-} from 'src/pagination/paginatorType';
-import { ViewCommentDto } from 'src/comment/dto/view-comment.dto';
-import { Comment } from 'src/comment/entities/comment.entity';
-import { CommentRepository } from 'src/comment/comment.repository';
-import { User } from 'src/user/entities/user.entity';
-import { UserRepository } from 'src/user/user.repository';
+} from '../pagination/paginatorType';
+import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { Blog } from '../blog/entities/blog.entity';
+import { ViewCommentDto } from '../comment/dto/view-comment.dto';
+import { Comment } from '../comment/entities/comment.entity';
+import { User } from '../user/entities/user.entity';
+import { BlogRepository } from '../blog/blog.repository';
+import { CommentRepository } from '../comment/comment.repository';
+import { PaginationQuery } from '../pagination/base-pagination';
+import { UserRepository } from '../user/user.repository';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { ViewPostDto } from './dto/view-post.dto';
+import { Post } from './entities/post.entity';
+import { PostRepository } from './post.repository';
 
 @Injectable()
 export class PostService {

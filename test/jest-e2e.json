@@ -1,6 +1,6 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "/Users/markmaistrenko/Documents/Creators/lich14.1/lich14.1/test",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {

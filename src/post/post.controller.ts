@@ -10,15 +10,15 @@ import {
   HttpCode,
   NotFoundException,
 } from '@nestjs/common';
-import { PostService } from './post.service';
+import { CreateCommentDto } from '../comment/dto/create-comment.dto';
+import { Tokens } from '../decorator/tokens.decorator';
+import { LikeDto } from '../dto/like.dto';
+import { JWTService } from '../jwt/jwt.service';
+import { PaginationQuery } from '../pagination/base-pagination';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { PaginationQuery } from 'src/pagination/base-pagination';
-import { CreateCommentDto } from 'src/comment/dto/create-comment.dto';
-import { Tokens } from 'src/decorator/tokens.decorator';
 import { ViewPostDto } from './dto/view-post.dto';
-import { JWTService } from 'src/jwt/jwt.service';
-import { LikeDto } from 'src/dto/like.dto';
+import { PostService } from './post.service';
 
 @Controller('posts')
 export class PostController {

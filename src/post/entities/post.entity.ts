@@ -1,9 +1,11 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
+
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
+import { CreatePostBlogDto } from '../../blog/dto/create-post-in-blog.dto';
+import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
 import { ViewPostDto } from '../dto/view-post.dto';
-import { CreatePostBlogDto } from 'src/blog/dto/create-post-in-blog.dto';
-import { CreatePostDto } from '../dto/create-post.dto';
 
 @Schema()
 export class like {

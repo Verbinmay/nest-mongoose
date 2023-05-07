@@ -1,7 +1,7 @@
-import { ViewBlogDto } from 'src/blog/dto/view-blog.dto';
-import { ViewCommentDto } from 'src/comment/dto/view-comment.dto';
-import { ViewPostDto } from 'src/post/dto/view-post.dto';
-import { ViewUserDto } from 'src/user/dto/view-user.dto';
+import { ViewBlogDto } from '../blog/dto/view-blog.dto';
+import { ViewCommentDto } from '../comment/dto/view-comment.dto';
+import { ViewPostDto } from '../post/dto/view-post.dto';
+import { ViewUserDto } from '../user/dto/view-user.dto';
 
 export type PaginatorEnd = {
   pagesCount: number;

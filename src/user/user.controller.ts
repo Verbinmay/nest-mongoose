@@ -8,9 +8,9 @@ import {
   Query,
   HttpCode,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { PaginationQuery } from '../pagination/base-pagination';
 import { CreateUserDto } from './dto/create-user.dto';
-import { PaginationQuery } from 'src/pagination/base-pagination';
+import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController {

@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
   Comment,
-  CommentModelType as CommentModelType,
+  CommentsModelType as CommentsModelType,
 } from './entities/comment.entity';
 
 @Injectable()
 export class CommentRepository {
   constructor(
     @InjectModel(Comment.name)
-    private CommentModel: CommentModelType,
+    private CommentModel: CommentsModelType,
   ) {}
   async findById(id: string): Promise<Comment> {
     try {

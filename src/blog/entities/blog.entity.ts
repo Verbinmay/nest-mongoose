@@ -1,11 +1,18 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
+
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
+import { CreateBlogDto } from '../dto/create-blog.dto';
 import { UpdateBlogDto } from '../dto/update-blog.dto';
 import { ViewBlogDto } from '../dto/view-blog.dto';
-import { CreateBlogDto } from '../dto/create-blog.dto';
 
 @Schema()
 export class Blog {
+  constructor(inputModel: CreateBlogDto) {
+    this.name = inputModel.name;
+    this.description = inputModel.description;
+    this.websiteUrl = inputModel.websiteUrl;
+  }
   @Prop({ default: new Types.ObjectId(), type: mongoose.Schema.Types.ObjectId })
   public _id: Types.ObjectId = new Types.ObjectId();
 
@@ -47,13 +54,13 @@ export class Blog {
     return result;
   }
 
-  static createBlog(inputModel: CreateBlogDto): Blog {
-    const blog = new Blog();
-    blog.name = inputModel.name;
-    blog.description = inputModel.description;
-    blog.websiteUrl = inputModel.websiteUrl;
-    return blog;
-  }
+  // static createBlog(inputModel: CreateBlogDto): Blog {
+  //   const blog = new Blog(inputModel);
+  //   blog.name = inputModel.name;
+  //   blog.description = inputModel.description;
+  //   blog.websiteUrl = inputModel.websiteUrl;
+  //   return blog;
+  // }
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);
@@ -63,9 +70,9 @@ BlogSchema.methods = {
   getViewModel: Blog.prototype.getViewModel,
 };
 
-BlogSchema.statics = {
-  createBlog: Blog.createBlog,
-};
+// BlogSchema.statics = {
+//   createBlog: Blog.createBlog,
+// };
 
 export type BlogsDocument = HydratedDocument<Blog>;
 

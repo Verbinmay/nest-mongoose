@@ -1,15 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
+
+import { ViewPostDto } from '../post/dto/view-post.dto';
+import { Post } from '../post/entities/post.entity';
+import { PaginationQuery } from '../pagination/base-pagination';
+import { PaginatorBlog, PaginatorPost } from '../pagination/paginatorType';
+import { PostRepository } from '../post/post.repository';
 import { CreateBlogDto } from './dto/create-blog.dto';
-import { UpdateBlogDto } from './dto/update-blog.dto';
-import { PaginationQuery } from 'src/pagination/base-pagination';
-import { Blog } from './entities/blog.entity';
-import { ViewBlogDto } from './dto/view-blog.dto';
-import { PaginatorBlog, PaginatorPost } from 'src/pagination/paginatorType';
-import { BlogRepository } from './blog.repository';
-import { PostRepository } from 'src/post/post.repository';
 import { CreatePostBlogDto } from './dto/create-post-in-blog.dto';
-import { Post } from 'src/post/entities/post.entity';
-import { ViewPostDto } from 'src/post/dto/view-post.dto';
+import { UpdateBlogDto } from './dto/update-blog.dto';
+import { ViewBlogDto } from './dto/view-blog.dto';
+import { Blog } from './entities/blog.entity';
+import { BlogRepository } from './blog.repository';
 
 @Injectable()
 export class BlogService {
@@ -53,7 +55,8 @@ export class BlogService {
     return result;
   }
   async createBlog(inputModel: CreateBlogDto) {
-    const blog: Blog = Blog.createBlog(inputModel);
+    const blog: Blog = new Blog(inputModel);
+    // const blog: Blog = Blog.createBlog(inputModel);
     const result = await this.blogRepository.save(blog);
     return result.getViewModel();
   }

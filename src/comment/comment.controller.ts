@@ -9,13 +9,12 @@ import {
   Delete,
   HttpCode,
 } from '@nestjs/common';
-
+import { Tokens } from '../decorator/tokens.decorator';
+import { LikeDto } from '../dto/like.dto';
+import { JWTService } from '../jwt/jwt.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { CommentService } from './comment.service';
-import { Tokens } from 'src/decorator/tokens.decorator';
-import { JWTService } from 'src/jwt/jwt.service';
 import { ViewCommentDto } from './dto/view-comment.dto';
-import { LikeDto } from 'src/dto/like.dto';
+import { CommentService } from './comment.service';
 
 @Controller('comments')
 export class CommentController {
