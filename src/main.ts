@@ -1,3 +1,4 @@
+import { useContainer } from 'class-validator';
 import * as cookieParser from 'cookie-parser';
 
 import { NestFactory } from '@nestjs/core';
@@ -9,6 +10,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   /*{ abortOnError: false } По умолчанию, если при создании приложения произойдет какая-либо ошибка, ваше приложение выйдет с кодом 1. Если вы хотите, чтобы он выдавал ошибку, отключите эту опцию abortOnError */
   const app = await NestFactory.create(AppModule, { abortOnError: false });
+
+  /*Таким образом, вызов useContainer(app.select(AppModule), { fallbackOnErrors: true }) говорит NestJS использовать контейнер TypeDI для разрешения зависимостей и воспользоваться собственным механизмом разрешения зависимостей в случае возникновения ошибки. */
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   /* app.enableCors() позволяет вашему приложению принимать запросы из других доменов, указав набор параметров, которые определяют, какие типы запросов и какие источники будут разрешены.*/
   app.enableCors();
@@ -23,9 +27,11 @@ async function bootstrap() {
       stopAtFirstError: true,
       exceptionFactory(errors) {
         const errorsForResponse = [];
-
+        console.log(errors);
         errors.forEach((e) => {
-          const constraintsKeys = Object.keys(e.constraints);
+          /* Валидация айди, написанная нами для проверки input моделей прибавляет ошибку и не считывается ограничением одной ошибки, поэтому приходится слайсить, оставляя первый объект  */
+          const constraintsKeys = Object.keys(e.constraints).slice(0, 1);
+          console.log(constraintsKeys);
           constraintsKeys.forEach((ckey) => {
             errorsForResponse.push({
               message: e.constraints[ckey],

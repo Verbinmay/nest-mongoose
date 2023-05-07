@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { Post, PostSchema } from '../post/entities/post.entity';
 import { PostRepository } from '../post/post.repository';
+import { ValidationBlogId } from '../validation/validationId';
 import { Blog, BlogSchema } from './entities/blog.entity';
 import { BlogController } from './blog.controller';
 import { BlogRepository } from './blog.repository';
@@ -21,6 +22,6 @@ import { BlogService } from './blog.service';
     ]),
   ],
   controllers: [BlogController],
-  providers: [BlogService, BlogRepository, PostRepository],
+  providers: [BlogService, BlogRepository, PostRepository, ValidationBlogId],
 })
 export class BlogModule {}
