@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, IsUrl, MaxLength } from 'class-validator';
 
 export class CreateBlogDto {
   @IsNotEmpty()
@@ -12,7 +12,7 @@ export class CreateBlogDto {
   public description: string;
 
   @IsNotEmpty()
-  @IsEmail()
+  @IsUrl()
   @MaxLength(100)
   public websiteUrl: string;
 }

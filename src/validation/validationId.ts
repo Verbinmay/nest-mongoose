@@ -12,14 +12,16 @@ import { BlogService } from '../blog/blog.service';
 export class ValidationBlogId implements ValidatorConstraintInterface {
   constructor(protected readonly blogService: BlogService) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async validate(text: string, args: ValidationArguments) {
     try {
-      const user = await this.blogService.getBlogById(text);
+      await this.blogService.getBlogById(text);
       return true;
     } catch (error) {
       return false;
     }
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   defaultMessage(args: ValidationArguments) {
     return 'blogId not exist!';
   }

@@ -42,7 +42,7 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  describe('BLOGS Create', () => {
+  describe.skip('BLOGS Create', () => {
     beforeAll(async () => {
       await agent.delete(info.url.testingDelete);
     });

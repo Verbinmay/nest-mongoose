@@ -109,4 +109,11 @@ export class UserService {
     }
     return await this.userRepository.delete(id);
   }
+
+  async findUserByLoginOrEmail(loginOrEmail: string) {
+    const result: User | null =
+      await this.userRepository.findUserByLoginOrEmail(loginOrEmail);
+
+    return result ? true : false;
+  }
 }
