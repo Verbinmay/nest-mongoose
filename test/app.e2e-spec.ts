@@ -34,7 +34,6 @@ describe('AppController (e2e)', () => {
       }),
     );
     await app.init();
-
     agent = supertest.agent(app.getHttpServer());
   });
 
@@ -338,7 +337,7 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe.skip('USERS create user', () => {
+  describe('USERS create user', () => {
     beforeAll(async () => {
       await agent.delete(info.url.testingDelete);
     }, 8000);

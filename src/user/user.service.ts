@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { validateOrReject } from 'class-validator';
 import { randomUUID } from 'crypto';
-import add from 'date-fns/add';
+import { add } from 'date-fns';
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 
@@ -12,26 +12,26 @@ import { ViewUserDto } from './dto/view-user.dto';
 import { User } from './entities/user.entity';
 import { UserRepository } from './user.repository';
 
-async function validateOrRejectModel(
-  inputModel: any,
-  classForm: { new (): any },
-) {
-  if (inputModel instanceof classForm === false) {
-    throw new Error('Incorrect input data');
-  }
-  try {
-    await validateOrReject(inputModel);
-  } catch (error) {
-    throw new Error(error);
-  }
-}
+// async function validateOrRejectModel(
+//   inputModel: any,
+//   classForm: { new (): any },
+// ) {
+//   if (inputModel instanceof classForm === false) {
+//     throw new Error('Incorrect input data');
+//   }
+//   try {
+//     await validateOrReject(inputModel);
+//   } catch (error) {
+//     throw new Error(error);
+//   }
+// }
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async createUser(inputModel: CreateUserDto) {
-    await validateOrRejectModel(inputModel, CreateUserDto);
+    // await validateOrRejectModel(inputModel, CreateUserDto);
 
     const hashBcrypt = await bcrypt.hash(inputModel.password, 10);
     const confirmationCode = randomUUID();
@@ -111,8 +111,9 @@ export class UserService {
   }
 
   async findUserByLoginOrEmail(loginOrEmail: string) {
-    const result: User | null =
-      await this.userRepository.findUserByLoginOrEmail(loginOrEmail);
+    const result = await this.userRepository.findUserByLoginOrEmail(
+      loginOrEmail,
+    );
 
     return result ? true : false;
   }

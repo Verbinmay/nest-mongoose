@@ -1,6 +1,7 @@
-import { User, UsersModelType as UserModelType } from './entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+
+import { User, UsersModelType as UserModelType } from './entities/user.entity';
 
 @Injectable()
 export class UserRepository {
@@ -44,7 +45,7 @@ export class UserRepository {
   }
   /*Нам не подходит функция ниже, ибо нужно знать, где именно происходит совпадение(поле ошибки) */
   async findUserByLoginOrEmail(loginOrEmail: string) {
-    const result: User | null = await this.UserModel.findOne({
+    const result = await this.UserModel.findOne({
       $or: [{ login: loginOrEmail }, { email: loginOrEmail }],
     }).lean();
     return result;

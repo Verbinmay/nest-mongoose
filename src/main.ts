@@ -12,7 +12,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { abortOnError: false });
 
   /*Таким образом, вызов useContainer(app.select(AppModule), { fallbackOnErrors: true }) говорит NestJS использовать контейнер TypeDI для разрешения зависимостей и воспользоваться собственным механизмом разрешения зависимостей в случае возникновения ошибки. */
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  useContainer(
+    app,
+    // .select(AppModule)
+    { fallbackOnErrors: true },
+  );
 
   /* app.enableCors() позволяет вашему приложению принимать запросы из других доменов, указав набор параметров, которые определяют, какие типы запросов и какие источники будут разрешены.*/
   app.enableCors();

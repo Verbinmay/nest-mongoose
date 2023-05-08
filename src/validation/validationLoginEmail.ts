@@ -7,16 +7,22 @@ import { Injectable } from '@nestjs/common';
 
 import { UserService } from '../user/user.service';
 
-@ValidatorConstraint({ name: 'ValidationBlogId', async: true })
+@ValidatorConstraint({ name: 'ValidationLoginEmail', async: true })
 @Injectable()
 export class ValidationLoginEmail implements ValidatorConstraintInterface {
-  constructor(protected readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async validate(value: any, args: ValidationArguments) {
-    const userIsRegistered: boolean =
-      await this.userService.findUserByLoginOrEmail(value);
+  async validate(value: string, args: ValidationArguments) {
+    const userIsRegistered = await this.userService.findUserByLoginOrEmail(
+      value,
+    );
 
     return !userIsRegistered;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  defaultMessage(args: ValidationArguments) {
+    return 'Please change me';
   }
 }
