@@ -13,11 +13,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 
+import { createApp } from '../src/helpers/createApp';
 import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
   jest.setTimeout(1000 * 1000);
   let app: INestApplication;
+  let fullApp: INestApplication;
   let agent: supertest.SuperAgentTest;
 
   beforeAll(async () => {
@@ -26,19 +28,15 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(
-      new ValidationPipe({
-        transform: true,
-        whitelist: true,
-        stopAtFirstError: true,
-      }),
-    );
-    await app.init();
-    agent = supertest.agent(app.getHttpServer());
+
+    //преобразование апп
+    fullApp = createApp(app);
+    await fullApp.init();
+    agent = supertest.agent(fullApp.getHttpServer());
   });
 
   afterAll(async () => {
-    await app.close();
+    await fullApp.close();
   });
 
   describe.skip('BLOGS Create', () => {
