@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { SessionRepository } from '../session/sessions.repository';
+
 @Injectable()
 export class JWTService {
   constructor(
-    private readonly jwt: JwtService, // private readonly sessionRepository: SessionRepository,
+    private readonly jwt: JwtService,
+    private readonly sessionRepository: SessionRepository,
   ) {}
 
   async createJWTAccessToken(id: string) {
@@ -29,7 +32,7 @@ export class JWTService {
     });
 
     return {
-      accessToken: { accessToken: tokenAccess },
+      accessToken: tokenAccess,
       refreshToken: tokenRefresh,
     };
   }
@@ -41,15 +44,14 @@ export class JWTService {
       });
       if (typeof result === 'string') return null;
       if (!result.deviceId) return result;
-      //TODO
-      // const session: boolean =
-      //   await this.sessionRepository.checkRefreshTokenEqual({
-      //     iat: result.iat,
-      //     deviceId: result.deviceId,
-      //     userId: result.sub,
-      //   });
-      // return session ? result : null;
-      return result;
+
+      const session: boolean =
+        await this.sessionRepository.checkRefreshTokenEqual({
+          iat: result.iat,
+          deviceId: result.deviceId,
+          userId: result.sub,
+        });
+      return session ? result : null;
     } catch {
       return null;
     }

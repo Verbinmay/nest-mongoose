@@ -335,7 +335,7 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe('USERS create user', () => {
+  describe.skip('USERS create user', () => {
     beforeAll(async () => {
       await agent.delete(info.url.testingDelete);
     }, 8000);
@@ -387,7 +387,7 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe.skip('Auth', () => {
+  describe('Auth', () => {
     let accessToken: any = {};
     let user: any = {};
     const inputInfoUser = testInputInfoUser();

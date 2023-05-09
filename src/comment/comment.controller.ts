@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Tokens } from '../decorator/tokens.decorator';
 import { LikeDto } from '../dto/like.dto';
-import { JWTService } from '../jwt/jwt.service';
+import { JWTService } from '../Jwt/jwt.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ViewCommentDto } from './dto/view-comment.dto';
 import { CommentService } from './comment.service';
