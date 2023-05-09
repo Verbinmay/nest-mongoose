@@ -9,6 +9,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
+import { RefreshTokenGuard } from '../guard/refresh-token.guard';
 import { Session } from './entities/session.entity';
 import { SessionService } from './session.service';
 
@@ -16,36 +17,35 @@ import { SessionService } from './session.service';
 export class SessionsController {
   constructor(private readonly sessionsService: SessionService) {}
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(RefreshTokenGuard)
   @Get()
-  findAll(@CurrentUserId() userId) {
-    console.log(userId);
-    return this.sessionsService.findAll(userId.userId);
+  findAll(@CurrentUserId() payload) {
+    return this.sessionsService.findAll(payload.sub);
   }
 
-  // @UseGuards(JwtRefreshStrategy)
+  @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   @Delete()
-  deleteAll(@CurrentUserId() userId) {
+  deleteAll(@CurrentUserId() payload) {
     return this.sessionsService.deleteAll({
-      userId: userId.userId,
-      deviceId: userId.deviceId,
+      userId: payload.sub,
+      deviceId: payload.deviceId,
     });
   }
 
-  // @UseGuards(JwtRefreshStrategy)
+  @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   @Delete(':deviceId')
   async deleteOne(
     @Param('deviceId') deviceId: string,
-    @CurrentUserId() userId,
+    @CurrentUserId() payload,
   ) {
     const session: Session | null =
       await this.sessionsService.findSessionByDeviceId(deviceId);
     if (!session) {
       throw new NotFoundException();
     }
-    if (session.userId !== userId.userId) {
+    if (session.userId !== payload.sub) {
       throw new ForbiddenException();
     }
 

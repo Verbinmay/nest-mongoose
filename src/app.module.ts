@@ -41,7 +41,7 @@ import { ValidationLoginEmail } from './validation/validationLoginEmail';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './auth-pasport/strategy/local.strategy';
+import { LocalStrategy } from './guard/auth-pasport/strategy-pasport/local.strategy';
 
 @Module({
   imports: [

@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 import { JWTService } from '../Jwt/jwt.service';
 import { SessionService } from '../session/session.service';
-import { Tokens } from './dto/token.dto';
+import { Tokens } from './dto/tokens.dto';
 
 @Injectable()
 export class AuthService {
@@ -52,5 +52,19 @@ export class AuthService {
     });
 
     return sessionCreate ? tokens : null;
+  }
+
+  async refreshTokens(payload) {
+    const newTokens: Tokens = await this.jwtService.tokenCreator({
+      sub: payload.sub,
+      deviceId: payload.deviceId,
+    });
+
+    //refreshToken Changed in DB
+    await this.sessionService.changeRefreshTokenInfo({
+      newToken: newTokens.refreshToken,
+      iatOldSession: payload.iat,
+    });
+    return newTokens;
   }
 }

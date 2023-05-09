@@ -8,15 +8,14 @@ import {
   Res,
   UseGuards,
   HttpCode,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { LocalAuthGuard } from '../auth-pasport/guard/local-auth.guard';
+import { LocalAuthGuard } from '../guard/auth-pasport/guard-pasport/local-auth.guard';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
+import { RefreshTokenGuard } from '../guard/refresh-token.guard';
 import { InputLogin } from './dto/input-login.dto';
-import { Tokens } from './dto/token.dto';
+import { Tokens } from './dto/tokens.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -52,10 +51,18 @@ export class AuthController {
     return res.json({ accessToken: loginProcess.accessToken });
   }
 
-  // @Post('refresh-token')
-  // create(@Body() createAuthDto: CreateAuthDto) {
-  //   return this.authService.create(createAuthDto);
-  // }
+  @UseGuards(RefreshTokenGuard)
+  @Post('refresh-token')
+  async create(@CurrentUserId() payload, @Res() res: Response) {
+    const newTokens = await this.authService.refreshTokens(payload);
+
+    res.cookie('refreshToken', newTokens.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+
+    return res.json({ accessToken: newTokens.accessToken });
+  }
 
   // @Post('logout')
   // create(@Body() createAuthDto: CreateAuthDto) {
