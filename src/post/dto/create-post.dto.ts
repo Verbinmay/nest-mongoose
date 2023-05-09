@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsString, Validate } from 'class-validator';
 
 import { PartialType } from '@nestjs/mapped-types';
@@ -9,5 +10,6 @@ export class CreatePostDto extends PartialType(CreatePostBlogDto) {
   @IsNotEmpty()
   @IsString()
   @Validate(ValidationBlogId)
+  @Transform(({ value }): string => value.trim())
   blogId: string;
 }

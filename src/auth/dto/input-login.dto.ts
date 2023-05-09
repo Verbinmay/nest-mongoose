@@ -3,12 +3,14 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class InputLogin {
   @IsString()
-  @Transform(({ value }) => value.trim())
   @IsNotEmpty()
+  @Transform(({ value }): string => value.trim())
   loginOrEmail: string;
 
   @IsString()
-  @Transform(({ value }) => value.trim())
   @IsNotEmpty()
   password: string;
 }
+
+const a = 'aaa ';
+const b = a.trim();

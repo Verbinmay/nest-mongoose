@@ -13,6 +13,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(loginOrEmail: string, password: string) {
+    /* на случай, если пользователь нажмет пробелы в перед или после логина */
+    loginOrEmail = loginOrEmail.trim();
+
     const user = await this.userRepository.findUserByLoginOrEmail(loginOrEmail);
     if (!user) return null;
 

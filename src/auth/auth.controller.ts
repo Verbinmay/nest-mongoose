@@ -8,6 +8,8 @@ import {
   Res,
   UseGuards,
   HttpCode,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -54,6 +56,7 @@ export class AuthController {
   // create(@Body() createAuthDto: CreateAuthDto) {
   //   return this.authService.create(createAuthDto);
   // }
+
   // @Post('logout')
   // create(@Body() createAuthDto: CreateAuthDto) {
   //   return this.authService.create(createAuthDto);
