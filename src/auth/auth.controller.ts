@@ -8,6 +8,7 @@ import {
   Res,
   UseGuards,
   HttpCode,
+  Get,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -52,8 +53,9 @@ export class AuthController {
   }
 
   @UseGuards(RefreshTokenGuard)
+  @HttpCode(200)
   @Post('refresh-token')
-  async create(@CurrentUserId() payload, @Res() res: Response) {
+  async refreshTokens(@CurrentUserId() payload, @Res() res: Response) {
     const newTokens = await this.authService.refreshTokens(payload);
 
     res.cookie('refreshToken', newTokens.refreshToken, {
@@ -64,10 +66,19 @@ export class AuthController {
     return res.json({ accessToken: newTokens.accessToken });
   }
 
-  // @Post('logout')
-  // create(@Body() createAuthDto: CreateAuthDto) {
-  //   return this.authService.create(createAuthDto);
+  @UseGuards(RefreshTokenGuard)
+  @HttpCode(204)
+  @Post('logout')
+  async logout(@CurrentUserId() payload) {
+    const result: boolean = await this.authService.logout(payload);
+    return result;
+  }
+
+  // @Get('me')
+  // authMe(@CurrentUserId() userId) {
+  //   return this.authService.authMe(createAuthDto);
   // }
+
   // @Post('registration')
   // create(@Body() createAuthDto: CreateAuthDto) {
   //   return this.authService.create(createAuthDto);

@@ -60,11 +60,18 @@ export class AuthService {
       deviceId: payload.deviceId,
     });
 
-    //refreshToken Changed in DB
     await this.sessionService.changeRefreshTokenInfo({
       newToken: newTokens.refreshToken,
       iatOldSession: payload.iat,
     });
     return newTokens;
+  }
+
+  async logout(payload) {
+    const tokenRevoked = await this.sessionService.deleteSessionsByDeviceId(
+      payload.deviceId,
+    );
+
+    return tokenRevoked ? true : false;
   }
 }
