@@ -42,12 +42,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './guard/auth-pasport/strategy-pasport/local.strategy';
+import { JwtStrategy } from './guard/auth-pasport/strategy-pasport/jwt.strategy';
 
 @Module({
   imports: [
     /* и еще в провайдерах регистрировать каждую стратегию */
     PassportModule,
-    //
+    /* главное, чтобы подтягивались env нужно вызвать сверху  */
     ConfigModule.forRoot(),
     //
     MongooseModule.forRoot(process.env.MONGO_URL, {
@@ -82,6 +83,8 @@ import { LocalStrategy } from './guard/auth-pasport/strategy-pasport/local.strat
     CommentService,
     JWTService,
     JwtService,
+    JwtStrategy /*стратегия*/,
+    LocalStrategy /*стратегия*/,
     PostRepository,
     PostService,
     RequestCountRepository,
@@ -91,7 +94,6 @@ import { LocalStrategy } from './guard/auth-pasport/strategy-pasport/local.strat
     UserService,
     ValidationBlogId,
     ValidationLoginEmail,
-    LocalStrategy /*стратегия*/,
   ],
 })
 export class AppModule {}

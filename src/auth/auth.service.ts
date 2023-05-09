@@ -1,9 +1,11 @@
 import { randomUUID } from 'crypto';
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 
+import { User } from '../user/entities/user.entity';
 import { JWTService } from '../Jwt/jwt.service';
 import { SessionService } from '../session/session.service';
+import { UserRepository } from '../user/user.repository';
 import { Tokens } from './dto/tokens.dto';
 
 @Injectable()
@@ -11,6 +13,7 @@ export class AuthService {
   constructor(
     private sessionService: SessionService,
     private jwtService: JWTService,
+    private userRepository: UserRepository,
   ) {}
 
   // async validateUser(loginOrEmail: string, pass: string) {
@@ -73,5 +76,19 @@ export class AuthService {
     );
 
     return tokenRevoked ? true : false;
+  }
+
+  async authMe(userId) {
+    const authGet: User | null = await this.userRepository.findUserById(userId);
+
+    if (!authGet) {
+      throw new UnauthorizedException();
+    }
+
+    return {
+      email: authGet.email,
+      login: authGet.login,
+      userId: authGet._id.toString(),
+    };
   }
 }
