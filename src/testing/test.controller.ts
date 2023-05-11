@@ -1,15 +1,15 @@
+import {
+  RequestCount,
+  RequestCountsModelType as RequestCountModelType,
+} from '../request-count/entities/requestCount.entity';
 import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Blog, BlogsModelType } from '../blog/entities/blog.entity';
 import { Comment, CommentsModelType } from '../comment/entities/comment.entity';
 import { Post, PostsModelType } from '../post/entities/post.entity';
-import {
-  RequestCount,
-  RequestCountsModelType as RequestCountModelType,
-} from '../request-count/entities/requestCount.entity';
 import { Session, SessionModelType } from '../session/entities/session.entity';
-import { User, UsersModelType } from '../user/entities/user.entity';
+import { User, UserModelType } from '../user/entities/user.entity';
 
 @Controller('testing')
 export class TestController {
@@ -25,7 +25,7 @@ export class TestController {
     @InjectModel(RequestCount.name)
     private requestCount: RequestCountModelType,
     @InjectModel(User.name)
-    private usersModel: UsersModelType,
+    private usersModel: UserModelType,
   ) {}
 
   @HttpCode(204)

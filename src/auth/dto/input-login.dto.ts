@@ -11,6 +11,3 @@ export class InputLogin {
   @IsNotEmpty()
   password: string;
 }
-
-const a = 'aaa ';
-const b = a.trim();

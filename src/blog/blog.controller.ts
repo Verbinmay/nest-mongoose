@@ -14,6 +14,7 @@ import { CreateBlogDto } from './dto/create-blog.dto';
 import { CreatePostBlogDto } from './dto/create-post-in-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 import { BlogService } from './blog.service';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('blogs')
 export class BlogController {
@@ -29,6 +30,7 @@ export class BlogController {
     return this.blogService.getBlogs(query);
   }
 
+  @Throttle(1, 1000)
   @Post()
   createBlog(@Body() inputModel: CreateBlogDto) {
     return this.blogService.createBlog(inputModel);

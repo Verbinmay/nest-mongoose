@@ -18,6 +18,8 @@ export const createApp = (app: INestApplication): INestApplication => {
 
   app.use(cookieParser());
 
+  app.useGlobalInterceptors();
+
   /* app.useGlobalPipes() - это метод из NestJS, который позволяет установить глобальные pipes (каналы) для обработки входящих данных в вашем приложении. Pipes - это объекты, которые позволяют изменять и проверять входящие данные перед тем, как они будут переданы в ваше приложение. */
   app.useGlobalPipes(
     new ValidationPipe({
@@ -26,11 +28,11 @@ export const createApp = (app: INestApplication): INestApplication => {
       stopAtFirstError: true,
       exceptionFactory(errors) {
         const errorsForResponse = [];
-        console.log(errors);
+
         errors.forEach((e) => {
           /* Валидация айди, написанная нами для проверки input моделей прибавляет ошибку и не считывается ограничением одной ошибки, поэтому приходится слайсить, оставляя первый объект  */
           const constraintsKeys = Object.keys(e.constraints).slice(0, 1);
-          console.log(constraintsKeys);
+
           constraintsKeys.forEach((ckey) => {
             errorsForResponse.push({
               message: e.constraints[ckey],

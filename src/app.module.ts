@@ -43,13 +43,22 @@ import { AppService } from './app.service';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './guard/auth-pasport/strategy-pasport/local.strategy';
 import { JwtStrategy } from './guard/auth-pasport/strategy-pasport/jwt.strategy';
+import { MailModule } from './mail/mail.module';
+import { AuthRepository } from './auth/auth.repository';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
     /* и еще в провайдерах регистрировать каждую стратегию */
     PassportModule,
+    /*почта */
+    MailModule,
     /* главное, чтобы подтягивались env нужно вызвать сверху  */
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      // no need to import into other modules
+      isGlobal: true,
+    }),
     //
     MongooseModule.forRoot(process.env.MONGO_URL, {
       dbName: process.env.MONGO_NAME,
@@ -63,6 +72,11 @@ import { JwtStrategy } from './guard/auth-pasport/strategy-pasport/jwt.strategy'
       { name: User.name, schema: UserSchema },
       { name: RequestCount.name, schema: RequestCountSchema },
     ]),
+
+    ThrottlerModule.forRoot({
+      ttl: 6000,
+      limit: 1,
+    }),
   ],
   controllers: [
     AppController,
@@ -75,7 +89,12 @@ import { JwtStrategy } from './guard/auth-pasport/strategy-pasport/jwt.strategy'
     UserController,
   ],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     AppService,
+    AuthRepository,
     AuthService,
     BlogRepository,
     BlogService,

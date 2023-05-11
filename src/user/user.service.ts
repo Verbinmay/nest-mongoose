@@ -34,19 +34,8 @@ export class UserService {
     // await validateOrRejectModel(inputModel, CreateUserDto);
 
     const hashBcrypt = await bcrypt.hash(inputModel.password, 10);
-    const confirmationCode = randomUUID();
 
-    const expirationDate = add(new Date(), {
-      hours: 1,
-      minutes: 3,
-    });
-
-    const user: User = User.createUser(
-      inputModel,
-      confirmationCode,
-      expirationDate,
-      hashBcrypt,
-    );
+    const user: User = new User(inputModel, hashBcrypt);
 
     user.emailConfirmation.isConfirmed = true;
 

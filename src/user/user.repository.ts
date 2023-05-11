@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { User, UsersModelType as UserModelType } from './entities/user.entity';
+import { User, UserModelType } from './entities/user.entity';
 
 @Injectable()
 export class UserRepository {
@@ -49,6 +49,55 @@ export class UserRepository {
       $or: [{ login: loginOrEmail }, { email: loginOrEmail }],
     }).lean();
     return result;
+  }
+
+  async findUserByConfirmationCode(code: string) {
+    const result: User | null = await this.UserModel.findOne({
+      'emailConfirmation.confirmationCode': code,
+    }).lean();
+    return result;
+  }
+
+  async updateConfirmation(id: string) {
+    try {
+      const result = await this.UserModel.findById(id);
+
+      if (!result) return false;
+
+      result.emailConfirmation.isConfirmed = true;
+
+      result.save();
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async findUserByEmail(email: string) {
+    try {
+      return this.UserModel.findOne({
+        email: email,
+      });
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async updateConfirmationAndHash(a: { id: string; hash: string }) {
+    try {
+      const result = await this.UserModel.findById(a.id);
+
+      if (!result) return false;
+
+      result.emailConfirmation.isConfirmed = true;
+      result.hash = a.hash;
+      result.save();
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   // async findUserByLoginOrEmail(login: string, email: string) {

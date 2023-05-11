@@ -1,14 +1,21 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { randomUUID } from 'crypto';
+import { add } from 'date-fns';
 import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
-import { ViewUserDto } from '../dto/view-user.dto';
+
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { CreateUserDto } from '../dto/create-user.dto';
+import { ViewUserDto } from '../dto/view-user.dto';
 
 @Schema()
 export class EmailConfirmation {
   @Prop()
-  confirmationCode: string;
+  confirmationCode: string = randomUUID();
   @Prop()
-  expirationDate: Date;
+  expirationDate: Date = add(new Date(), {
+    hours: 1,
+    minutes: 3,
+  });
   @Prop({ type: Boolean, default: false })
   isConfirmed = false;
 }
@@ -18,6 +25,12 @@ export const emailConfirmationSchema =
 
 @Schema()
 export class User {
+  /* здесь нужно типизировать inputModel как  any, иначе не подтянется name в встроенном конструкторе и не InjectModel не сработает, придется вручную прописывать все имена строками */
+  constructor(inputModel: any, hash: string) {
+    this.login = inputModel.login;
+    this.email = inputModel.email;
+    this.hash = hash;
+  }
   @Prop({ default: new Types.ObjectId(), type: mongoose.Schema.Types.ObjectId })
   public _id: Types.ObjectId = new Types.ObjectId();
 
@@ -37,7 +50,7 @@ export class User {
   public updatedAt: string = new Date().toISOString();
 
   @Prop({ type: emailConfirmationSchema, required: true })
-  public emailConfirmation: EmailConfirmation;
+  public emailConfirmation: EmailConfirmation = new EmailConfirmation();
 
   getViewModel(): ViewUserDto {
     const result = {
@@ -50,24 +63,17 @@ export class User {
     return result;
   }
 
-  static createUser(
-    inputModel: CreateUserDto,
-    confirmationCode: string,
-    expirationDate: Date,
-    hash: string,
-  ): User {
-    const user = new User();
-    user.login = inputModel.login;
-    user.email = inputModel.email;
-    user.hash = hash;
+  // static createUser(inputModel: CreateUserDto, hash: string): User {
+  //   const user = new User();
+  //   user.login = inputModel.login;
+  //   user.email = inputModel.email;
+  //   user.hash = hash;
 
-    const emailConfirmation = new EmailConfirmation();
-    emailConfirmation.confirmationCode = confirmationCode;
-    emailConfirmation.expirationDate = expirationDate;
+  //   const emailConfirmation = new EmailConfirmation();
 
-    user.emailConfirmation = emailConfirmation;
-    return user;
-  }
+  //   user.emailConfirmation = emailConfirmation;
+  //   return user;
+  // }
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
@@ -77,7 +83,7 @@ UserSchema.methods = {
 };
 
 UserSchema.statics = {
-  createUser: User.createUser,
+  // createUser: User.createUser,
 };
 
 export type UsersDocument = HydratedDocument<User>;
@@ -89,6 +95,6 @@ export type UsersModelMethodsType = {
   getViewModel: (userId: string) => ViewUserDto;
 };
 
-export type UsersModelType = Model<UsersDocument> &
+export type UserModelType = Model<UsersDocument> &
   UsersModelStaticType &
   UsersModelMethodsType;
