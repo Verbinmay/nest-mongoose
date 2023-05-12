@@ -18,7 +18,6 @@ export class TestController {
     private postsModel: PostsModelType,
     @InjectModel(Session.name)
     private sessionsModel: SessionModelType,
-
     @InjectModel(User.name)
     private usersModel: UserModelType,
   ) {}

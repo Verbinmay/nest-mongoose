@@ -165,11 +165,11 @@ export class PostService {
     }
     const comment = Comment.createComment({
       content: a.content,
-      userId: a.userId,
+      userId: user._id.toString(),
       userLogin: user.login,
       postId: a.postId,
     });
     const result = await this.commentRepository.save(comment);
-    return result.getViewModel(a.userId);
+    return result.getViewModel(user._id.toString());
   }
 }

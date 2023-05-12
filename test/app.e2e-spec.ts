@@ -425,12 +425,16 @@ describe('AppController (e2e)', () => {
     //     userId: user.body.id,
     //   });
     // });
-
-    // it('POST|204 POST AUTH REGISTRATION ', async () => {
-    //   const result = await agent
-    //     .post(info.url.auth.registration)
-    //     .send(testInputInfoUser())
-    //     .expect(204);
-    // });
+  });
+  describe('REGISTRATION CONFIRMATION', () => {
+    beforeAll(async () => {
+      await agent.delete(info.url.testingDelete);
+    }, 8000);
+    it('POST|204 POST AUTH REGISTRATION ', async () => {
+      const result = await agent
+        .post(info.url.auth.registration)
+        .send(testInputInfoUser())
+        .expect(204);
+    });
   });
 });

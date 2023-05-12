@@ -1,4 +1,3 @@
-import { User } from '../user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
@@ -6,6 +5,7 @@ import { add } from 'date-fns';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { User } from '../user/entities/user.entity';
 import { JWTService } from '../Jwt/jwt.service';
 import { MailService } from '../mail/mail.service';
 import { SessionService } from '../session/session.service';
@@ -119,18 +119,23 @@ export class AuthService {
   async confirmEmail(code: string) {
     const userFind: User | null =
       await this.userRepository.findUserByConfirmationCode(code);
+
     if (!userFind) {
       return false;
     }
+
     if (userFind.emailConfirmation.isConfirmed) {
       return false;
     }
+
     if (userFind.emailConfirmation.confirmationCode !== code) {
       return false;
     }
+
     if (userFind.emailConfirmation.expirationDate < new Date()) {
       return false;
     }
+
     return await this.userRepository.updateConfirmation(
       userFind._id.toString(),
     );

@@ -1,11 +1,17 @@
-export type APIErrorResult = Array<FieldError>;
+export class ErrorResult {
+  errorsMessages: Array<FieldError>;
+}
 
-export type FieldError = {
+export class FieldError {
   message: string;
   field: string;
-};
+}
 
-export function errorMaker(msg: string, field: string, ...strings: any[]) {
+export function errorMaker(
+  msg: string,
+  field: string,
+  ...strings: any[]
+): ErrorResult {
   const arrayErrors: Array<FieldError> = [];
   arrayErrors.push({
     message: msg,
@@ -19,5 +25,6 @@ export function errorMaker(msg: string, field: string, ...strings: any[]) {
       });
     }
   }
+
   return { errorsMessages: arrayErrors };
 }

@@ -69,10 +69,10 @@ import { BasicStrategy } from './guard/auth-pasport/strategy-pasport/basic.strat
       { name: User.name, schema: UserSchema },
     ]),
 
-    ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
-    }),
+    // ThrottlerModule.forRoot({
+    //   ttl: 60,
+    //   limit: 10,
+    // }),
   ],
   controllers: [
     AppController,
@@ -85,10 +85,10 @@ import { BasicStrategy } from './guard/auth-pasport/strategy-pasport/basic.strat
     UserController,
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
     AppService,
     AuthRepository,
     AuthService,

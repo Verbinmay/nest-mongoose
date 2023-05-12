@@ -14,6 +14,7 @@ import {
 import { BasicAuthGuard } from '../guard/auth-pasport/guard-pasport/basic-auth.guard';
 import { JwtAuthGuard } from '../guard/auth-pasport/guard-pasport/jwt-auth.guard';
 import { CreateCommentDto } from '../comment/dto/create-comment.dto';
+import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { Tokens } from '../decorator/tokens.decorator';
 import { LikeDto } from '../dto/like.dto';
 import { JWTService } from '../Jwt/jwt.service';
@@ -71,12 +72,10 @@ export class PostController {
   @HttpCode(204)
   async updateLikeStatus(
     @Param('postId') postId: string,
-    @Tokens() tokens,
     @Body() inputModel: LikeDto,
+    @CurrentUserId() user,
   ) {
-    const userId = await this.jwtService.getUserIdFromAccessToken(
-      tokens.accessToken,
-    );
+    const userId = user.sub;
     if (userId === '') throw new NotFoundException();
 
     const postFind: ViewPostDto | null = await this.postService.getPostById(
@@ -103,7 +102,7 @@ export class PostController {
     return true;
   }
   //COMMENTS
-  @UseGuards(JwtAuthGuard)
+
   @Get(':postId/comments')
   async findCommentsByPostId(
     @Param('postId') postId: string,
@@ -116,15 +115,14 @@ export class PostController {
     return this.postService.getCommentsByPostId(postId, query, userId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':postId/comments')
   async createCommentByPostId(
     @Param('postId') postId: string,
     @Body() inputModel: CreateCommentDto,
-    @Tokens() tokens,
+    @CurrentUserId() user,
   ) {
-    const userId = await this.jwtService.getUserIdFromAccessToken(
-      tokens.accessToken,
-    );
+    const userId = user.sub;
     const post: ViewPostDto | null = await this.postService.getPostById(
       postId,
       userId,

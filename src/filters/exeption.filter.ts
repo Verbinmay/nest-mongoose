@@ -6,6 +6,8 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+import { ErrorResult } from '../helpers/errors';
+
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
@@ -14,14 +16,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
     if (status === 400) {
-      const errorResponse = {
-        errors: [],
-      };
       const expResponse: any = exception.getResponse();
 
-      expResponse.message.forEach((m) => errorResponse.errors.push(m));
+      /* проверка на то, что приходит уже не готовый к отправке массив ошибок  */
+      if (expResponse.errorsMessages) {
+        response.status(status).json(expResponse);
+        return;
+      }
+      const errorResponse = {
+        errorsMessages: [],
+      };
+      expResponse.message.forEach((m) => errorResponse.errorsMessages.push(m));
       //помогает смотреть ошибки через тесты
-      console.log(errorResponse);
+      console.log(errorResponse, 'filter');
 
       response.status(status).json(errorResponse);
     } else {
