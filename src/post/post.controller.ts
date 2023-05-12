@@ -9,7 +9,10 @@ import {
   Put,
   HttpCode,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
+import { BasicAuthGuard } from '../guard/auth-pasport/guard-pasport/basic-auth.guard';
+import { JwtAuthGuard } from '../guard/auth-pasport/guard-pasport/jwt-auth.guard';
 import { CreateCommentDto } from '../comment/dto/create-comment.dto';
 import { Tokens } from '../decorator/tokens.decorator';
 import { LikeDto } from '../dto/like.dto';
@@ -27,6 +30,7 @@ export class PostController {
     private readonly jwtService: JWTService,
   ) {}
 
+  @UseGuards(BasicAuthGuard)
   @Post()
   createPost(@Body() inputModel: CreatePostDto) {
     return this.postService.createPost(inputModel);
@@ -48,18 +52,21 @@ export class PostController {
     return this.postService.getPostById(id, userId);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Put(':id')
   @HttpCode(204)
   updatePost(@Param('id') id: string, @Body() inputModel: UpdatePostDto) {
     return this.postService.updatePost(id, inputModel);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   @HttpCode(204)
   deletePost(@Param('id') id: string) {
     return this.postService.deletePost(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':postId/like-status')
   @HttpCode(204)
   async updateLikeStatus(
@@ -96,6 +103,7 @@ export class PostController {
     return true;
   }
   //COMMENTS
+  @UseGuards(JwtAuthGuard)
   @Get(':postId/comments')
   async findCommentsByPostId(
     @Param('postId') postId: string,

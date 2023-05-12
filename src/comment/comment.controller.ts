@@ -8,7 +8,10 @@ import {
   ForbiddenException,
   Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../guard/auth-pasport/guard-pasport/jwt-auth.guard';
+import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { Tokens } from '../decorator/tokens.decorator';
 import { LikeDto } from '../dto/like.dto';
 import { JWTService } from '../Jwt/jwt.service';
@@ -31,15 +34,14 @@ export class CommentController {
     return this.commentService.findById(id, userId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put()
   async updateComment(
     @Param('commentId') commentId: string,
     @Body() inputModel: UpdateCommentDto,
-    @Tokens() tokens,
+    @CurrentUserId() user,
   ) {
-    const userId = await this.jwtService.getUserIdFromAccessToken(
-      tokens.accessToken,
-    );
+    const userId = user.sub;
     const commentFind: ViewCommentDto | null =
       await this.commentService.findById(commentId, userId);
     if (!commentFind) {
@@ -61,11 +63,13 @@ export class CommentController {
     return true;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete()
-  async deleteComment(@Param('commentId') commentId: string, @Tokens() tokens) {
-    const userId = await this.jwtService.getUserIdFromAccessToken(
-      tokens.accessToken,
-    );
+  async deleteComment(
+    @Param('commentId') commentId: string,
+    @CurrentUserId() user,
+  ) {
+    const userId = user.sub;
     const commentFind: ViewCommentDto | null =
       await this.commentService.findById(commentId, userId);
 
@@ -87,16 +91,15 @@ export class CommentController {
     return true;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':commentId/like-status')
   @HttpCode(204)
   async updateLikeStatus(
     @Param('commentId') commentId: string,
-    @Tokens() tokens,
     @Body() inputModel: LikeDto,
+    @CurrentUserId() user,
   ) {
-    const userId = await this.jwtService.getUserIdFromAccessToken(
-      tokens.accessToken,
-    );
+    const userId = user.sub;
 
     const commentFind: ViewCommentDto | null =
       await this.commentService.findById(commentId, userId);

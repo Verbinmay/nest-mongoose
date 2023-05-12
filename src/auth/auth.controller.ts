@@ -13,6 +13,8 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 
+import { Throttle } from '@nestjs/throttler';
+
 import { JwtAuthGuard } from '../guard/auth-pasport/guard-pasport/jwt-auth.guard';
 import { LocalAuthGuard } from '../guard/auth-pasport/guard-pasport/local-auth.guard';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -31,6 +33,7 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Throttle(5, 10)
   @UseGuards(LocalAuthGuard)
   @HttpCode(200)
   @Post('login')
@@ -39,7 +42,7 @@ export class AuthController {
     @Body() inputModel: InputLogin,
     @Ip() ip: string,
     @Headers('user-agent') title: string | null,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
   ) {
     const loginProcess: Tokens | null = await this.authService.login({
       userId: currentUserId,
@@ -57,7 +60,7 @@ export class AuthController {
       secure: true,
     });
 
-    return res.json({ accessToken: loginProcess.accessToken });
+    return { accessToken: loginProcess.accessToken };
   }
 
   @UseGuards(RefreshTokenGuard)
@@ -93,16 +96,17 @@ export class AuthController {
     return result;
   }
 
+  @Throttle(5, 10)
   @HttpCode(204)
   @Post('registration')
   async registration(@Body() inputModel: CreateUserDto) {
     const registration: boolean = await this.authService.registration(
       inputModel,
     );
-
     return registration;
   }
 
+  @Throttle(5, 10)
   @HttpCode(204)
   @Post('registration-confirmation')
   async registrationConfirmation(
@@ -123,6 +127,7 @@ export class AuthController {
     }
   }
 
+  @Throttle(5, 10)
   @HttpCode(204)
   @Post('registration-email-resending')
   async emailResending(@Body() inputModel: ResendingConfirmation) {
@@ -141,12 +146,15 @@ export class AuthController {
     return;
   }
 
+  @Throttle(5, 10)
   @HttpCode(204)
   @Post('password-recovery')
   async passwordRecovery(@Body() inputModel: ResendingConfirmation) {
     return await this.authService.resendingPassword(inputModel.email);
   }
 
+  @Throttle(5, 10)
+  @HttpCode(204)
   @Post('new-password')
   async create(@Body() inputModel: NewPassword) {
     const confirmPost: boolean = await this.authService.confirmPassword(

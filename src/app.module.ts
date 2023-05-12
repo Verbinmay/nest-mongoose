@@ -2,10 +2,6 @@ import { ConfigModule } from '@nestjs/config';
 
 ConfigModule.forRoot();
 
-import {
-  RequestCount,
-  RequestCountSchema,
-} from './request-count/entities/requestCount.entity';
 import { Module } from '@nestjs/common';
 
 import { MongooseModule } from '@nestjs/mongoose';
@@ -28,7 +24,7 @@ import { JWTService } from './Jwt/jwt.service';
 import { PostController } from './post/post.controller';
 import { PostRepository } from './post/post.repository';
 import { PostService } from './post/post.service';
-import { RequestCountRepository } from './request-count/requestCount.repository';
+
 import { SessionsController } from './session/session.controller';
 import { SessionService } from './session/session.service';
 import { SessionRepository } from './session/sessions.repository';
@@ -47,6 +43,7 @@ import { MailModule } from './mail/mail.module';
 import { AuthRepository } from './auth/auth.repository';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { BasicStrategy } from './guard/auth-pasport/strategy-pasport/basic.strategy';
 
 @Module({
   imports: [
@@ -70,12 +67,11 @@ import { APP_GUARD } from '@nestjs/core';
       { name: Post.name, schema: PostSchema },
       { name: Session.name, schema: SessionSchema },
       { name: User.name, schema: UserSchema },
-      { name: RequestCount.name, schema: RequestCountSchema },
     ]),
 
     ThrottlerModule.forRoot({
-      ttl: 6000,
-      limit: 1,
+      ttl: 60,
+      limit: 10,
     }),
   ],
   controllers: [
@@ -96,6 +92,7 @@ import { APP_GUARD } from '@nestjs/core';
     AppService,
     AuthRepository,
     AuthService,
+    BasicStrategy /*стратегия*/,
     BlogRepository,
     BlogService,
     CommentRepository,
@@ -106,7 +103,6 @@ import { APP_GUARD } from '@nestjs/core';
     LocalStrategy /*стратегия*/,
     PostRepository,
     PostService,
-    RequestCountRepository,
     SessionRepository,
     SessionService,
     UserRepository,

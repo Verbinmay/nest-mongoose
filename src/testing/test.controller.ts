@@ -1,7 +1,3 @@
-import {
-  RequestCount,
-  RequestCountsModelType as RequestCountModelType,
-} from '../request-count/entities/requestCount.entity';
 import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -22,8 +18,7 @@ export class TestController {
     private postsModel: PostsModelType,
     @InjectModel(Session.name)
     private sessionsModel: SessionModelType,
-    @InjectModel(RequestCount.name)
-    private requestCount: RequestCountModelType,
+
     @InjectModel(User.name)
     private usersModel: UserModelType,
   ) {}
@@ -35,7 +30,6 @@ export class TestController {
     await this.postsModel.deleteMany({});
     await this.usersModel.deleteMany({});
     await this.commentsModel.deleteMany({});
-    await this.requestCount.deleteMany({});
     await this.sessionsModel.deleteMany({});
     return;
   }

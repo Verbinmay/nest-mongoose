@@ -7,7 +7,9 @@ import {
   Delete,
   Query,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
+import { BasicAuthGuard } from '../guard/auth-pasport/guard-pasport/basic-auth.guard';
 import { PaginationQuery } from '../pagination/base-pagination';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
@@ -16,17 +18,19 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // @UseGuards(LocalAuthGuard)
+  @UseGuards(BasicAuthGuard)
   @Post()
   createUser(@Body() inputModel: CreateUserDto) {
     return this.userService.createUser(inputModel);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Get()
   findUsers(@Query() query: PaginationQuery) {
     return this.userService.getUsers(query);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete(':id')
   @HttpCode(204)
   deleteUser(@Param('id') id: string) {
