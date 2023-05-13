@@ -14,9 +14,9 @@ import {
 import { BasicAuthGuard } from '../guard/auth-pasport/guard-pasport/basic-auth.guard';
 import { JwtAuthGuard } from '../guard/auth-pasport/guard-pasport/jwt-auth.guard';
 import { CreateCommentDto } from '../comment/dto/create-comment.dto';
+import { LikeDto } from '../likes/dto/like.dto';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { Tokens } from '../decorator/tokens.decorator';
-import { LikeDto } from '../likes/dto/like.dto';
 import { JWTService } from '../Jwt/jwt.service';
 import { PaginationQuery } from '../pagination/base-pagination';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -75,7 +75,6 @@ export class PostController {
     @Body() inputModel: LikeDto,
     @CurrentUserId() user,
   ) {
-    console.log(user, 'CurrentUserId');
     const userId = user.sub;
     if (userId === '') throw new NotFoundException();
 

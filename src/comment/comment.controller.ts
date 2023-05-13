@@ -17,7 +17,6 @@ import { Tokens } from '../decorator/tokens.decorator';
 import { JWTService } from '../Jwt/jwt.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ViewCommentDto } from './dto/view-comment.dto';
-import { CommentDocument, CommentsModelType } from './entities/comment.entity';
 import { CommentRepository } from './comment.repository';
 import { CommentService } from './comment.service';
 
@@ -29,7 +28,7 @@ export class CommentController {
     private readonly jwtService: JWTService,
   ) {}
 
-  @Get()
+  @Get(':id')
   async findById(@Param('id') id: string, @Tokens() tokens) {
     const userId = await this.jwtService.getUserIdFromAccessToken(
       tokens.accessToken,
@@ -39,7 +38,7 @@ export class CommentController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put()
+  @Put(':commentId')
   async updateComment(
     @Param('commentId') commentId: string,
     @Body() inputModel: UpdateCommentDto,
@@ -68,7 +67,7 @@ export class CommentController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete()
+  @Delete(':commentId')
   async deleteComment(
     @Param('commentId') commentId: string,
     @CurrentUserId() user,

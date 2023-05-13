@@ -32,11 +32,12 @@ export class CommentService {
   }
 
   async updateCommentLikeStatus(a: {
-    comment: CommentDocument;
+    comment: any;
     likeStatus: 'None' | 'Like' | 'Dislike';
     userId: string;
   }) {
     const user = await this.userRepository.findUserById(a.userId);
+
     if (!user) {
       return false;
     }
