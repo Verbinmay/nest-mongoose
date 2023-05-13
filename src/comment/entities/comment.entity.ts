@@ -1,5 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
+
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { ViewCommentDto } from '../dto/view-comment.dto';
 
 @Schema()
@@ -25,6 +27,10 @@ export const likesInfoSchema = SchemaFactory.createForClass(likesInfo);
 
 @Schema()
 export class CommentatorInfo {
+  constructor(userId: string, userLogin: string) {
+    this.userId = userId;
+    this.userLogin = userLogin;
+  }
   @Prop({ required: true })
   userId: string;
   @Prop({ required: true })
@@ -36,14 +42,17 @@ export const commentatorInfoSchema =
 
 @Schema()
 export class Comment {
-  @Prop({ default: new Types.ObjectId(), type: mongoose.Schema.Types.ObjectId })
-  public _id: Types.ObjectId = new Types.ObjectId();
-
   @Prop({ required: true })
   public content: string;
 
   @Prop({ type: commentatorInfoSchema, required: true })
   public commentatorInfo: CommentatorInfo;
+
+  @Prop({ required: true })
+  public postId: string;
+
+  @Prop({ default: new Types.ObjectId(), type: mongoose.Schema.Types.ObjectId })
+  public _id: Types.ObjectId = new Types.ObjectId();
 
   @Prop({ default: new Date().toISOString() })
   public createdAt: string = new Date().toISOString();
@@ -51,10 +60,7 @@ export class Comment {
   @Prop({ default: new Date().toISOString() })
   public updatedAt: string = new Date().toISOString();
 
-  @Prop({ required: true })
-  public postId: string;
-
-  @Prop({ default: {}, type: likesInfoSchema })
+  @Prop({ required: true, type: likesInfoSchema })
   public likesInfo: likesInfo;
 
   getViewModel(userId: string): ViewCommentDto {
@@ -98,16 +104,17 @@ export class Comment {
     postId: string;
   }): Comment {
     const comment = new Comment();
+
     comment.content = a.content;
-    comment.commentatorInfo.userId = a.userId;
-    comment.commentatorInfo.userLogin = a.userLogin;
     comment.postId = a.postId;
 
+    comment.commentatorInfo = new CommentatorInfo(a.userId, a.userLogin);
+    comment.likesInfo = new likesInfo();
     return comment;
   }
 }
 
-export const CommentSchema = SchemaFactory.createForClass(CommentatorInfo);
+export const CommentSchema = SchemaFactory.createForClass(Comment);
 
 CommentSchema.methods = {
   getViewModel: Comment.prototype.getViewModel,
