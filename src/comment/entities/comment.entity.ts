@@ -2,28 +2,21 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+import { like, likeSchema } from '../../likes/entities/like.entity';
 import { ViewCommentDto } from '../dto/view-comment.dto';
 
-@Schema()
-export class like {
-  @Prop() addedAt: string;
-  @Prop() userId: string;
-  @Prop() login: string;
-}
-export const likeSchema = SchemaFactory.createForClass(like);
-
-@Schema()
-export class likesInfo {
-  @Prop({ default: [], type: [likeSchema] })
-  likesCount: Array<like>;
-  @Prop({ default: [], type: [likeSchema] })
-  dislikesCount: Array<like>;
-  @Prop({ default: 'NaN', required: true })
-  myStatus: string;
-  @Prop({ default: [], type: [likeSchema] })
-  newestLikes: Array<like>;
-}
-export const likesInfoSchema = SchemaFactory.createForClass(likesInfo);
+// @Schema()
+// export class likesInfo {
+//   @Prop({ default: [], type: [likeSchema] })
+//   likesCount: Array<like>;
+//   @Prop({ default: [], type: [likeSchema] })
+//   dislikesCount: Array<like>;
+//   @Prop({ default: 'NaN', required: true })
+//   myStatus: string;
+//   @Prop({ default: [], type: [likeSchema] })
+//   newestLikes: Array<like>;
+// }
+// export const likesInfoSchema = SchemaFactory.createForClass(likesInfo);
 
 @Schema()
 export class CommentatorInfo {
@@ -60,24 +53,19 @@ export class Comment {
   @Prop({ default: new Date().toISOString() })
   public updatedAt: string = new Date().toISOString();
 
-  @Prop({ required: true, type: likesInfoSchema })
-  public likesInfo: likesInfo;
+  @Prop({ default: [], type: [likeSchema] })
+  public likesInfo: Array<like> = [];
 
   getViewModel(userId: string): ViewCommentDto {
-    const likeArr = this.likesInfo.likesCount.filter(
-      (m) => m?.userId === userId,
-    ).length;
-    const dislikeArr = this.likesInfo.dislikesCount.filter(
-      (m) => m?.userId === userId,
-    ).length;
-
-    let status = '';
-    if (likeArr === dislikeArr) {
-      status = 'None';
-    } else if (likeArr > dislikeArr) {
-      status = 'Like';
-    } else {
-      status = 'Dislike';
+    let status: 'None' | 'Like' | 'Dislike' = 'None';
+    let likesCount = 0;
+    let dislikeCount = 0;
+    if (this.likesInfo.length !== 0) {
+      status = this.likesInfo.find((m) => m.userId === userId).status;
+      likesCount = this.likesInfo.filter((m) => m?.status === 'Like').length;
+      dislikeCount = this.likesInfo.filter(
+        (m) => m?.status === 'Dislike',
+      ).length;
     }
 
     const result: ViewCommentDto = {
@@ -89,11 +77,12 @@ export class Comment {
       },
       createdAt: this.createdAt,
       likesInfo: {
-        likesCount: this.likesInfo.likesCount.length,
-        dislikesCount: this.likesInfo.dislikesCount.length,
+        likesCount: likesCount,
+        dislikesCount: dislikeCount,
         myStatus: status,
       },
     };
+
     return result;
   }
 
@@ -109,7 +98,6 @@ export class Comment {
     comment.postId = a.postId;
 
     comment.commentatorInfo = new CommentatorInfo(a.userId, a.userLogin);
-    comment.likesInfo = new likesInfo();
     return comment;
   }
 }

@@ -1,3 +1,8 @@
+import {
+  Comment,
+  CommentDocument,
+  CommentsModelType,
+} from './entities/comment.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { UserRepository } from '../user/user.repository';
@@ -27,24 +32,40 @@ export class CommentService {
   }
 
   async updateCommentLikeStatus(a: {
-    commentId: string;
-    likeStatus: string;
+    comment: CommentDocument;
+    likeStatus: 'None' | 'Like' | 'Dislike';
     userId: string;
   }) {
     const user = await this.userRepository.findUserById(a.userId);
     if (!user) {
       return false;
     }
-    const likeInfo = {
-      addedAt: new Date().toISOString(),
-      userId: a.userId,
-      login: user.login,
-    };
 
-    return await this.commentRepository.updateCommentLikeStatus({
-      commentId: a.commentId,
-      likeStatus: a.likeStatus,
-      likeInfo: likeInfo,
-    });
+    const index = a.comment.likesInfo.findIndex((m) => m.userId === a.userId);
+
+    if (a.likeStatus === 'None' && a.comment.likesInfo.length > 0) {
+      if (index > -1) {
+        a.comment.likesInfo.splice(index, 1);
+      }
+    } else if (a.likeStatus === 'Like' || a.likeStatus === 'Dislike') {
+      if (index > -1) {
+        a.comment.likesInfo[index].status = a.likeStatus;
+        a.comment.likesInfo[index].addedAt = new Date().toISOString();
+      } else {
+        a.comment.likesInfo.push({
+          addedAt: new Date().toISOString(),
+          userId: a.userId,
+          login: user.login,
+          status: a.likeStatus,
+        });
+      }
+    }
+
+    try {
+      await this.commentRepository.save(a.comment);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }

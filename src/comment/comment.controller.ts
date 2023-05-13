@@ -11,18 +11,21 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../guard/auth-pasport/guard-pasport/jwt-auth.guard';
+import { LikeDto } from '../likes/dto/like.dto';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { Tokens } from '../decorator/tokens.decorator';
-import { LikeDto } from '../dto/like.dto';
 import { JWTService } from '../Jwt/jwt.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ViewCommentDto } from './dto/view-comment.dto';
+import { CommentDocument, CommentsModelType } from './entities/comment.entity';
+import { CommentRepository } from './comment.repository';
 import { CommentService } from './comment.service';
 
 @Controller('comments')
 export class CommentController {
   constructor(
     private readonly commentService: CommentService,
+    private readonly commentRepository: CommentRepository,
     private readonly jwtService: JWTService,
   ) {}
 
@@ -31,6 +34,7 @@ export class CommentController {
     const userId = await this.jwtService.getUserIdFromAccessToken(
       tokens.accessToken,
     );
+
     return this.commentService.findById(id, userId);
   }
 
@@ -101,20 +105,21 @@ export class CommentController {
   ) {
     const userId = user.sub;
 
-    const commentFind: ViewCommentDto | null =
-      await this.commentService.findById(commentId, userId);
+    const comment = await this.commentRepository.findById(commentId);
 
-    if (!commentFind) {
+    if (!comment) {
       throw new NotFoundException();
     }
 
-    if (commentFind.likesInfo.myStatus === inputModel.likeStatus) {
+    const commentViewModel = comment.getViewModel(userId);
+
+    if (commentViewModel.likesInfo.myStatus === inputModel.likeStatus) {
       return true;
     }
 
     const commentUpdateLikeStatus: boolean =
       await this.commentService.updateCommentLikeStatus({
-        commentId: commentId,
+        comment: comment,
         likeStatus: inputModel.likeStatus,
         userId: userId,
       });

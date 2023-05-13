@@ -33,6 +33,7 @@ export class PostService {
     userId: string;
   }) {
     const user = await this.userRepository.findUserById(a.userId);
+
     if (!user) {
       return false;
     }

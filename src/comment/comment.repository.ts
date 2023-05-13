@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import {
   Comment,
   CommentsModelType as CommentsModelType,
 } from './entities/comment.entity';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+
+import { like } from '../likes/entities/like.entity';
 
 @Injectable()
 export class CommentRepository {
@@ -11,7 +13,7 @@ export class CommentRepository {
     @InjectModel(Comment.name)
     private CommentModel: CommentsModelType,
   ) {}
-  async findById(id: string): Promise<Comment> {
+  async findById(id: string) {
     try {
       return await this.CommentModel.findById(id);
     } catch (error) {
@@ -64,79 +66,75 @@ export class CommentRepository {
     }
   }
 
-  async updateCommentLikeStatus(a: {
-    commentId: string;
-    likeStatus: string;
-    likeInfo: any;
-  }) {
-    try {
-      const result = await this.CommentModel.findById(a.commentId);
+  // async updateCommentLikeStatus(a: { commentId: string; likeInfo: like }) {
+  //   try {
+  //     const result = await this.CommentModel.findById(a.commentId);
 
-      if (!result) return false;
+  //     if (!result) return false;
 
-      let likeArr = 0;
-      let dislikeArr = 0;
+  //     let likeArr = 0;
+  //     let dislikeArr = 0;
 
-      switch (a.likeStatus) {
-        case 'None':
-          likeArr = result.likesInfo.likesCount.findIndex(
-            (b) => b.userId === a.likeInfo.userId,
-          );
+  //     switch (a.likeStatus) {
+  //       case 'None':
+  //         likeArr = result.likesInfo.likesCount.findIndex(
+  //           (b) => b.userId === a.likeInfo.userId,
+  //         );
 
-          if (likeArr > -1) {
-            result.likesInfo.likesCount.splice(likeArr, 1);
-          }
+  //         if (likeArr > -1) {
+  //           result.likesInfo.likesCount.splice(likeArr, 1);
+  //         }
 
-          dislikeArr = result.likesInfo.dislikesCount.findIndex(
-            (b) => b.userId === a.likeInfo.userId,
-          );
+  //         dislikeArr = result.likesInfo.dislikesCount.findIndex(
+  //           (b) => b.userId === a.likeInfo.userId,
+  //         );
 
-          if (dislikeArr > -1) {
-            result.likesInfo.dislikesCount.splice(dislikeArr, 1);
-          }
+  //         if (dislikeArr > -1) {
+  //           result.likesInfo.dislikesCount.splice(dislikeArr, 1);
+  //         }
 
-          break;
-        case 'Like':
-          dislikeArr = result.likesInfo.dislikesCount.findIndex(
-            (b) => b.userId === a.likeInfo.userId,
-          );
+  //         break;
+  //       case 'Like':
+  //         dislikeArr = result.likesInfo.dislikesCount.findIndex(
+  //           (b) => b.userId === a.likeInfo.userId,
+  //         );
 
-          if (dislikeArr > -1) {
-            result.likesInfo.dislikesCount.splice(dislikeArr, 1);
-          }
-          likeArr = result.likesInfo.likesCount.findIndex(
-            (b) => b.userId === a.likeInfo.userId,
-          );
+  //         if (dislikeArr > -1) {
+  //           result.likesInfo.dislikesCount.splice(dislikeArr, 1);
+  //         }
+  //         likeArr = result.likesInfo.likesCount.findIndex(
+  //           (b) => b.userId === a.likeInfo.userId,
+  //         );
 
-          if (likeArr <= -1) {
-            result.likesInfo.likesCount.push(a.likeInfo);
-          }
+  //         if (likeArr <= -1) {
+  //           result.likesInfo.likesCount.push(a.likeInfo);
+  //         }
 
-          break;
-        case 'Dislike':
-          likeArr = result.likesInfo.likesCount.findIndex(
-            (b) => b.userId === a.likeInfo.userId,
-          );
+  //         break;
+  //       case 'Dislike':
+  //         likeArr = result.likesInfo.likesCount.findIndex(
+  //           (b) => b.userId === a.likeInfo.userId,
+  //         );
 
-          if (likeArr > -1) {
-            result.likesInfo.likesCount.splice(likeArr, 1);
-          }
+  //         if (likeArr > -1) {
+  //           result.likesInfo.likesCount.splice(likeArr, 1);
+  //         }
 
-          dislikeArr = result.likesInfo.dislikesCount.findIndex(
-            (b) => b.userId === a.likeInfo.userId,
-          );
+  //         dislikeArr = result.likesInfo.dislikesCount.findIndex(
+  //           (b) => b.userId === a.likeInfo.userId,
+  //         );
 
-          if (dislikeArr <= -1) {
-            result.likesInfo.dislikesCount.push(a.likeInfo);
-          }
-          break;
-      }
+  //         if (dislikeArr <= -1) {
+  //           result.likesInfo.dislikesCount.push(a.likeInfo);
+  //         }
+  //         break;
+  //     }
 
-      result.save();
+  //     result.save();
 
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
+  //     return true;
+  //   } catch (error) {
+  //     return false;
+  //   }
+  // }
 }
