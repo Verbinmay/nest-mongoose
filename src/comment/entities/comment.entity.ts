@@ -5,19 +5,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { like, likeSchema } from '../../likes/entities/like.entity';
 import { ViewCommentDto } from '../dto/view-comment.dto';
 
-// @Schema()
-// export class likesInfo {
-//   @Prop({ default: [], type: [likeSchema] })
-//   likesCount: Array<like>;
-//   @Prop({ default: [], type: [likeSchema] })
-//   dislikesCount: Array<like>;
-//   @Prop({ default: 'NaN', required: true })
-//   myStatus: string;
-//   @Prop({ default: [], type: [likeSchema] })
-//   newestLikes: Array<like>;
-// }
-// export const likesInfoSchema = SchemaFactory.createForClass(likesInfo);
-
 @Schema()
 export class CommentatorInfo {
   constructor(userId: string, userLogin: string) {
@@ -61,8 +48,11 @@ export class Comment {
     let likesCount = 0;
     let dislikeCount = 0;
     if (this.likesInfo.length !== 0) {
-      status = this.likesInfo.find((m) => m.userId === userId).status;
+      const like = this.likesInfo.find((m) => m.userId === userId);
+      if (like) status = like.status;
+
       likesCount = this.likesInfo.filter((m) => m?.status === 'Like').length;
+
       dislikeCount = this.likesInfo.filter(
         (m) => m?.status === 'Dislike',
       ).length;

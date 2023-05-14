@@ -50,7 +50,8 @@ export class Post {
     let dislikeCount = 0;
     let newestLikes = [];
     if (this.extendedLikesInfo.length !== 0) {
-      status = this.extendedLikesInfo.find((m) => m.userId === userId).status;
+      const like = this.extendedLikesInfo.find((m) => m.userId === userId);
+      if (like) status = like.status;
 
       likesCount = this.extendedLikesInfo.filter(
         (m) => m.status === 'Like',
@@ -67,7 +68,15 @@ export class Post {
           const dateB = new Date(b.addedAt).getTime();
           return dateA - dateB;
         })
-        .slice(-3);
+        .slice(-3)
+        .map((a) => {
+          return {
+            addedAt: a.addedAt,
+            userId: a.userId,
+            login: a.login,
+          };
+        })
+        .reverse();
     }
     const result = {
       id: this._id.toString(),

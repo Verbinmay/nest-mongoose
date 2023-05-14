@@ -37,18 +37,20 @@ export class PostService {
     if (!user) {
       return false;
     }
-    const index = a.post.likesInfo.findIndex((m) => m.userId === a.userId);
+    const index = a.post.extendedLikesInfo.findIndex(
+      (m) => m.userId === a.userId,
+    );
 
-    if (a.likeStatus === 'None' && a.post.likesInfo.length > 0) {
+    if (a.likeStatus === 'None' && a.post.extendedLikesInfo.length > 0) {
       if (index > -1) {
-        a.post.likesInfo.splice(index, 1);
+        a.post.extendedLikesInfo.splice(index, 1);
       }
     } else if (a.likeStatus === 'Like' || a.likeStatus === 'Dislike') {
       if (index > -1) {
-        a.post.likesInfo[index].status = a.likeStatus;
-        a.post.likesInfo[index].addedAt = new Date().toISOString();
+        a.post.extendedLikesInfo[index].status = a.likeStatus;
+        a.post.extendedLikesInfo[index].addedAt = new Date().toISOString();
       } else {
-        a.post.likesInfo.push({
+        a.post.extendedLikesInfo.push({
           addedAt: new Date().toISOString(),
           userId: a.userId,
           login: user.login,

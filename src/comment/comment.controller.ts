@@ -110,9 +110,13 @@ export class CommentController {
       throw new NotFoundException();
     }
 
-    const commentViewModel = comment.getViewModel(userId);
+    let myStatusBefore = '';
+    const like = comment.likesInfo.find((m) => m.userId === userId);
+    if (like) {
+      myStatusBefore = like.status;
+    }
 
-    if (commentViewModel.likesInfo.myStatus === inputModel.likeStatus) {
+    if (myStatusBefore === inputModel.likeStatus) {
       return true;
     }
 

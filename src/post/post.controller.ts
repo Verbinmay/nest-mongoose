@@ -78,16 +78,20 @@ export class PostController {
     @CurrentUserId() user,
   ) {
     const userId = user.sub;
-    if (userId === '') throw new NotFoundException();
 
     const post = await this.postRepository.findPostById(postId);
 
     if (!post) {
       throw new NotFoundException();
     }
-    const postViewModel = post.getViewModel(userId);
 
-    if (postViewModel.extendedLikesInfo.myStatus === inputModel.likeStatus) {
+    let myStatusBefore = '';
+    const like = post.extendedLikesInfo.find((m) => m.userId === userId);
+    if (like) {
+      myStatusBefore = like.status;
+    }
+
+    if (myStatusBefore === inputModel.likeStatus) {
       return true;
     }
 
