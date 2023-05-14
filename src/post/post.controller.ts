@@ -22,6 +22,7 @@ import { PaginationQuery } from '../pagination/base-pagination';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { ViewPostDto } from './dto/view-post.dto';
+import { PostRepository } from './post.repository';
 import { PostService } from './post.service';
 
 @Controller('posts')
@@ -29,6 +30,7 @@ export class PostController {
   constructor(
     private readonly postService: PostService,
     private readonly jwtService: JWTService,
+    private readonly postRepository: PostRepository,
   ) {}
 
   @UseGuards(BasicAuthGuard)
@@ -78,26 +80,25 @@ export class PostController {
     const userId = user.sub;
     if (userId === '') throw new NotFoundException();
 
-    const postFind: ViewPostDto | null = await this.postService.getPostById(
-      postId,
-      userId,
-    );
+    const post = await this.postRepository.findPostById(postId);
 
-    if (!postFind) {
+    if (!post) {
       throw new NotFoundException();
     }
-    if (postFind.extendedLikesInfo.myStatus === inputModel.likeStatus) {
+    const postViewModel = post.getViewModel(userId);
+
+    if (postViewModel.extendedLikesInfo.myStatus === inputModel.likeStatus) {
       return true;
     }
 
-    const LikeStatusUpdated: boolean =
+    const postUpdateLikeStatus: boolean =
       await this.postService.updatePostLikeStatus({
-        postId: postId,
+        post: post,
         likeStatus: inputModel.likeStatus,
         userId: userId,
       });
 
-    if (!LikeStatusUpdated) {
+    if (!postUpdateLikeStatus) {
       throw new NotFoundException();
     }
     return true;

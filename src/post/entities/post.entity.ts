@@ -3,30 +3,10 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { CreatePostBlogDto } from '../../blog/dto/create-post-in-blog.dto';
+import { like, likeSchema } from '../../likes/entities/like.entity';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
 import { ViewPostDto } from '../dto/view-post.dto';
-
-@Schema()
-export class like {
-  @Prop() addedAt: string;
-  @Prop() userId: string;
-  @Prop() login: string;
-}
-export const likeSchema = SchemaFactory.createForClass(like);
-
-@Schema()
-export class extendedLikesInfo {
-  @Prop({ default: [], type: [likeSchema] })
-  likesCount: Array<like>;
-  @Prop({ default: [], type: [likeSchema] })
-  dislikesCount: Array<like>;
-  @Prop({ default: 'NaN', required: true })
-  myStatus: string;
-  @Prop({ default: [], type: [likeSchema] })
-  newestLikes: Array<like>;
-}
-export const likesInfoSchema = SchemaFactory.createForClass(extendedLikesInfo);
 
 @Schema()
 export class Post {
@@ -50,8 +30,8 @@ export class Post {
   @Prop({ default: new Date().toISOString() })
   public updatedAt: string = new Date().toISOString();
 
-  @Prop({ default: {}, type: likesInfoSchema })
-  public extendedLikesInfo: extendedLikesInfo;
+  @Prop({ default: [], type: [likeSchema] })
+  public extendedLikesInfo: Array<like> = [];
 
   updateInfo(inputModel: UpdatePostDto, blogName: string) {
     this.title = inputModel.title;
@@ -65,22 +45,30 @@ export class Post {
   }
 
   getViewModel(userId: string): ViewPostDto {
-    const likeArr = this.extendedLikesInfo.likesCount.filter(
-      (m) => m?.userId === userId,
-    ).length;
-    const dislikeArr = this.extendedLikesInfo.dislikesCount.filter(
-      (m) => m?.userId === userId,
-    ).length;
+    let status: 'None' | 'Like' | 'Dislike' = 'None';
+    let likesCount = 0;
+    let dislikeCount = 0;
+    let newestLikes = [];
+    if (this.extendedLikesInfo.length !== 0) {
+      status = this.extendedLikesInfo.find((m) => m.userId === userId).status;
 
-    let status = '';
-    if (likeArr === dislikeArr) {
-      status = 'None';
-    } else if (likeArr > dislikeArr) {
-      status = 'Like';
-    } else {
-      status = 'Dislike';
+      likesCount = this.extendedLikesInfo.filter(
+        (m) => m.status === 'Like',
+      ).length;
+
+      dislikeCount = this.extendedLikesInfo.filter(
+        (m) => m.status === 'Dislike',
+      ).length;
+
+      newestLikes = this.extendedLikesInfo
+        .filter((m) => m.status === 'Like')
+        .sort((a, b) => {
+          const dateA = new Date(a.addedAt).getTime();
+          const dateB = new Date(b.addedAt).getTime();
+          return dateA - dateB;
+        })
+        .slice(-3);
     }
-
     const result = {
       id: this._id.toString(),
       title: this.title,
@@ -90,10 +78,10 @@ export class Post {
       blogName: this.blogName,
       createdAt: this.createdAt,
       extendedLikesInfo: {
-        likesCount: this.extendedLikesInfo.likesCount.length,
-        dislikesCount: this.extendedLikesInfo.dislikesCount.length,
+        likesCount: likesCount,
+        dislikesCount: dislikeCount,
         myStatus: status,
-        newestLikes: this.extendedLikesInfo.likesCount.splice(-3).reverse(),
+        newestLikes: newestLikes,
       },
     };
     return result;

@@ -1,8 +1,3 @@
-import {
-  Comment,
-  CommentDocument,
-  CommentsModelType,
-} from './entities/comment.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { UserRepository } from '../user/user.repository';

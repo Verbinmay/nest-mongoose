@@ -28,8 +28,8 @@ export class PostService {
   ) {}
 
   async updatePostLikeStatus(a: {
-    postId: string;
-    likeStatus: string;
+    post: any;
+    likeStatus: 'None' | 'Like' | 'Dislike';
     userId: string;
   }) {
     const user = await this.userRepository.findUserById(a.userId);
@@ -37,17 +37,32 @@ export class PostService {
     if (!user) {
       return false;
     }
-    const likeInfo = {
-      addedAt: new Date().toISOString(),
-      userId: a.userId,
-      login: user.login,
-    };
+    const index = a.post.likesInfo.findIndex((m) => m.userId === a.userId);
 
-    return await this.postRepository.updatePostLikeStatus({
-      postId: a.postId,
-      likeStatus: a.likeStatus,
-      likeInfo: likeInfo,
-    });
+    if (a.likeStatus === 'None' && a.post.likesInfo.length > 0) {
+      if (index > -1) {
+        a.post.likesInfo.splice(index, 1);
+      }
+    } else if (a.likeStatus === 'Like' || a.likeStatus === 'Dislike') {
+      if (index > -1) {
+        a.post.likesInfo[index].status = a.likeStatus;
+        a.post.likesInfo[index].addedAt = new Date().toISOString();
+      } else {
+        a.post.likesInfo.push({
+          addedAt: new Date().toISOString(),
+          userId: a.userId,
+          login: user.login,
+          status: a.likeStatus,
+        });
+      }
+    }
+
+    try {
+      await this.postRepository.save(a.post);
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   async createPost(inputModel: CreatePostDto) {
