@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BasicAuthGuard } from '../guard/auth-pasport/guard-pasport/basic-auth.guard';
+import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { PaginationQuery } from '../pagination/base-pagination';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { CreatePostBlogDto } from './dto/create-post-in-blog.dto';
@@ -57,15 +58,19 @@ export class BlogController {
   createPostByBlogId(
     @Param('blogId') blogId: string,
     @Body() inputModel: CreatePostBlogDto,
+    @CurrentUserId() user,
   ) {
-    return this.blogService.createPostByBlogId(blogId, inputModel);
+    const userId = user.sub;
+    return this.blogService.createPostByBlogId(blogId, userId, inputModel);
   }
 
   @Get(':blogId/posts')
   findPostByBlogId(
     @Param('blogId') blogId: string,
     @Query() query: PaginationQuery,
+    @CurrentUserId() user,
   ) {
-    return this.blogService.findPostByBlogId(blogId, query);
+    const userId = user.sub;
+    return this.blogService.findPostByBlogId(blogId, userId, query);
   }
 }

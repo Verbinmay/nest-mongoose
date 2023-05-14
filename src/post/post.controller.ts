@@ -118,6 +118,14 @@ export class PostController {
     const userId = await this.jwtService.getUserIdFromAccessToken(
       tokens.accessToken,
     );
+    const post: ViewPostDto | null = await this.postService.getPostById(
+      postId,
+      userId,
+    );
+
+    if (!post) {
+      throw new NotFoundException();
+    }
     return this.postService.getCommentsByPostId(postId, query, userId);
   }
 

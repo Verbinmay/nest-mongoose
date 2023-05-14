@@ -77,19 +77,26 @@ export class BlogService {
   }
 
   //Create ang get post throw blog
-  async createPostByBlogId(blogId: string, inputModel: CreatePostBlogDto) {
+  async createPostByBlogId(
+    blogId: string,
+    userId: string,
+    inputModel: CreatePostBlogDto,
+  ) {
     const blog: Blog | null = await this.blogRepository.findBlogById(blogId);
     if (!blog) {
       throw new NotFoundException();
     }
     const post: Post = Post.createPost(blog.name, inputModel, blogId);
     const result = await this.postRepository.save(post);
-    //user
-    const userId = '';
+
     return result.getViewModel(userId);
   }
 
-  async findPostByBlogId(blogId: string, query: PaginationQuery) {
+  async findPostByBlogId(
+    blogId: string,
+    userId: string,
+    query: PaginationQuery,
+  ) {
     const blog: Blog | null = await this.blogRepository.findBlogById(blogId);
     if (!blog) {
       throw new NotFoundException();
@@ -109,8 +116,6 @@ export class BlogService {
       skip: query.skip(),
       limit: query.pageSize,
     });
-    //User
-    const userId = '';
 
     const posts: ViewPostDto[] = postsFromDB.map((m) => m.getViewModel(userId));
 
