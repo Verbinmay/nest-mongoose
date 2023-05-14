@@ -17,7 +17,7 @@ import { CreateCommentDto } from '../comment/dto/create-comment.dto';
 import { LikeDto } from '../likes/dto/like.dto';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { Tokens } from '../decorator/tokens.decorator';
-import { JWTService } from '../Jwt/jwt.service';
+import { JWTService } from '../jwt/jwt.service';
 import { PaginationQuery } from '../pagination/base-pagination';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';

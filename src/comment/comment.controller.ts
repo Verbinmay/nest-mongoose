@@ -14,7 +14,7 @@ import { JwtAuthGuard } from '../guard/auth-pasport/guard-pasport/jwt-auth.guard
 import { LikeDto } from '../likes/dto/like.dto';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { Tokens } from '../decorator/tokens.decorator';
-import { JWTService } from '../Jwt/jwt.service';
+import { JWTService } from '../jwt/jwt.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ViewCommentDto } from './dto/view-comment.dto';
 import { CommentRepository } from './comment.repository';

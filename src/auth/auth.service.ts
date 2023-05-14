@@ -6,7 +6,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/entities/user.entity';
-import { JWTService } from '../Jwt/jwt.service';
+import { JWTService } from '../jwt/jwt.service';
 import { MailService } from '../mail/mail.service';
 import { SessionService } from '../session/session.service';
 import { UserRepository } from '../user/user.repository';

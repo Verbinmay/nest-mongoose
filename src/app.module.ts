@@ -20,7 +20,7 @@ import { BlogService } from './blog/blog.service';
 import { CommentController } from './comment/comment.controller';
 import { CommentRepository } from './comment/comment.repository';
 import { CommentService } from './comment/comment.service';
-import { JWTService } from './Jwt/jwt.service';
+import { JWTService } from './jwt/jwt.service';
 import { PostController } from './post/post.controller';
 import { PostRepository } from './post/post.repository';
 import { PostService } from './post/post.service';
