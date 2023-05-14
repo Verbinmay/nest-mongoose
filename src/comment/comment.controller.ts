@@ -38,6 +38,7 @@ export class CommentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
   @Put(':commentId')
   async updateComment(
     @Param('commentId') commentId: string,
@@ -67,6 +68,7 @@ export class CommentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @HttpCode(204)
   @Delete(':commentId')
   async deleteComment(
     @Param('commentId') commentId: string,
@@ -95,8 +97,8 @@ export class CommentController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(':commentId/like-status')
   @HttpCode(204)
+  @Put(':commentId/like-status')
   async updateLikeStatus(
     @Param('commentId') commentId: string,
     @Body() inputModel: LikeDto,
@@ -127,7 +129,7 @@ export class CommentController {
         userId: userId,
       });
 
-    if (commentUpdateLikeStatus) {
+    if (!commentUpdateLikeStatus) {
       throw new NotFoundException();
     }
     return true;
