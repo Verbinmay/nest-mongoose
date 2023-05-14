@@ -45,7 +45,7 @@ export class CommentController {
     @Body() inputModel: UpdateCommentDto,
     @CurrentUserId() user,
   ) {
-    const userId = user.sub;
+    const userId = user.sub ?? user;
     const commentFind: ViewCommentDto | null =
       await this.commentService.findById(commentId, userId);
     if (!commentFind) {
@@ -74,7 +74,7 @@ export class CommentController {
     @Param('commentId') commentId: string,
     @CurrentUserId() user,
   ) {
-    const userId = user.sub;
+    const userId = user.sub ?? user;
     const commentFind: ViewCommentDto | null =
       await this.commentService.findById(commentId, userId);
 
@@ -104,7 +104,7 @@ export class CommentController {
     @Body() inputModel: LikeDto,
     @CurrentUserId() user,
   ) {
-    const userId = user.sub;
+    const userId = user.sub ?? user;
 
     const comment = await this.commentRepository.findById(commentId);
 

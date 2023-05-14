@@ -77,7 +77,7 @@ export class PostController {
     @Body() inputModel: LikeDto,
     @CurrentUserId() user,
   ) {
-    const userId = user.sub;
+    const userId = user.sub ?? user;
 
     const post = await this.postRepository.findPostById(postId);
 
@@ -136,7 +136,7 @@ export class PostController {
     @Body() inputModel: CreateCommentDto,
     @CurrentUserId() user,
   ) {
-    const userId = user.sub;
+    const userId = user.sub ?? user;
     const post: ViewPostDto | null = await this.postService.getPostById(
       postId,
       userId,
