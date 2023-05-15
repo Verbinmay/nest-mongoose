@@ -60,7 +60,7 @@ export class BlogController {
     @Body() inputModel: CreatePostBlogDto,
     @CurrentUserId() user,
   ) {
-    const userId = user.sub ?? user;
+    const userId = user ? user.sub : '';
 
     return this.blogService.createPostByBlogId(blogId, userId, inputModel);
   }
@@ -71,7 +71,8 @@ export class BlogController {
     @Query() query: PaginationQuery,
     @CurrentUserId() user,
   ) {
-    const userId = user.sub ?? user;
+    const userId = user ? user.sub : '';
+
     return this.blogService.findPostByBlogId(blogId, userId, query);
   }
 }

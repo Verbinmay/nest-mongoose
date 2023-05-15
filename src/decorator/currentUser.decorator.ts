@@ -1,19 +1,24 @@
+import jwtDecode from 'jwt-decode';
+
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 
 export const CurrentUserId = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
+  async (data: unknown, context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest();
-    if (typeof request.user === 'boolean') {
+
+    if (
+      typeof request.user === 'boolean' ||
+      !request.user ||
+      request.user == undefined
+    ) {
       const accessToken = request.headers.authorization;
       if (!accessToken) {
-        request.user = '';
-        return true;
+        request.user = null;
+        return request.user;
       } else {
-        const jwt = new JwtService();
-        const verify = jwt.decode(accessToken);
-        request.user = verify;
-        return true;
+        const payload = await jwtDecode(accessToken);
+        request.user = payload;
+        return request.user;
       }
     } else {
       return request.user;
