@@ -61,6 +61,7 @@ export class BlogController {
     @CurrentUserId() user,
   ) {
     const userId = user.sub ?? user;
+
     return this.blogService.createPostByBlogId(blogId, userId, inputModel);
   }
 
