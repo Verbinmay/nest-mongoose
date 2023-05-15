@@ -13,19 +13,19 @@ import { RefreshTokenGuard } from '../guard/refresh-token.guard';
 import { Session } from './entities/session.entity';
 import { SessionService } from './session.service';
 
-@Controller('devices')
+@Controller('security')
 export class SessionsController {
   constructor(private readonly sessionsService: SessionService) {}
 
   @UseGuards(RefreshTokenGuard)
-  @Get()
+  @Get('devices')
   findAll(@CurrentUserId() payload) {
     return this.sessionsService.findAll(payload.sub);
   }
 
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
-  @Delete()
+  @Delete('devices')
   deleteAll(@CurrentUserId() payload) {
     return this.sessionsService.deleteAll({
       userId: payload.sub,
@@ -35,7 +35,7 @@ export class SessionsController {
 
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
-  @Delete(':deviceId')
+  @Delete('devices/:deviceId')
   async deleteOne(
     @Param('deviceId') deviceId: string,
     @CurrentUserId() payload,
