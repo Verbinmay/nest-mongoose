@@ -13,14 +13,16 @@ import {
 import { CommandBus } from '@nestjs/cqrs';
 
 import { BasicAuthGuard } from '../guard/auth-passport/guard-passport/basic-auth.guard';
+import { CreateBlogCommand } from './application/use-cases/create-blog-case';
+import { GetAllBlogsCommand } from './application/use-cases/get-all-blogs-case';
 import { GetBlogByBlogIdCommand } from './application/use-cases/get-blog-by-blog-id-case';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { makeAnswerInController } from '../helpers/errors';
 import { PaginationQuery } from '../pagination/base-pagination';
+import { BlogService } from './application/blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { CreatePostBlogDto } from './dto/create-post-in-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
-import { BlogService } from './blog.service';
 
 @Controller('blogs')
 export class BlogController {
@@ -36,17 +38,17 @@ export class BlogController {
     );
     return makeAnswerInController(result);
   }
-
   @Get()
-  getBlogs(@Query() query: PaginationQuery) {
-    return this.blogService.getBlogs(query);
+  getAllBlogs(@Query() query: PaginationQuery) {
+    return this.commandBus.execute(new GetAllBlogsCommand(query));
   }
 
   @UseGuards(BasicAuthGuard)
   @Post()
   createBlog(@Body() inputModel: CreateBlogDto) {
-    return this.blogService.createBlog(inputModel);
+    return this.commandBus.execute(new CreateBlogCommand(inputModel));
   }
+  /**------------------------------------- */
 
   @UseGuards(BasicAuthGuard)
   @Put(':id')

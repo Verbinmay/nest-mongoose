@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 
-import { ViewPostDto } from '../post/dto/view-post.dto';
-import { Post } from '../post/entities/post.entity';
-import { PaginationQuery } from '../pagination/base-pagination';
-import { PaginatorBlog, PaginatorPost } from '../pagination/paginatorType';
-import { PostRepository } from '../post/post.repository';
-import { CreateBlogDto } from './dto/create-blog.dto';
-import { CreatePostBlogDto } from './dto/create-post-in-blog.dto';
-import { UpdateBlogDto } from './dto/update-blog.dto';
-import { ViewBlogDto } from './dto/view-blog.dto';
-import { Blog } from './entities/blog.entity';
-import { BlogRepository } from './blog.repository';
+import { ViewPostDto } from '../../post/dto/view-post.dto';
+import { Post } from '../../post/entities/post.entity';
+import { PaginationQuery } from '../../pagination/base-pagination';
+import { PaginatorBlog, PaginatorPost } from '../../pagination/paginatorType';
+import { PostRepository } from '../../post/post.repository';
+import { CreateBlogDto } from '../dto/create-blog.dto';
+import { CreatePostBlogDto } from '../dto/create-post-in-blog.dto';
+import { UpdateBlogDto } from '../dto/update-blog.dto';
+import { ViewBlogDto } from '../dto/view-blog.dto';
+import { Blog } from '../entities/blog.entity';
+import { BlogRepository } from '../blog.repository';
 
 @Injectable()
 export class BlogService {
@@ -20,40 +20,6 @@ export class BlogService {
     private readonly postRepository: PostRepository,
   ) {}
 
-  async getBlogs(query: PaginationQuery) {
-    const filterName: { name: { $regex: string } } = query.createFilterName();
-
-    const filterSort: { [x: string]: number } = query.sortFilter();
-
-    const totalCount = await this.blogRepository.findCountBlogs(filterName);
-
-    const pagesCount = query.countPages(totalCount);
-
-    const blogsFromDB: Blog[] = await this.blogRepository.findBlogs({
-      find: filterName,
-      sort: filterSort,
-      skip: query.skip(),
-      limit: query.pageSize,
-    });
-
-    const blogs: ViewBlogDto[] = blogsFromDB.map((m) => m.getViewModel());
-
-    const result: PaginatorBlog = {
-      pagesCount: pagesCount,
-      page: query.pageNumber,
-      pageSize: query.pageSize,
-      totalCount: totalCount,
-      items: blogs,
-    };
-
-    return result;
-  }
-  async createBlog(inputModel: CreateBlogDto) {
-    const blog: Blog = new Blog(inputModel);
-    // const blog: Blog = Blog.createBlog(inputModel);
-    const result = await this.blogRepository.save(blog);
-    return result.getViewModel();
-  }
   async updateBlog(id: string, inputModel: UpdateBlogDto) {
     const blog: Blog | null = await this.blogRepository.findBlogById(id);
     if (!blog) {
