@@ -1,6 +1,6 @@
 {
 "version": 2,
-"name": "lich14",
+"name": "lich15",
 "builds": [
   {
     "src": "src/main.ts",

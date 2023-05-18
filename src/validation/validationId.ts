@@ -4,18 +4,19 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
+import { CommandBus } from '@nestjs/cqrs';
 
-import { BlogService } from '../blog/blog.service';
+import { GetBlogByBlogIdCommand } from '../blog/application/use-cases/get-blog-by-blog-id-case';
 
 @ValidatorConstraint({ name: 'ValidationBlogId', async: true })
 @Injectable()
 export class ValidationBlogId implements ValidatorConstraintInterface {
-  constructor(protected readonly blogService: BlogService) {}
+  constructor(private commandBus: CommandBus) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async validate(text: string, args: ValidationArguments) {
+  async validate(id: string, args: ValidationArguments) {
     try {
-      await this.blogService.getBlogById(text);
+      await this.commandBus.execute(new GetBlogByBlogIdCommand(id));
       return true;
     } catch (error) {
       return false;

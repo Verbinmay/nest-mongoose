@@ -11,8 +11,8 @@ import {
   NotFoundException,
   UseGuards,
 } from '@nestjs/common';
-import { BasicAuthGuard } from '../guard/auth-pasport/guard-pasport/basic-auth.guard';
-import { JwtAuthGuard } from '../guard/auth-pasport/guard-pasport/jwt-auth.guard';
+import { BasicAuthGuard } from '../guard/auth-passport/guard-passport/basic-auth.guard';
+import { JwtAuthGuard } from '../guard/auth-passport/guard-passport/jwt-auth.guard';
 import { CreateCommentDto } from '../comment/dto/create-comment.dto';
 import { LikeDto } from '../likes/dto/like.dto';
 import { CurrentUserId } from '../decorator/currentUser.decorator';

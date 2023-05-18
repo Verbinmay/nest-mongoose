@@ -1,0 +1,22 @@
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
+import { BlogRepository } from '../../blog.repository';
+
+export class GetBlogByBlogIdCommand {
+  constructor(public id: string) {}
+}
+
+@CommandHandler(GetBlogByBlogIdCommand)
+export class GetBlogByBlogIdCase
+  implements ICommandHandler<GetBlogByBlogIdCommand>
+{
+  constructor(private readonly blogRepository: BlogRepository) {}
+
+  async execute(command: GetBlogByBlogIdCommand) {
+    const blog = await this.blogRepository.findBlogById(command.id);
+    if (!blog) {
+      return 'Error 404';
+    }
+    return blog.getViewModel();
+  }
+}

@@ -10,8 +10,12 @@ import {
   Body,
   UseGuards,
 } from '@nestjs/common';
-import { BasicAuthGuard } from '../guard/auth-pasport/guard-pasport/basic-auth.guard';
+import { CommandBus } from '@nestjs/cqrs';
+
+import { BasicAuthGuard } from '../guard/auth-passport/guard-passport/basic-auth.guard';
+import { GetBlogByBlogIdCommand } from './application/use-cases/get-blog-by-blog-id-case';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
+import { makeAnswerInController } from '../helpers/errors';
 import { PaginationQuery } from '../pagination/base-pagination';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { CreatePostBlogDto } from './dto/create-post-in-blog.dto';
@@ -20,11 +24,17 @@ import { BlogService } from './blog.service';
 
 @Controller('blogs')
 export class BlogController {
-  constructor(private readonly blogService: BlogService) {}
+  constructor(
+    private readonly blogService: BlogService,
+    private commandBus: CommandBus,
+  ) {}
 
   @Get(':id')
-  getBlog(@Param('id') id: string) {
-    return this.blogService.getBlogById(id);
+  async getBlogByBlogId(@Param('id') id: string) {
+    const result = await this.commandBus.execute(
+      new GetBlogByBlogIdCommand(id),
+    );
+    return makeAnswerInController(result);
   }
 
   @Get()

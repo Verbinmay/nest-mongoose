@@ -10,7 +10,7 @@ import {
   HttpCode,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../guard/auth-pasport/guard-pasport/jwt-auth.guard';
+import { JwtAuthGuard } from '../guard/auth-passport/guard-passport/jwt-auth.guard';
 import { LikeDto } from '../likes/dto/like.dto';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { Tokens } from '../decorator/tokens.decorator';

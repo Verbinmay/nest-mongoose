@@ -37,20 +37,31 @@ import { ValidationLoginEmail } from './validation/validationLoginEmail';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './guard/auth-pasport/strategy-pasport/local.strategy';
-import { JwtStrategy } from './guard/auth-pasport/strategy-pasport/jwt.strategy';
+import { LocalStrategy } from './guard/auth-passport/strategy-passport/local.strategy';
+import { JwtStrategy } from './guard/auth-passport/strategy-passport/jwt.strategy';
 import { MailModule } from './mail/mail.module';
 import { AuthRepository } from './auth/auth.repository';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { BasicStrategy } from './guard/auth-pasport/strategy-pasport/basic.strategy';
+import { BasicStrategy } from './guard/auth-passport/strategy-passport/basic.strategy';
+import { GetBlogByBlogIdCase } from './blog/application/use-cases/get-blog-by-blog-id-case';
+import { CqrsModule } from '@nestjs/cqrs';
+
+const validations = [ValidationBlogId, ValidationLoginEmail];
+const useCases = [GetBlogByBlogIdCase];
+const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
 
 @Module({
   imports: [
+    /* для использования одноименной функции в nest, command bus */
+    CqrsModule,
+
     /* и еще в провайдерах регистрировать каждую стратегию */
     PassportModule,
+
     /*почта */
     MailModule,
+
     /* главное, чтобы подтягивались env нужно вызвать сверху  */
     ConfigModule.forRoot({
       // no need to import into other modules
@@ -93,22 +104,20 @@ import { BasicStrategy } from './guard/auth-pasport/strategy-pasport/basic.strat
     AppService,
     AuthRepository,
     AuthService,
-    BasicStrategy /*стратегия*/,
     BlogRepository,
     BlogService,
     CommentRepository,
     CommentService,
     JWTService,
-    JwtStrategy /*стратегия*/,
-    LocalStrategy /*стратегия*/,
     PostRepository,
     PostService,
     SessionRepository,
     SessionService,
     UserRepository,
     UserService,
-    ValidationBlogId,
-    ValidationLoginEmail,
+    ...validations /*валидаторы */,
+    ...useCases /* кейсы */,
+    ...strategies /* стратегия */,
   ],
 })
 export class AppModule {}

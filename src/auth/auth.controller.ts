@@ -15,8 +15,8 @@ import { Response } from 'express';
 
 import { Throttle } from '@nestjs/throttler';
 
-import { JwtAuthGuard } from '../guard/auth-pasport/guard-pasport/jwt-auth.guard';
-import { LocalAuthGuard } from '../guard/auth-pasport/guard-pasport/local-auth.guard';
+import { JwtAuthGuard } from '../guard/auth-passport/guard-passport/jwt-auth.guard';
+import { LocalAuthGuard } from '../guard/auth-passport/guard-passport/local-auth.guard';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { RefreshTokenGuard } from '../guard/refresh-token.guard';

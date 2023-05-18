@@ -19,13 +19,7 @@ export class BlogService {
     private readonly blogRepository: BlogRepository,
     private readonly postRepository: PostRepository,
   ) {}
-  async getBlogById(id: string) {
-    const blog = await this.blogRepository.findBlogById(id);
-    if (!blog) {
-      throw new NotFoundException();
-    }
-    return blog.getViewModel();
-  }
+
   async getBlogs(query: PaginationQuery) {
     const filterName: { name: { $regex: string } } = query.createFilterName();
 

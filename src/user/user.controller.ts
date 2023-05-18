@@ -9,7 +9,7 @@ import {
   HttpCode,
   UseGuards,
 } from '@nestjs/common';
-import { BasicAuthGuard } from '../guard/auth-pasport/guard-pasport/basic-auth.guard';
+import { BasicAuthGuard } from '../guard/auth-passport/guard-passport/basic-auth.guard';
 import { PaginationQuery } from '../pagination/base-pagination';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';

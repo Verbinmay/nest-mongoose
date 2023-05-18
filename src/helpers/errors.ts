@@ -1,3 +1,10 @@
+import {
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+
 export class ErrorResult {
   errorsMessages: Array<FieldError>;
 }
@@ -27,4 +34,27 @@ export function errorMaker(
   }
 
   return { errorsMessages: arrayErrors };
+}
+
+export function makeAnswerInController(response: any) {
+  if (typeof response !== 'string') return response;
+  if (!response.includes('Error')) return response;
+  const numberOfError = response.substring(6);
+
+  switch (numberOfError) {
+    case '400':
+      throw new BadRequestException();
+      break;
+    case '401':
+      throw new UnauthorizedException();
+      break;
+    case '403':
+      throw new ForbiddenException();
+      break;
+    case '404':
+      throw new NotFoundException();
+      break;
+    default:
+      return numberOfError;
+  }
 }

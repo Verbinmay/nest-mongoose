@@ -6,8 +6,6 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-import { ErrorResult } from '../helpers/errors';
-
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
@@ -28,7 +26,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       };
       expResponse.message.forEach((m) => errorResponse.errorsMessages.push(m));
       //помогает смотреть ошибки через тесты
-      console.log(errorResponse, 'filter');
+      console.log(errorResponse, 'filter-errors-400');
 
       response.status(status).json(errorResponse);
     } else {
