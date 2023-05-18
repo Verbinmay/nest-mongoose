@@ -39,7 +39,7 @@ export function errorMaker(
 export function makeAnswerInController(response: any) {
   if (typeof response !== 'string') return response;
   if (!response.includes('Error')) return response;
-  const numberOfError = response.substring(6);
+  const numberOfError = response.trim().substring(5).trim();
 
   switch (numberOfError) {
     case '400':

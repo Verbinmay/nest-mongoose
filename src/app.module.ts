@@ -51,6 +51,14 @@ import { UpdateBlogCase } from './blog/application/use-cases/update-blog-case';
 import { DeleteBlogCase } from './blog/application/use-cases/delete-blog-case';
 import { CreatePostByBlogIdCase } from './post/application/use-cases/create-post-by-blog-id-case';
 import { GetAllPostsByBlogIdCase } from './post/application/use-cases/get-post-by-blog-id-case';
+import { CreatePostCase } from './post/application/use-cases/create-post-case';
+import { GetAllPostsCase } from './post/application/use-cases/get-all-posts-case';
+import { GetPostByIdCase } from './post/application/use-cases/get-post-by-id-case';
+import { UpdatePostCase } from './post/application/use-cases/update-post-case';
+import { DeletePostCase } from './post/application/use-cases/delete-post-case';
+import { LikePostCase } from './post/application/use-cases/like-post-case';
+import { GetAllCommentsByBlogIdCase } from './comment/application/use-cases/get-all-comments-by-post-id-case';
+import { CreateCommentByBlogIdCase } from './comment/application/use-cases/create-comment-by-post-id-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
@@ -62,7 +70,18 @@ const useCasesBlog = [
   DeleteBlogCase,
 ];
 
-const useCasesPost = [CreatePostByBlogIdCase, GetAllPostsByBlogIdCase];
+const useCasesPost = [
+  CreatePostByBlogIdCase,
+  GetAllPostsByBlogIdCase,
+  CreatePostCase,
+  GetAllPostsCase,
+  GetPostByIdCase,
+  UpdatePostCase,
+  DeletePostCase,
+  LikePostCase,
+];
+
+const useCasesComment = [GetAllCommentsByBlogIdCase, CreateCommentByBlogIdCase];
 
 const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
 
@@ -132,6 +151,7 @@ const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
     ...validations /*валидаторы */,
     ...useCasesBlog /* кейсы */,
     ...useCasesPost /* кейсы */,
+    ...useCasesComment /* кейсы */,
     ...strategies /* стратегия */,
   ],
 })
