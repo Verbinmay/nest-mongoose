@@ -16,7 +16,6 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { BlogController } from './blog/blog.controller';
 import { BlogRepository } from './blog/blog.repository';
-import { BlogService } from './blog/blog.service';
 import { CommentController } from './comment/comment.controller';
 import { CommentRepository } from './comment/comment.repository';
 import { CommentService } from './comment/comment.service';
@@ -46,9 +45,25 @@ import { APP_GUARD } from '@nestjs/core';
 import { BasicStrategy } from './guard/auth-passport/strategy-passport/basic.strategy';
 import { GetBlogByBlogIdCase } from './blog/application/use-cases/get-blog-by-blog-id-case';
 import { CqrsModule } from '@nestjs/cqrs';
+import { GetAllBlogsCase } from './blog/application/use-cases/get-all-blogs-case';
+import { CreateBlogCase } from './blog/application/use-cases/create-blog-case';
+import { UpdateBlogCase } from './blog/application/use-cases/update-blog-case';
+import { DeleteBlogCase } from './blog/application/use-cases/delete-blog-case';
+import { CreatePostByBlogIdCase } from './post/application/use-cases/create-post-by-blog-id-case';
+import { GetAllPostsByBlogIdCase } from './post/application/use-cases/get-post-by-blog-id-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
-const useCases = [GetBlogByBlogIdCase];
+
+const useCasesBlog = [
+  GetBlogByBlogIdCase,
+  GetAllBlogsCase,
+  CreateBlogCase,
+  UpdateBlogCase,
+  DeleteBlogCase,
+];
+
+const useCasesPost = [CreatePostByBlogIdCase, GetAllPostsByBlogIdCase];
+
 const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
 
 @Module({
@@ -105,7 +120,6 @@ const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
     AuthRepository,
     AuthService,
     BlogRepository,
-    BlogService,
     CommentRepository,
     CommentService,
     JWTService,
@@ -116,7 +130,8 @@ const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
     UserRepository,
     UserService,
     ...validations /*валидаторы */,
-    ...useCases /* кейсы */,
+    ...useCasesBlog /* кейсы */,
+    ...useCasesPost /* кейсы */,
     ...strategies /* стратегия */,
   ],
 })

@@ -13,21 +13,23 @@ import {
 import { CommandBus } from '@nestjs/cqrs';
 
 import { BasicAuthGuard } from '../guard/auth-passport/guard-passport/basic-auth.guard';
+import { CreateBlogCommand } from './application/use-cases/create-blog-case';
+import { CreatePostByBlogIdCommand } from '../post/application/use-cases/create-post-by-blog-id-case';
+import { DeleteBlogCommand } from './application/use-cases/delete-blog-case';
+import { GetAllBlogsCommand } from './application/use-cases/get-all-blogs-case';
 import { GetBlogByBlogIdCommand } from './application/use-cases/get-blog-by-blog-id-case';
+import { GetAllPostsByBlogIdCommand } from '../post/application/use-cases/get-post-by-blog-id-case';
+import { UpdateBlogCommand } from './application/use-cases/update-blog-case';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { makeAnswerInController } from '../helpers/errors';
 import { PaginationQuery } from '../pagination/base-pagination';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { CreatePostBlogDto } from './dto/create-post-in-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
-import { BlogService } from './blog.service';
 
 @Controller('blogs')
 export class BlogController {
-  constructor(
-    private readonly blogService: BlogService,
-    private commandBus: CommandBus,
-  ) {}
+  constructor(private commandBus: CommandBus) {}
 
   @Get(':id')
   async getBlogByBlogId(@Param('id') id: string) {
@@ -36,53 +38,66 @@ export class BlogController {
     );
     return makeAnswerInController(result);
   }
-
   @Get()
-  getBlogs(@Query() query: PaginationQuery) {
-    return this.blogService.getBlogs(query);
+  async getAllBlogs(@Query() query: PaginationQuery) {
+    const result = await this.commandBus.execute(new GetAllBlogsCommand(query));
+    return makeAnswerInController(result);
   }
 
   @UseGuards(BasicAuthGuard)
   @Post()
-  createBlog(@Body() inputModel: CreateBlogDto) {
-    return this.blogService.createBlog(inputModel);
+  async createBlog(@Body() inputModel: CreateBlogDto) {
+    const result = await this.commandBus.execute(
+      new CreateBlogCommand(inputModel),
+    );
+    return makeAnswerInController(result);
   }
 
   @UseGuards(BasicAuthGuard)
   @Put(':id')
   @HttpCode(204)
-  updateBlog(@Param('id') id: string, @Body() inputModel: UpdateBlogDto) {
-    return this.blogService.updateBlog(id, inputModel);
+  async updateBlog(@Param('id') id: string, @Body() inputModel: UpdateBlogDto) {
+    const result = await this.commandBus.execute(
+      new UpdateBlogCommand(inputModel, id),
+    );
+    return makeAnswerInController(result);
   }
 
   @UseGuards(BasicAuthGuard)
   @Delete(':id')
   @HttpCode(204)
-  deleteBlog(@Param('id') id: string) {
-    return this.blogService.deleteBlog(id);
+  async deleteBlog(@Param('id') id: string) {
+    const result = await this.commandBus.execute(new DeleteBlogCommand(id));
+    return makeAnswerInController(result);
   }
 
   //Create ang get post throw blog
   @UseGuards(BasicAuthGuard)
   @Post(':blogId/posts')
-  createPostByBlogId(
+  async createPostByBlogId(
     @Param('blogId') blogId: string,
     @Body() inputModel: CreatePostBlogDto,
     @CurrentUserId() user,
   ) {
     const userId = user ? user.sub : '';
 
-    return this.blogService.createPostByBlogId(blogId, userId, inputModel);
+    const result = await this.commandBus.execute(
+      new CreatePostByBlogIdCommand(blogId, userId, inputModel),
+    );
+    return makeAnswerInController(result);
   }
 
   @Get(':blogId/posts')
-  findPostByBlogId(
+  async getPostByBlogId(
     @Param('blogId') blogId: string,
     @Query() query: PaginationQuery,
     @CurrentUserId() user,
   ) {
     const userId = user ? user.sub : '';
 
-    return this.blogService.findPostByBlogId(blogId, userId, query);
+    const result = await this.commandBus.execute(
+      new GetAllPostsByBlogIdCommand(blogId, userId, query),
+    );
+    return makeAnswerInController(result);
   }
 }
