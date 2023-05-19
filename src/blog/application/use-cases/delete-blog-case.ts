@@ -1,7 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { UpdateBlogDto } from '../../dto/update-blog.dto';
-import { Blog } from '../../entities/blog.entity';
 import { BlogRepository } from '../../blog.repository';
 
 export class DeleteBlogCommand {

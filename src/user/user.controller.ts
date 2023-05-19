@@ -13,27 +13,41 @@ import { BasicAuthGuard } from '../guard/auth-passport/guard-passport/basic-auth
 import { PaginationQuery } from '../pagination/base-pagination';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
+import { CommandBus } from '@nestjs/cqrs';
+import { makeAnswerInController } from '../helpers/errors';
+import { CreateUserCommand } from './application/use-cases/create-user-case';
+import { GetAllUsersCommand } from './application/use-cases/get-all-users-case';
+import { DeleteUserCommand } from './application/use-cases/delete-user-case';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
-
+  constructor(
+    private readonly userService: UserService,
+    private commandBus: CommandBus,
+  ) {}
   @UseGuards(BasicAuthGuard)
   @Post()
-  createUser(@Body() inputModel: CreateUserDto) {
-    return this.userService.createUser(inputModel);
+  async createUser(@Body() inputModel: CreateUserDto) {
+    const result = await this.commandBus.execute(
+      new CreateUserCommand(inputModel),
+    );
+    return makeAnswerInController(result);
   }
 
   @UseGuards(BasicAuthGuard)
   @Get()
-  findUsers(@Query() query: PaginationQuery) {
-    return this.userService.getUsers(query);
+  async findUsers(@Query() query: PaginationQuery) {
+    const result = await this.commandBus.execute(new GetAllUsersCommand(query));
+    return makeAnswerInController(result);
   }
 
   @UseGuards(BasicAuthGuard)
   @Delete(':id')
   @HttpCode(204)
-  deleteUser(@Param('id') id: string) {
-    return this.userService.deleteUser(id);
+  async deleteUser(@Param('id') id: string) {
+    const result: boolean | string = await this.commandBus.execute(
+      new DeleteUserCommand(id),
+    );
+    return makeAnswerInController(result);
   }
 }

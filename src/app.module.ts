@@ -6,7 +6,6 @@ import { Module } from '@nestjs/common';
 
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
-
 import { Blog, BlogSchema } from './blog/entities/blog.entity';
 import { Comment, CommentSchema } from './comment/entities/comment.entity';
 import { Post, PostSchema } from './post/entities/post.entity';
@@ -18,11 +17,9 @@ import { BlogController } from './blog/blog.controller';
 import { BlogRepository } from './blog/blog.repository';
 import { CommentController } from './comment/comment.controller';
 import { CommentRepository } from './comment/comment.repository';
-import { CommentService } from './comment/comment.service';
 import { JWTService } from './jwt/jwt.service';
 import { PostController } from './post/post.controller';
 import { PostRepository } from './post/post.repository';
-import { PostService } from './post/post.service';
 
 import { SessionsController } from './session/session.controller';
 import { SessionService } from './session/session.service';
@@ -59,29 +56,54 @@ import { DeletePostCase } from './post/application/use-cases/delete-post-case';
 import { LikePostCase } from './post/application/use-cases/like-post-case';
 import { GetAllCommentsByBlogIdCase } from './comment/application/use-cases/get-all-comments-by-post-id-case';
 import { CreateCommentByBlogIdCase } from './comment/application/use-cases/create-comment-by-post-id-case';
+import { DeleteCommentCase } from './comment/application/use-cases/delete-comment-case';
+import { GetCommentByCommentIdCase } from './comment/application/use-cases/get-comment-by-comment-id-case';
+import { LikeCommentCase } from './comment/application/use-cases/like-comment-case';
+import { UpdateCommentCase } from './comment/application/use-cases/update-comment-case';
+import { DeleteAllSessionsWithoutCurrentCase } from './session/application/use-cases/delete-all-session-without-current-case';
+import { DeleteSessionByDeviceIdCase } from './session/application/use-cases/delete-session-by-device-id-case';
+import { GetAllSessionsCase } from './session/application/use-cases/get-all-sessions-case';
+import { CreateUserCase } from './user/application/use-cases/create-user-case';
+import { GetAllUsersCase } from './user/application/use-cases/get-all-users-case';
+import { DeleteUserCase } from './user/application/use-cases/delete-user-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
 const useCasesBlog = [
-  GetBlogByBlogIdCase,
-  GetAllBlogsCase,
   CreateBlogCase,
-  UpdateBlogCase,
   DeleteBlogCase,
+  GetAllBlogsCase,
+  GetBlogByBlogIdCase,
+  UpdateBlogCase,
 ];
 
 const useCasesPost = [
   CreatePostByBlogIdCase,
-  GetAllPostsByBlogIdCase,
   CreatePostCase,
+  DeletePostCase,
+  GetAllPostsByBlogIdCase,
   GetAllPostsCase,
   GetPostByIdCase,
-  UpdatePostCase,
-  DeletePostCase,
   LikePostCase,
+  UpdatePostCase,
 ];
 
-const useCasesComment = [GetAllCommentsByBlogIdCase, CreateCommentByBlogIdCase];
+const useCasesComment = [
+  CreateCommentByBlogIdCase,
+  DeleteCommentCase,
+  GetAllCommentsByBlogIdCase,
+  GetCommentByCommentIdCase,
+  LikeCommentCase,
+  UpdateCommentCase,
+];
+
+const useCasesSession = [
+  DeleteSessionByDeviceIdCase,
+  DeleteAllSessionsWithoutCurrentCase,
+  GetAllSessionsCase,
+];
+
+const useCasesUser = [CreateUserCase, GetAllUsersCase, DeleteUserCase];
 
 const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
 
@@ -134,25 +156,25 @@ const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-    JwtService,
+    ...strategies /* стратегия */,
+    ...useCasesBlog /* кейсы */,
+    ...useCasesComment /* кейсы */,
+    ...useCasesPost /* кейсы */,
+    ...useCasesSession /* кейсы */,
+    ...useCasesUser /* кейсы */,
+    ...validations /*валидаторы */,
     AppService,
     AuthRepository,
     AuthService,
     BlogRepository,
     CommentRepository,
-    CommentService,
     JWTService,
+    JwtService,
     PostRepository,
-    PostService,
     SessionRepository,
     SessionService,
     UserRepository,
     UserService,
-    ...validations /*валидаторы */,
-    ...useCasesBlog /* кейсы */,
-    ...useCasesPost /* кейсы */,
-    ...useCasesComment /* кейсы */,
-    ...strategies /* стратегия */,
   ],
 })
 export class AppModule {}

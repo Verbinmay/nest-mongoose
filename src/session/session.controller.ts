@@ -4,57 +4,55 @@ import {
   Param,
   Delete,
   UseGuards,
-  NotFoundException,
-  ForbiddenException,
   HttpCode,
 } from '@nestjs/common';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { RefreshTokenGuard } from '../guard/refresh-token.guard';
-import { Session } from './entities/session.entity';
 import { SessionService } from './session.service';
+import { CommandBus } from '@nestjs/cqrs';
+import { GetAllSessionsCommand } from './application/use-cases/get-all-sessions-case';
+import { makeAnswerInController } from '../helpers/errors';
+import { DeleteAllSessionsWithoutCurrentCommand } from './application/use-cases/delete-all-session-without-current-case';
+import { DeleteSessionByDeviceIdCommand } from './application/use-cases/delete-session-by-device-id-case';
 
 @Controller('security')
 export class SessionsController {
-  constructor(private readonly sessionsService: SessionService) {}
+  constructor(
+    private readonly sessionsService: SessionService,
+    private commandBus: CommandBus,
+  ) {}
 
   @UseGuards(RefreshTokenGuard)
   @Get('devices')
-  findAll(@CurrentUserId() payload) {
-    return this.sessionsService.findAll(payload.sub);
+  async getAll(@CurrentUserId() user) {
+    const userId = user ? user.sub : '';
+    const result = await this.commandBus.execute(
+      new GetAllSessionsCommand(userId),
+    );
+    return makeAnswerInController(result);
   }
-
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   @Delete('devices')
-  deleteAll(@CurrentUserId() payload) {
-    return this.sessionsService.deleteAll({
-      userId: payload.sub,
-      deviceId: payload.deviceId,
-    });
+  async deleteAllSessionsWithoutCurrent(@CurrentUserId() payload) {
+    const result = await this.commandBus.execute(
+      new DeleteAllSessionsWithoutCurrentCommand(payload.sub, payload.deviceId),
+    );
+    return makeAnswerInController(result);
   }
 
   @UseGuards(RefreshTokenGuard)
   @HttpCode(204)
   @Delete('devices/:deviceId')
-  async deleteOne(
+  async deleteSessionByDeviceId(
     @Param('deviceId') deviceId: string,
-    @CurrentUserId() payload,
+    @CurrentUserId() user,
   ) {
-    const session: Session | null =
-      await this.sessionsService.findSessionByDeviceId(deviceId);
-    if (!session) {
-      throw new NotFoundException();
-    }
-    if (session.userId !== payload.sub) {
-      throw new ForbiddenException();
-    }
+    const userId = user ? user.sub : '';
+    const result: boolean = await this.commandBus.execute(
+      new DeleteSessionByDeviceIdCommand(userId, deviceId),
+    );
 
-    const sessionDelete: boolean =
-      await this.sessionsService.deleteSessionsByDeviceId(deviceId);
-
-    if (sessionDelete == false) {
-      throw new NotFoundException();
-    }
-    return sessionDelete;
+    return makeAnswerInController(result);
   }
 }

@@ -21,6 +21,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     const match: boolean = await bcrypt.compare(password, user.hash);
 
-    return match ? user._id.toString() : null;
+    return match ? { sub: user._id.toString() } : null;
   }
 }

@@ -31,12 +31,16 @@ export class SessionRepository {
     }
   }
 
-  async deleteAll(a: { userId: string; deviceId: string }) {
-    await this.SessionModel.deleteMany({
-      userId: a.userId,
-      deviceId: { $ne: a.deviceId },
-    });
-    return true;
+  async deleteAll(userId: string, deviceId: string) {
+    try {
+      await this.SessionModel.deleteMany({
+        userId: userId,
+        deviceId: { $ne: deviceId },
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   async findSessionByDeviceId(deviceId: string) {

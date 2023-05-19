@@ -12,27 +12,6 @@ export class SessionService {
     private readonly jwtService: JWTService,
   ) {}
 
-  async findAll(userId: string) {
-    const userSessions: Array<Session> =
-      await this.sessionRepository.findSessionsByUserId(userId);
-
-    return userSessions.map((m) => m.getViewModel());
-  }
-
-  async deleteAll(a: { userId: string; deviceId: string }) {
-    return await this.sessionRepository.deleteAll(a);
-  }
-
-  async findSessionByDeviceId(deviceId: string) {
-    const result: Session | null =
-      await this.sessionRepository.findSessionByDeviceId(deviceId);
-    return result;
-  }
-
-  async deleteSessionsByDeviceId(deviceId: string) {
-    return await this.sessionRepository.deleteSessionsByDeviceId(deviceId);
-  }
-
   async createSession(a: CreateSessionDto) {
     try {
       const newSession = Session.createSession(a);

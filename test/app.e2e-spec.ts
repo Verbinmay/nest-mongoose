@@ -10,7 +10,7 @@ import {
 import * as supertest from 'supertest';
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 
 import { createApp } from '../src/helpers/createApp';

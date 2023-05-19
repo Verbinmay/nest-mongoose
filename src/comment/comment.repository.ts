@@ -1,11 +1,6 @@
-import {
-  Comment,
-  CommentsModelType as CommentsModelType,
-} from './entities/comment.entity';
+import { Comment, CommentsModelType } from './entities/comment.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-
-import { like } from '../likes/entities/like.entity';
 
 @Injectable()
 export class CommentRepository {
@@ -43,12 +38,12 @@ export class CommentRepository {
     return commentModel.save();
   }
 
-  async updateComment(a: { commentId: string; content: string }) {
+  async updateComment(commentId: string, content: string) {
     try {
-      const result = await this.CommentModel.findById(a.commentId);
+      const result = await this.CommentModel.findById(commentId);
 
       if (!result) return false;
-      result.content = a.content;
+      result.content = content;
       result.save();
 
       return true;

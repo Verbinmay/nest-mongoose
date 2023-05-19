@@ -38,9 +38,10 @@ export class UserRepository {
 
   async delete(id: string) {
     try {
-      return await this.UserModel.findByIdAndDelete(id);
+      await this.UserModel.findByIdAndDelete(id);
+      return true;
     } catch (error) {
-      return null;
+      return false;
     }
   }
   /*Нам не подходит функция ниже, ибо нужно знать, где именно происходит совпадение(поле ошибки) */

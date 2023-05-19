@@ -1,5 +1,3 @@
-import jwtDecode from 'jwt-decode';
-
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -20,10 +18,6 @@ export const CurrentUserId = createParamDecorator(
         if (accessToken.includes('Bearer')) {
           accessToken = accessToken.slice(7);
         }
-        // const payload = await jwtDecode(accessToken);
-        // request.user = payload;
-        // return request.user;
-
         const jwtService = new JwtService({});
 
         try {
