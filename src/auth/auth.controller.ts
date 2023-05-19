@@ -32,6 +32,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { LoginCommand } from './application/use-cases/login-case';
 import { GetNewTokensCommand } from './application/use-cases/get-new-refresh-token-case';
 import { LogoutCommand } from './application/use-cases/logout-case';
+import { GetMeCommand } from './application/use-cases/get-me-case';
 
 @Controller('auth')
 export class AuthController {
@@ -99,15 +100,18 @@ export class AuthController {
     );
     return makeAnswerInController(result);
   }
-  /**------------------------- */
+
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @Get('me')
-  async authMe(@CurrentUserId() payload) {
-    const result: ViewMe = await this.authService.authMe(payload.sub);
-    return result;
+  async authMe(@CurrentUserId() user) {
+    const userId = user ? user.sub : '';
+    const result: ViewMe = await this.commandBus.execute(
+      new GetMeCommand(userId),
+    );
+    return makeAnswerInController(result);
   }
-
+  /**------------------------- */
   @Throttle(5, 10)
   @HttpCode(204)
   @Post('registration')

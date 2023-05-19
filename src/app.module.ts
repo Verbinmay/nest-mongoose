@@ -69,6 +69,7 @@ import { DeleteUserCase } from './user/application/use-cases/delete-user-case';
 import { LoginCase } from './auth/application/use-cases/login-case';
 import { GetNewTokensCase } from './auth/application/use-cases/get-new-refresh-token-case';
 import { LogoutCase } from './auth/application/use-cases/logout-case';
+import { GetMeCase } from './auth/application/use-cases/get-me-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
@@ -106,7 +107,7 @@ const useCasesSession = [
   GetAllSessionsCase,
 ];
 
-const useCasesAuth = [LoginCase, GetNewTokensCase, LogoutCase];
+const useCasesAuth = [LoginCase, GetNewTokensCase, LogoutCase, GetMeCase];
 
 const useCasesUser = [CreateUserCase, GetAllUsersCase, DeleteUserCase];
 

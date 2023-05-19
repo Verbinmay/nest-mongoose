@@ -24,20 +24,6 @@ export class AuthService {
     private authRepository: AuthRepository,
   ) {}
 
-  async authMe(userId) {
-    const authGet: User | null = await this.userRepository.findUserById(userId);
-
-    if (!authGet) {
-      throw new UnauthorizedException();
-    }
-
-    return {
-      email: authGet.email,
-      login: authGet.login,
-      userId: authGet._id.toString(),
-    };
-  }
-
   async registration(inputModel: CreateUserDto) {
     const hashBcrypt = await bcrypt.hash(inputModel.password, 10);
 
