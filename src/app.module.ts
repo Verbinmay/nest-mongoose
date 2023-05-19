@@ -66,6 +66,9 @@ import { GetAllSessionsCase } from './session/application/use-cases/get-all-sess
 import { CreateUserCase } from './user/application/use-cases/create-user-case';
 import { GetAllUsersCase } from './user/application/use-cases/get-all-users-case';
 import { DeleteUserCase } from './user/application/use-cases/delete-user-case';
+import { LoginCase } from './auth/application/use-cases/login-case';
+import { GetNewTokensCase } from './auth/application/use-cases/get-new-refresh-token-case';
+import { LogoutCase } from './auth/application/use-cases/logout-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
@@ -102,6 +105,8 @@ const useCasesSession = [
   DeleteAllSessionsWithoutCurrentCase,
   GetAllSessionsCase,
 ];
+
+const useCasesAuth = [LoginCase, GetNewTokensCase, LogoutCase];
 
 const useCasesUser = [CreateUserCase, GetAllUsersCase, DeleteUserCase];
 
@@ -162,6 +167,7 @@ const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
     ...useCasesPost /* кейсы */,
     ...useCasesSession /* кейсы */,
     ...useCasesUser /* кейсы */,
+    ...useCasesAuth /* кейсы */,
     ...validations /*валидаторы */,
     AppService,
     AuthRepository,

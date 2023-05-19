@@ -24,27 +24,6 @@ export class AuthService {
     private authRepository: AuthRepository,
   ) {}
 
-  async refreshTokens(payload) {
-    const newTokens: Tokens = await this.jwtService.tokenCreator({
-      sub: payload.sub,
-      deviceId: payload.deviceId,
-    });
-
-    await this.sessionService.changeRefreshTokenInfo({
-      newToken: newTokens.refreshToken,
-      iatOldSession: payload.iat,
-    });
-    return newTokens;
-  }
-
-  async logout(payload) {
-    const tokenRevoked = await this.sessionService.deleteSessionsByDeviceId(
-      payload.deviceId,
-    );
-
-    return tokenRevoked ? true : false;
-  }
-
   async authMe(userId) {
     const authGet: User | null = await this.userRepository.findUserById(userId);
 

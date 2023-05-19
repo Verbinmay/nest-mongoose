@@ -30,6 +30,8 @@ import { ViewMe } from './dto/view-me.dto';
 import { AuthService } from './auth.service';
 import { CommandBus } from '@nestjs/cqrs';
 import { LoginCommand } from './application/use-cases/login-case';
+import { GetNewTokensCommand } from './application/use-cases/get-new-refresh-token-case';
+import { LogoutCommand } from './application/use-cases/logout-case';
 
 @Controller('auth')
 export class AuthController {
@@ -69,15 +71,16 @@ export class AuthController {
     return { accessToken: result.accessToken };
   }
 
-  /**------------------------- */
   @UseGuards(RefreshTokenGuard)
   @HttpCode(200)
   @Post('refresh-token')
-  async refreshTokens(
+  async getNewTokens(
     @CurrentUserId() payload,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const newTokens = await this.authService.refreshTokens(payload);
+    const newTokens = await this.commandBus.execute(
+      new GetNewTokensCommand(payload),
+    );
 
     res.cookie('refreshToken', newTokens.refreshToken, {
       httpOnly: true,
@@ -91,10 +94,12 @@ export class AuthController {
   @HttpCode(204)
   @Post('logout')
   async logout(@CurrentUserId() payload) {
-    const result: boolean = await this.authService.logout(payload);
-    return result;
+    const result: boolean | string = await this.commandBus.execute(
+      new LogoutCommand(payload),
+    );
+    return makeAnswerInController(result);
   }
-
+  /**------------------------- */
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
   @Get('me')
