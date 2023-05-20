@@ -74,10 +74,10 @@ export class SessionRepository {
     }
   }
 
-  async deleteSessionLogout(a: { userId: string; deviceId: string }) {
+  async deleteSessionLogout(userId: string, deviceId: string) {
     const result = await this.SessionModel.deleteOne({
-      userId: a.userId,
-      deviceId: a.deviceId,
+      userId: userId,
+      deviceId: deviceId,
     });
     return result.deletedCount === 1;
   }

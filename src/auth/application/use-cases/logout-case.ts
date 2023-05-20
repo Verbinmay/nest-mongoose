@@ -1,6 +1,5 @@
-import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-
-import { DeleteSessionByDeviceIdCommand } from '../../../session/application/use-cases/delete-session-by-device-id-case';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { SessionRepository } from '../../../session/sessions.repository';
 
 export class LogoutCommand {
   constructor(public payload: any) {}
@@ -8,15 +7,14 @@ export class LogoutCommand {
 
 @CommandHandler(LogoutCommand)
 export class LogoutCase implements ICommandHandler<LogoutCommand> {
-  constructor(private commandBus: CommandBus) {}
+  constructor(private sessionRepository: SessionRepository) {}
 
   async execute(command: LogoutCommand) {
-    const tokenRevoked = await this.commandBus.execute(
-      new DeleteSessionByDeviceIdCommand(
-        command.payload.userId,
-        command.payload.deviceId,
-      ),
+    const tokenRevoked = await this.sessionRepository.deleteSessionLogout(
+      command.payload.userId,
+      command.payload.deviceId,
     );
-    return tokenRevoked;
+
+    return tokenRevoked === true ? tokenRevoked : 'Error 404';
   }
 }
