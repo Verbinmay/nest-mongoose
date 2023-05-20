@@ -184,7 +184,6 @@ const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
     ...validations /*валидаторы */,
     AppService,
     AuthRepository,
-    AuthService,
     BlogRepository,
     CommentRepository,
     JWTService,
