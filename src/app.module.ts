@@ -12,7 +12,6 @@ import { Post, PostSchema } from './post/entities/post.entity';
 import { Session, SessionSchema } from './session/entities/session.entity';
 import { User, UserSchema } from './user/entities/user.entity';
 import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { BlogController } from './blog/blog.controller';
 import { BlogRepository } from './blog/blog.repository';
 import { CommentController } from './comment/comment.controller';
@@ -70,6 +69,10 @@ import { LoginCase } from './auth/application/use-cases/login-case';
 import { GetNewTokensCase } from './auth/application/use-cases/get-new-refresh-token-case';
 import { LogoutCase } from './auth/application/use-cases/logout-case';
 import { GetMeCase } from './auth/application/use-cases/get-me-case';
+import { RegistrationCase } from './auth/application/use-cases/registration-case';
+import { RegistrationConfirmationCase } from './auth/application/use-cases/registration-confirmation-case';
+import { ConfirmPasswordRecoveryCase } from './auth/application/use-cases/confirm-password-recovery-case';
+import { PasswordRecoveryCase } from './auth/application/use-cases/password-recovery-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
@@ -107,7 +110,16 @@ const useCasesSession = [
   GetAllSessionsCase,
 ];
 
-const useCasesAuth = [LoginCase, GetNewTokensCase, LogoutCase, GetMeCase];
+const useCasesAuth = [
+  LoginCase,
+  GetNewTokensCase,
+  LogoutCase,
+  GetMeCase,
+  RegistrationCase,
+  RegistrationConfirmationCase,
+  PasswordRecoveryCase,
+  ConfirmPasswordRecoveryCase,
+];
 
 const useCasesUser = [CreateUserCase, GetAllUsersCase, DeleteUserCase];
 

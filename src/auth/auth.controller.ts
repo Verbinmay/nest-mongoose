@@ -4,7 +4,6 @@ import {
   Body,
   Headers,
   Ip,
-  UnauthorizedException,
   Res,
   UseGuards,
   HttpCode,
@@ -27,19 +26,21 @@ import { RegistrationConfirmationCode } from './dto/input-registration-confirmat
 import { ResendingConfirmation } from './dto/input-resending-confirmation.dto';
 import { Tokens } from './dto/tokens.dto';
 import { ViewMe } from './dto/view-me.dto';
-import { AuthService } from './auth.service';
+
 import { CommandBus } from '@nestjs/cqrs';
 import { LoginCommand } from './application/use-cases/login-case';
 import { GetNewTokensCommand } from './application/use-cases/get-new-refresh-token-case';
 import { LogoutCommand } from './application/use-cases/logout-case';
 import { GetMeCommand } from './application/use-cases/get-me-case';
+import { RegistrationCommand } from './application/use-cases/registration-case';
+import { RegistrationConfirmationCommand } from './application/use-cases/registration-confirmation-case';
+import { ResendingEmailCommand } from './application/use-cases/resending-email-case';
+import { PasswordRecoveryCommand } from './application/use-cases/password-recovery-case';
+import { ConfirmPasswordRecoveryCommand } from './application/use-cases/confirm-password-recovery-case';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private commandBus: CommandBus,
-  ) {}
+  constructor(private commandBus: CommandBus) {}
 
   @Throttle(5, 10)
   @UseGuards(LocalAuthGuard)
@@ -111,13 +112,13 @@ export class AuthController {
     );
     return makeAnswerInController(result);
   }
-  /**------------------------- */
+
   @Throttle(5, 10)
   @HttpCode(204)
   @Post('registration')
   async registration(@Body() inputModel: CreateUserDto) {
-    const registration: boolean = await this.authService.registration(
-      inputModel,
+    const registration: boolean = await this.commandBus.execute(
+      new RegistrationCommand(inputModel),
     );
     return registration;
   }
@@ -128,8 +129,8 @@ export class AuthController {
   async registrationConfirmation(
     @Body() inputModel: RegistrationConfirmationCode,
   ) {
-    const confirmPost: boolean = await this.authService.confirmEmail(
-      inputModel.code,
+    const confirmPost: boolean = await this.commandBus.execute(
+      new RegistrationConfirmationCommand(inputModel.code),
     );
     if (confirmPost) {
       return true;
@@ -147,8 +148,8 @@ export class AuthController {
   @HttpCode(204)
   @Post('registration-email-resending')
   async emailResending(@Body() inputModel: ResendingConfirmation) {
-    const emailResendingPost: boolean = await this.authService.resendingEmail(
-      inputModel.email,
+    const emailResendingPost: boolean = await this.commandBus.execute(
+      new ResendingEmailCommand(inputModel.email),
     );
 
     if (!emailResendingPost) {
@@ -166,15 +167,17 @@ export class AuthController {
   @HttpCode(204)
   @Post('password-recovery')
   async passwordRecovery(@Body() inputModel: ResendingConfirmation) {
-    return await this.authService.resendingPassword(inputModel.email);
+    return await this.commandBus.execute(
+      new PasswordRecoveryCommand(inputModel.email),
+    );
   }
 
   @Throttle(5, 10)
   @HttpCode(204)
   @Post('new-password')
   async create(@Body() inputModel: NewPassword) {
-    const confirmPost: boolean = await this.authService.confirmPassword(
-      inputModel,
+    const confirmPost: boolean = await this.commandBus.execute(
+      new ConfirmPasswordRecoveryCommand(inputModel),
     );
 
     if (confirmPost) {
