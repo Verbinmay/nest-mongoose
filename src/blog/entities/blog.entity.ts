@@ -4,15 +4,17 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { CreateBlogDto } from '../../blogger/blogs/dto/create-blog.dto';
 import { UpdateBlogDto } from '../../blogger/blogs/dto/update-blog.dto';
-import { ViewBlogDto } from '../dto/view-blog.dto';
+import { ViewBlogDto } from '../../blogger/blogs/dto/view-blog.dto';
+import { SAViewBlogDto } from '../../sa/dto/sa-view-blog.dto';
 
 @Schema()
 export class Blog {
-  constructor(userId: string, inputModel: CreateBlogDto) {
+  constructor(userId: string, userLogin: string, inputModel: CreateBlogDto) {
     this.name = inputModel.name;
     this.description = inputModel.description;
     this.websiteUrl = inputModel.websiteUrl;
     this.userId = userId;
+    this.userLogin = userLogin;
   }
   @Prop({ default: new Types.ObjectId(), type: mongoose.Schema.Types.ObjectId })
   public _id: Types.ObjectId = new Types.ObjectId();
@@ -28,6 +30,9 @@ export class Blog {
 
   @Prop({ required: true })
   public userId: string;
+
+  @Prop({ required: true })
+  public userLogin: string;
 
   @Prop({ default: new Date().toISOString() })
   public createdAt: string = new Date().toISOString();
@@ -58,6 +63,22 @@ export class Blog {
     return result;
   }
 
+  SAgetViewModel(): SAViewBlogDto {
+    const result = {
+      id: this._id.toString(),
+      name: this.name,
+      description: this.description,
+      websiteUrl: this.websiteUrl,
+      createdAt: this.createdAt,
+      isMembership: this.isMembership,
+      blogOwnerInfo: {
+        userId: this.userId,
+        userLogin: this.userLogin,
+      },
+    };
+    return result;
+  }
+
   // static createBlog(inputModel: CreateBlogDto): Blog {
   //   const blog = new Blog(inputModel);
   //   blog.name = inputModel.name;
@@ -72,6 +93,7 @@ export const BlogSchema = SchemaFactory.createForClass(Blog);
 BlogSchema.methods = {
   updateInfo: Blog.prototype.updateInfo,
   getViewModel: Blog.prototype.getViewModel,
+  SAgetViewModel: Blog.prototype.SAgetViewModel,
 };
 
 // BlogSchema.statics = {
@@ -86,6 +108,7 @@ export type BlogsModelStaticType = {
 export type BlogsModelMethodsType = {
   updateInfo: (inputModel: UpdateBlogDto) => Blog;
   getViewModel: () => ViewBlogDto;
+  SAgetViewModel: () => SAViewBlogDto;
 };
 
 export type BlogsModelType = Model<BlogsDocument> &

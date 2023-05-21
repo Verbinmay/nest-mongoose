@@ -23,11 +23,11 @@ export class UpdateCommentCase
       command.commentId,
     );
     if (!comment) {
-      return 'Error 404';
+      return { s: 404 };
     }
 
     if (comment.commentatorInfo.userId !== command.userId) {
-      return 'Error 403';
+      return { s: 403 };
     }
 
     const commentUpdate = await this.commentRepository.updateComment(
@@ -36,7 +36,7 @@ export class UpdateCommentCase
     );
 
     if (!commentUpdate) {
-      return 'Error 404';
+      return { s: 500 };
     }
     return true;
   }

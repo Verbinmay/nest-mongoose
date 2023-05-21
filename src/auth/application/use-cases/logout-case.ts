@@ -14,6 +14,6 @@ export class LogoutCase implements ICommandHandler<LogoutCommand> {
       command.payload.deviceId,
     );
 
-    return tokenRevoked === true ? tokenRevoked : 'Error 404';
+    return tokenRevoked === true ? tokenRevoked : { s: 404 };
   }
 }

@@ -24,7 +24,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       const errorResponse = {
         errorsMessages: [],
       };
+
       expResponse.message.forEach((m) => errorResponse.errorsMessages.push(m));
+
       //помогает смотреть ошибки через тесты
       console.log(errorResponse, 'filter-errors-400');
 

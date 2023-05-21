@@ -15,7 +15,7 @@ export class GetCommentByCommentIdCase
   async execute(command: GetCommentByCommentIdCommand) {
     const comment = await this.commentRepository.findById(command.id);
     if (!comment) {
-      return 'Error 404';
+      return { s: 404 };
     }
     return comment.getViewModel(command.userId);
   }

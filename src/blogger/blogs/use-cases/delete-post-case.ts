@@ -21,18 +21,18 @@ export class DeletePostCase implements ICommandHandler<DeletePostCommand> {
 
   async execute(command: DeletePostCommand) {
     const blog = await this.blogRepository.findBlogById(command.blogId);
-    if (!blog) return 'Error 404';
-    if (blog.userId !== command.userId) return 'Error 403';
+    if (!blog) return { s: 404 };
+    if (blog.userId !== command.userId) return { s: 403 };
 
     const post: Post | null = await this.postRepository.findPostById(
       command.postId,
     );
-    if (!post) return 'Error 404';
+    if (!post) return { s: 404 };
     try {
       await this.postRepository.delete(command.postId);
       return true;
     } catch (error) {
-      return 'Error 500';
+      return { s: 500 };
     }
   }
 }

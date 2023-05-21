@@ -27,8 +27,8 @@ export class CreatePostByBlogIdCase
     const blog: Blog | null = await this.blogRepository.findBlogById(
       command.blogId,
     );
-    if (!blog) return 'Error 404';
-    if (blog.userId !== command.userId) return 'Error 403';
+    if (!blog) return { s: 404 };
+    if (blog.userId !== command.userId) return { s: 403 };
 
     const post: Post = new Post(
       command.blogId,
@@ -40,7 +40,7 @@ export class CreatePostByBlogIdCase
       const result = await this.postRepository.save(post);
       return result.getViewModel(command.userId);
     } catch (error) {
-      return 'Error 500';
+      return { s: 500 };
     }
   }
 }

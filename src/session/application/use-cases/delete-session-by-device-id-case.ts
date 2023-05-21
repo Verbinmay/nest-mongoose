@@ -17,17 +17,17 @@ export class DeleteSessionByDeviceIdCase
     const session: Session | null =
       await this.sessionRepository.findSessionByDeviceId(command.deviceId);
     if (!session) {
-      return 'Error 404';
+      return { s: 404 };
     }
     if (session.userId !== command.userId) {
-      return 'Error 403';
+      return { s: 403 };
     }
 
     const sessionDelete: boolean =
       await this.sessionRepository.deleteSessionsByDeviceId(command.deviceId);
 
     if (sessionDelete == false) {
-      return 'Error 404';
+      return { s: 500 };
     }
     return sessionDelete;
   }

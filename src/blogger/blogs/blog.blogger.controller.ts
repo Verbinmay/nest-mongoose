@@ -28,12 +28,12 @@ import { UpdatePostByBlogDto } from './dto/update-post-by-blog.dto';
 import { UpdatePostCommand } from './use-cases/update-post-case';
 import { DeletePostCommand } from './use-cases/delete-post-case';
 
-@Controller('blogger')
+@Controller('blogger/blogs')
 export class BlogController {
   constructor(private commandBus: CommandBus) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get('blogs')
+  @Get()
   async getCurrentUserBlogs(
     @Query() query: PaginationQuery,
     @CurrentPayload() payload,
@@ -46,7 +46,7 @@ export class BlogController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('blogs')
+  @Post()
   async createBlog(
     @Body() inputModel: CreateBlogDto,
     @CurrentPayload() payload,
@@ -59,7 +59,7 @@ export class BlogController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('blogs/:id')
+  @Put(':id')
   @HttpCode(204)
   async updateBlog(
     @Param('id') blogId: string,
@@ -74,7 +74,7 @@ export class BlogController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('blogs/:id')
+  @Delete(':id')
   @HttpCode(204)
   async deleteBlog(@Param('id') blogId: string, @CurrentPayload() payload) {
     const userId = payload ? payload.sub : '';
@@ -86,7 +86,7 @@ export class BlogController {
 
   //Create ang get post throw blog
   @UseGuards(JwtAuthGuard)
-  @Post('blogs/:blogId/posts')
+  @Post(':blogId/posts')
   async createPostByBlogId(
     @Param('blogId') blogId: string,
     @Body() inputModel: CreatePostBlogDto,
@@ -101,7 +101,7 @@ export class BlogController {
 
   @UseGuards(JwtAuthGuard)
   @HttpCode(204)
-  @Put('blogs/:blogId/posts/:postId')
+  @Put(':blogId/posts/:postId')
   async updatePostByBlogId(
     @Param('blogId') blogId: string,
     @Param('postId') postId: string,
@@ -118,7 +118,7 @@ export class BlogController {
 
   @UseGuards(JwtAuthGuard)
   @HttpCode(204)
-  @Delete('blogs/:blogId/posts/:postId')
+  @Delete(':blogId/posts/:postId')
   async deletePostByBlogId(
     @Param('blogId') blogId: string,
     @Param('postId') postId: string,

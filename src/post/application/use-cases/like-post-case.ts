@@ -23,7 +23,7 @@ export class LikePostCase implements ICommandHandler<LikePostCommand> {
     const post = await this.postRepository.findPostById(command.postId);
 
     if (!post) {
-      return 'Error 404';
+      return { s: 404 };
     }
 
     let myStatusBefore = '';
@@ -41,7 +41,7 @@ export class LikePostCase implements ICommandHandler<LikePostCommand> {
     const user = await this.userRepository.findUserById(command.userId);
 
     if (!user) {
-      return 'Error 404';
+      return { s: 404 };
     }
     const index = post.extendedLikesInfo.findIndex(
       (m) => m.userId === command.userId,
@@ -75,7 +75,7 @@ export class LikePostCase implements ICommandHandler<LikePostCommand> {
       await this.postRepository.save(post);
       return true;
     } catch (error) {
-      return 'Error 404';
+      return { s: 500 };
     }
   }
 }

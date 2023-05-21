@@ -47,7 +47,6 @@ import { UpdateBlogCase } from './blogger/blogs/use-cases/update-blog-case';
 import { DeleteBlogCase } from './blogger/blogs/use-cases/delete-blog-case';
 import { CreatePostByBlogIdCase } from './blogger/blogs/use-cases/create-post-by-blog-id-case';
 import { GetAllPostsByBlogIdCase } from './post/application/use-cases/get-post-by-blog-id-case';
-import { CreatePostCase } from './post/application/use-cases/create-post-case';
 import { GetAllPostsCase } from './post/application/use-cases/get-all-posts-case';
 import { GetPostByIdCase } from './post/application/use-cases/get-post-by-id-case';
 import { UpdatePostCase } from './blogger/blogs/use-cases/update-post-case';
@@ -75,6 +74,7 @@ import { ConfirmPasswordRecoveryCase } from './auth/application/use-cases/confir
 import { PasswordRecoveryCase } from './auth/application/use-cases/password-recovery-case';
 import { ResendingEmailCase } from './auth/application/use-cases/resending-email-case';
 import { GetCurrentUserBlogsCase } from './blogger/blogs/use-cases/get-current-user-blogs-case';
+import { BindBlogWithUserCase } from './sa/use-cases/bind-blog-with-user-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
@@ -85,11 +85,11 @@ const useCasesBlog = [
   GetBlogByBlogIdCase,
   UpdateBlogCase,
   GetCurrentUserBlogsCase,
+  BindBlogWithUserCase,
 ];
 
 const useCasesPost = [
   CreatePostByBlogIdCase,
-  CreatePostCase,
   DeletePostCase,
   GetAllPostsByBlogIdCase,
   GetAllPostsCase,

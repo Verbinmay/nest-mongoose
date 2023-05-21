@@ -13,7 +13,7 @@ export class GetPostByIdCase implements ICommandHandler<GetPostByIdCommand> {
   async execute(command: GetPostByIdCommand) {
     const post = await this.postRepository.findPostById(command.id);
     if (!post) {
-      return 'Error 404';
+      return { s: 404 };
     }
     return post.getViewModel(command.userId);
   }

@@ -1,102 +1,44 @@
 import {
   Controller,
   Get,
-  Post,
   Param,
-  Delete,
   Query,
   Put,
   HttpCode,
-  Body,
   UseGuards,
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
 import { BasicAuthGuard } from '../guard/auth-passport/guard-passport/basic-auth.guard';
-import { CreateBlogCommand } from '../blogger/blogs/use-cases/create-blog-case';
-import { CreatePostByBlogIdCommand } from '../blogger/blogs/use-cases/create-post-by-blog-id-case';
-import { DeleteBlogCommand } from '../blogger/blogs/use-cases/delete-blog-case';
-import { GetAllBlogsCommand } from '../blog/application/use-cases/get-all-blogs-case';
-import { GetBlogByBlogIdCommand } from '../blog/application/use-cases/get-blog-by-blog-id-case';
-import { GetAllPostsByBlogIdCommand } from '../post/application/use-cases/get-post-by-blog-id-case';
-import { UpdateBlogCommand } from '../blogger/blogs/use-cases/update-blog-case';
-import { CurrentUserId } from '../decorator/currentUser.decorator';
+
 import { makeAnswerInController } from '../helpers/errors';
 import { PaginationQuery } from '../pagination/base-pagination';
-import { CreateBlogDto } from '../blogger/blogs/dto/create-blog.dto';
-import { CreatePostBlogDto } from '../blogger/blogs/dto/create-post-in-blog.dto';
-import { UpdateBlogDto } from '../blogger/blogs/dto/update-blog.dto';
 
-@Controller('blogs')
+import { SAGetAllBlogsCommand } from './use-cases/sa-get-all-blogs-case';
+import { BindBlogWithUserCommand } from './use-cases/bind-blog-with-user-case';
+
+@Controller('sa/blogs')
 export class BlogController {
   constructor(private commandBus: CommandBus) {}
 
-  @Get(':id')
-  async getBlogByBlogId(@Param('id') id: string) {
-    const result = await this.commandBus.execute(
-      new GetBlogByBlogIdCommand(id),
-    );
-    return makeAnswerInController(result);
-  }
+  @UseGuards(BasicAuthGuard)
   @Get()
-  async getAllBlogs(@Query() query: PaginationQuery) {
-    const result = await this.commandBus.execute(new GetAllBlogsCommand(query));
-    return makeAnswerInController(result);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @Post()
-  async createBlog(@Body() inputModel: CreateBlogDto) {
+  async SA_GetAllBlogs(@Query() query: PaginationQuery) {
     const result = await this.commandBus.execute(
-      new CreateBlogCommand(inputModel),
+      new SAGetAllBlogsCommand(query),
     );
     return makeAnswerInController(result);
   }
 
   @UseGuards(BasicAuthGuard)
-  @Put(':id')
+  @Put(':id/bind-with-user/:userId')
   @HttpCode(204)
-  async updateBlog(@Param('id') id: string, @Body() inputModel: UpdateBlogDto) {
-    const result = await this.commandBus.execute(
-      new UpdateBlogCommand(inputModel, id),
-    );
-    return makeAnswerInController(result);
-  }
-
-  @UseGuards(BasicAuthGuard)
-  @Delete(':id')
-  @HttpCode(204)
-  async deleteBlog(@Param('id') id: string) {
-    const result = await this.commandBus.execute(new DeleteBlogCommand(id));
-    return makeAnswerInController(result);
-  }
-
-  //Create ang get post throw blog
-  @UseGuards(BasicAuthGuard)
-  @Post(':blogId/posts')
-  async createPostByBlogId(
-    @Param('blogId') blogId: string,
-    @Body() inputModel: CreatePostBlogDto,
-    @CurrentUserId() user,
+  async bindBlogWithUser(
+    @Param('id') blogId: string,
+    @Param('userId') userId: string,
   ) {
-    const userId = user ? user.sub : '';
-
     const result = await this.commandBus.execute(
-      new CreatePostByBlogIdCommand(blogId, userId, inputModel),
-    );
-    return makeAnswerInController(result);
-  }
-
-  @Get(':blogId/posts')
-  async getPostByBlogId(
-    @Param('blogId') blogId: string,
-    @Query() query: PaginationQuery,
-    @CurrentUserId() user,
-  ) {
-    const userId = user ? user.sub : '';
-
-    const result = await this.commandBus.execute(
-      new GetAllPostsByBlogIdCommand(blogId, userId, query),
+      new BindBlogWithUserCommand(blogId, userId),
     );
     return makeAnswerInController(result);
   }

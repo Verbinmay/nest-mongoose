@@ -2,7 +2,7 @@ import supertest from 'supertest';
 
 import { faker } from '@faker-js/faker';
 
-import { ViewBlogDto } from '../src/blog/dto/view-blog.dto';
+import { ViewBlogDto } from '../src/blogger/blogs/dto/view-blog.dto';
 
 export const info = {
   url: {

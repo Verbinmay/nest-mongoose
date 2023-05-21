@@ -30,7 +30,7 @@ export class GetAllPostsByBlogIdCase
       command.blogId,
     );
     if (!blog) {
-      return 'Error 404';
+      return { s: 404 };
     }
 
     const filter: { blogId: string } = { blogId: command.blogId };

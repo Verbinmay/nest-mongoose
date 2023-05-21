@@ -20,7 +20,7 @@ export class DeleteAllSessionsWithoutCurrentCase
     if (sessionsDelete) {
       return true;
     } else {
-      return 'Error 404';
+      return { s: 404 };
     }
   }
 }

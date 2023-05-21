@@ -19,11 +19,11 @@ export class DeleteCommentCase
       command.commentId,
     );
     if (!comment) {
-      return 'Error 404';
+      return { s: 404 };
     }
 
     if (comment.commentatorInfo.userId !== command.userId) {
-      return 'Error 403';
+      return { s: 403 };
     }
 
     const commentDelete = await this.commentRepository.deleteComment(
@@ -31,7 +31,7 @@ export class DeleteCommentCase
     );
 
     if (!commentDelete) {
-      return 'Error 404';
+      return { s: 500 };
     }
     return true;
   }

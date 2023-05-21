@@ -1,20 +1,21 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { PaginationQuery } from '../../pagination/base-pagination';
+import { BlogRepository } from '../../db/blog.repository';
+import { Blog } from '../../blog/entities/blog.entity';
+import { SAViewBlogDto } from '../dto/sa-view-blog.dto';
+import { PaginatorBlog } from '../../pagination/paginatorType';
 
-import { PaginationQuery } from '../../../pagination/base-pagination';
-import { PaginatorBlog } from '../../../pagination/paginatorType';
-import { ViewBlogDto } from '../../../blogger/blogs/dto/view-blog.dto';
-import { Blog } from '../../entities/blog.entity';
-import { BlogRepository } from '../../../db/blog.repository';
-
-export class GetAllBlogsCommand {
+export class SAGetAllBlogsCommand {
   constructor(public query: PaginationQuery) {}
 }
 
-@CommandHandler(GetAllBlogsCommand)
-export class GetAllBlogsCase implements ICommandHandler<GetAllBlogsCommand> {
+@CommandHandler(SAGetAllBlogsCommand)
+export class SAGetAllBlogsCase
+  implements ICommandHandler<SAGetAllBlogsCommand>
+{
   constructor(private readonly blogRepository: BlogRepository) {}
 
-  async execute(command: GetAllBlogsCommand) {
+  async execute(command: SAGetAllBlogsCommand) {
     const filterName: { name: { $regex: string } } =
       command.query.createFilterName();
 
@@ -31,7 +32,7 @@ export class GetAllBlogsCase implements ICommandHandler<GetAllBlogsCommand> {
       limit: command.query.pageSize,
     });
 
-    const blogs: ViewBlogDto[] = blogsFromDB.map((m) => m.getViewModel());
+    const blogs: SAViewBlogDto[] = blogsFromDB.map((m) => m.SAgetViewModel());
 
     const result: PaginatorBlog = {
       pagesCount: pagesCount,

@@ -12,11 +12,11 @@ export class DeleteBlogCase implements ICommandHandler<DeleteBlogCommand> {
 
   async execute(command: DeleteBlogCommand) {
     const blog = await this.blogRepository.findBlogById(command.blogId);
-    if (!blog) return 'Error 404';
-    if (blog.userId !== command.userId) return 'Error 403';
+    if (!blog) return { s: 404 };
+    if (blog.userId !== command.userId) return { s: 403 };
     const deleted = await this.blogRepository.delete(command.blogId);
     if (deleted === null) {
-      return 'Error 500';
+      return { s: 500 };
     } else {
       return true;
     }

@@ -20,15 +20,15 @@ export class UpdateBlogCase implements ICommandHandler<UpdateBlogCommand> {
     const blog: Blog | null = await this.blogRepository.findBlogById(
       command.blogId,
     );
-    if (!blog) return 'Error 404';
-    if (blog.userId !== command.userId) return 'Error 403';
+    if (!blog) return { s: 404 };
+    if (blog.userId !== command.userId) return { s: 403 };
 
     const blogUpdated = blog.updateInfo(command.inputModel);
     try {
       this.blogRepository.save(blogUpdated);
       return true;
     } catch (error) {
-      return 'Error 500';
+      return { s: 500 };
     }
   }
 }

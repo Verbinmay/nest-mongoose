@@ -15,7 +15,7 @@ export class GetBlogByBlogIdCase
   async execute(command: GetBlogByBlogIdCommand) {
     const blog = await this.blogRepository.findBlogById(command.id);
     if (!blog) {
-      return 'Error 404';
+      return { s: 404 };
     }
     return blog.getViewModel();
   }

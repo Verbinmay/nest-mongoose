@@ -23,15 +23,20 @@ export class UpdatePostCase implements ICommandHandler<UpdatePostCommand> {
 
   async execute(command: UpdatePostCommand) {
     const blog = await this.blogRepository.findBlogById(command.blogId);
-    if (!blog) return 'Error 404';
-    if (blog.userId !== command.userId) return 'Error 403';
+    if (!blog) return { s: 404 };
+    if (blog.userId !== command.userId) return { s: 403 };
 
     const post: Post | null = await this.postRepository.findPostById(
       command.postId,
     );
-    if (!post) return 'Error 404';
+    if (!post) return { s: 404 };
 
     const postUpdated = post.updateInfo(command.inputModel);
-    return this.postRepository.save(postUpdated);
+    try {
+      this.postRepository.save(postUpdated);
+      return true;
+    } catch (error) {
+      return { s: 500 };
+    }
   }
 }

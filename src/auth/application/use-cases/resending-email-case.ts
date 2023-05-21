@@ -5,6 +5,7 @@ import { MailService } from '../../../mail/mail.service';
 import { AuthRepository } from '../../auth.repository';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
+import { errorMaker } from '../../../helpers/errors';
 
 export class ResendingEmailCommand {
   constructor(public email: string) {}
@@ -22,13 +23,15 @@ export class ResendingEmailCase
 
   async execute(command: ResendingEmailCommand) {
     const userFind = await this.userRepository.findUserByEmail(command.email);
-    console.log(userFind, 'userFind');
-    if (!userFind) {
-      return false;
-    }
 
-    if (userFind.emailConfirmation.isConfirmed) {
-      return false;
+    if (!userFind && userFind.emailConfirmation.isConfirmed) {
+      return {
+        s: 400,
+        mf: errorMaker([
+          ' inputModel has incorrect values or if email is already confirmed',
+          'email',
+        ]),
+      };
     }
 
     const confirmationCode = randomUUID();
@@ -43,7 +46,7 @@ export class ResendingEmailCase
       user: userFind,
     });
 
-    if (!userUpdate) return false;
+    if (!userUpdate) return { s: 500 };
 
     await this.mailService.sendUserConfirmation(
       command.email,

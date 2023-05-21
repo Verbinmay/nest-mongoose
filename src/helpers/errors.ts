@@ -14,47 +14,36 @@ export class FieldError {
   field: string;
 }
 
-export function errorMaker(
-  msg: string,
-  field: string,
-  ...strings: any[]
-): ErrorResult {
+export function errorMaker(strings): ErrorResult {
   const arrayErrors: Array<FieldError> = [];
-  arrayErrors.push({
-    message: msg,
-    field: field,
-  });
-  if (strings.length > 0) {
-    for (let i = 0; i > strings.length; i + 2) {
-      arrayErrors.push({
-        message: strings[i],
-        field: strings[i + 1],
-      });
-    }
+  console.log(strings);
+  for (let i = 0; i < strings.length; i += 2) {
+    arrayErrors.push({
+      message: strings[i],
+      field: strings[i + 1],
+    });
   }
 
   return { errorsMessages: arrayErrors };
 }
 
 export function makeAnswerInController(response: any) {
-  if (typeof response !== 'string') return response;
-  if (!response.includes('Error')) return response;
-  const numberOfError = response.trim().substring(5).trim();
+  if ('s' in response && typeof response.s !== 'number') return response;
 
-  switch (numberOfError) {
-    case '400':
-      throw new BadRequestException();
+  switch (response.s) {
+    case 400:
+      throw new BadRequestException(response.mf ?? null);
       break;
-    case '401':
+    case 401:
       throw new UnauthorizedException();
       break;
-    case '403':
+    case 403:
       throw new ForbiddenException();
       break;
-    case '404':
+    case 404:
       throw new NotFoundException();
       break;
     default:
-      return `Error ${numberOfError}, sorry, try again`;
+      return `Error ${response.s}, sorry, try again`;
   }
 }

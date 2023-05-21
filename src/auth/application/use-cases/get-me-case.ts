@@ -17,7 +17,7 @@ export class GetMeCase implements ICommandHandler<GetMeCommand> {
     );
 
     if (!user) {
-      return 'Error 404';
+      return { s: 404 };
     }
 
     return {

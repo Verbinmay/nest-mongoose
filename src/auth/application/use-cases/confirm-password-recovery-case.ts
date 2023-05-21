@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 
 import { UserRepository } from '../../../user/user.repository';
 import { NewPassword } from '../../dto/input-newpassword.dto';
+import { errorMaker } from '../../../helpers/errors';
 
 export class ConfirmPasswordRecoveryCommand {
   constructor(public inputModel: NewPassword) {}
@@ -18,18 +19,21 @@ export class ConfirmPasswordRecoveryCase
     const userFind = await this.userRepository.findUserByConfirmationCode(
       command.inputModel.recoveryCode,
     );
-    if (!userFind) {
-      return false;
-    }
     if (
+      !userFind &&
       userFind.emailConfirmation.confirmationCode !==
-      command.inputModel.recoveryCode
+        command.inputModel.recoveryCode &&
+      userFind.emailConfirmation.expirationDate < new Date()
     ) {
-      return false;
+      return {
+        s: 400,
+        mf: errorMaker([
+          'If the confirmation code is incorrect, expired or already been applied',
+          'recoveryCode',
+        ]),
+      };
     }
-    if (userFind.emailConfirmation.expirationDate < new Date()) {
-      return false;
-    }
+
     const hashBcrypt = await bcrypt.hash(command.inputModel.newPassword, 10);
     return await this.userRepository.updateConfirmationAndHash({
       id: userFind._id.toString(),

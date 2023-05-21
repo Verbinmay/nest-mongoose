@@ -31,7 +31,7 @@ export class LoginCase implements ICommandHandler<LoginCommand> {
     const decoder = await this.jwtService.decoderJWTs(tokens.refreshToken);
 
     if (typeof decoder == 'string') {
-      return 'Error 404';
+      return { s: 500 };
     }
     const sessionCreate: boolean = await this.sessionService.createSession({
       iat: decoder.iat,
@@ -42,6 +42,6 @@ export class LoginCase implements ICommandHandler<LoginCommand> {
       userId: command.userId,
     });
 
-    return sessionCreate ? tokens : 'Error 404';
+    return sessionCreate ? tokens : { s: 500 };
   }
 }

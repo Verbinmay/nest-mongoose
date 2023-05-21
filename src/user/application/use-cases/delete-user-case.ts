@@ -13,11 +13,11 @@ export class DeleteUserCase implements ICommandHandler<DeleteUserCommand> {
   async execute(command: DeleteUserCommand) {
     const user = await this.userRepository.findUserById(command.id);
     if (!user) {
-      return 'Error 404';
+      return { s: 404 };
     }
     const userDelete = await this.userRepository.delete(command.id);
     if (!userDelete) {
-      return 'Error 404';
+      return { s: 500 };
     }
     return userDelete;
   }

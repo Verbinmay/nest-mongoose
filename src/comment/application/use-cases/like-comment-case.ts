@@ -23,7 +23,7 @@ export class LikeCommentCase implements ICommandHandler<LikeCommentCommand> {
     const comment = await this.commentRepository.findById(command.commentId);
 
     if (!comment) {
-      return 'Error 404';
+      return { s: 404 };
     }
 
     let myStatusBefore = '';
@@ -39,7 +39,7 @@ export class LikeCommentCase implements ICommandHandler<LikeCommentCommand> {
     const user = await this.userRepository.findUserById(command.userId);
 
     if (!user) {
-      return 'Error 404';
+      return { s: 404 };
     }
 
     const index = comment.likesInfo.findIndex(
@@ -74,7 +74,7 @@ export class LikeCommentCase implements ICommandHandler<LikeCommentCommand> {
       await this.commentRepository.save(comment);
       return true;
     } catch (error) {
-      return 'Error 404';
+      return { s: 500 };
     }
   }
 }

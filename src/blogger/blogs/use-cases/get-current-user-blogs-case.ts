@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { PaginationQuery } from '../../../pagination/base-pagination';
 import { PaginatorBlog } from '../../../pagination/paginatorType';
-import { ViewBlogDto } from '../../../blog/dto/view-blog.dto';
+import { ViewBlogDto } from '../dto/view-blog.dto';
 import { Blog } from '../../../blog/entities/blog.entity';
 import { BlogRepository } from '../../../db/blog.repository';
 

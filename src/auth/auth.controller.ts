@@ -8,7 +8,6 @@ import {
   UseGuards,
   HttpCode,
   Get,
-  BadRequestException,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -19,7 +18,7 @@ import { LocalAuthGuard } from '../guard/auth-passport/guard-passport/local-auth
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { CurrentUserId } from '../decorator/currentUser.decorator';
 import { RefreshTokenGuard } from '../guard/refresh-token.guard';
-import { errorMaker, makeAnswerInController } from '../helpers/errors';
+import { makeAnswerInController } from '../helpers/errors';
 import { InputLogin } from './dto/input-login.dto';
 import { NewPassword } from './dto/input-newpassword.dto';
 import { RegistrationConfirmationCode } from './dto/input-registration-confirmation.dto';
@@ -129,38 +128,20 @@ export class AuthController {
   async registrationConfirmation(
     @Body() inputModel: RegistrationConfirmationCode,
   ) {
-    const confirmPost: boolean = await this.commandBus.execute(
+    const result: boolean = await this.commandBus.execute(
       new RegistrationConfirmationCommand(inputModel.code),
     );
-    if (confirmPost) {
-      return true;
-    } else {
-      throw new BadRequestException(
-        errorMaker(
-          'If the confirmation code is incorrect, expired or already been applied',
-          'code',
-        ),
-      );
-    }
+    return makeAnswerInController(result);
   }
 
   @Throttle(5, 10)
   @HttpCode(204)
   @Post('registration-email-resending')
   async emailResending(@Body() inputModel: ResendingConfirmation) {
-    const emailResendingPost: boolean = await this.commandBus.execute(
+    const result: boolean = await this.commandBus.execute(
       new ResendingEmailCommand(inputModel.email),
     );
-
-    if (!emailResendingPost) {
-      throw new BadRequestException(
-        errorMaker(
-          ' inputModel has incorrect values or if email is already confirmed',
-          'email',
-        ),
-      );
-    }
-    return emailResendingPost;
+    return makeAnswerInController(result);
   }
 
   @Throttle(5, 10)
@@ -176,19 +157,9 @@ export class AuthController {
   @HttpCode(204)
   @Post('new-password')
   async create(@Body() inputModel: NewPassword) {
-    const confirmPost: boolean = await this.commandBus.execute(
+    const result: boolean = await this.commandBus.execute(
       new ConfirmPasswordRecoveryCommand(inputModel),
     );
-
-    if (confirmPost) {
-      return true;
-    } else {
-      throw new BadRequestException(
-        errorMaker(
-          'If the confirmation code is incorrect, expired or already been applied',
-          'recoveryCode',
-        ),
-      );
-    }
+    return makeAnswerInController(result);
   }
 }

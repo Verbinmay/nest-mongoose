@@ -32,13 +32,13 @@ export class CreateCommentByBlogIdCase
     );
 
     if (!post) {
-      return 'Error 404';
+      return { s: 404 };
     }
     const user: User | null = await this.userRepository.findUserById(
       command.userId,
     );
     if (!user) {
-      return 'Error 404';
+      return { s: 404 };
     }
     const comment = Comment.createComment({
       content: command.inputModel.content,
@@ -46,7 +46,11 @@ export class CreateCommentByBlogIdCase
       userLogin: user.login,
       postId: command.postId,
     });
-    const result = await this.commentRepository.save(comment);
-    return result.getViewModel(user._id.toString());
+    try {
+      const result = await this.commentRepository.save(comment);
+      return result.getViewModel(user._id.toString());
+    } catch (error) {
+      return { s: 500 };
+    }
   }
 }

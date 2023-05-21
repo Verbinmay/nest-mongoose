@@ -1,6 +1,7 @@
-import { ViewBlogDto } from '../blog/dto/view-blog.dto';
+import { ViewBlogDto } from '../blogger/blogs/dto/view-blog.dto';
 import { ViewCommentDto } from '../comment/dto/view-comment.dto';
 import { ViewPostDto } from '../post/dto/view-post.dto';
+import { SAViewBlogDto } from '../sa/dto/sa-view-blog.dto';
 import { ViewUserDto } from '../user/dto/view-user.dto';
 
 export type PaginatorEnd = {
@@ -11,7 +12,7 @@ export type PaginatorEnd = {
 };
 
 export type PaginatorBlog = PaginatorEnd & {
-  items: Array<ViewBlogDto>;
+  items: Array<ViewBlogDto> | Array<SAViewBlogDto>;
 };
 
 export type PaginatorPost = PaginatorEnd & {
