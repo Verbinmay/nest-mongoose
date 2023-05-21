@@ -73,6 +73,7 @@ import { RegistrationCase } from './auth/application/use-cases/registration-case
 import { RegistrationConfirmationCase } from './auth/application/use-cases/registration-confirmation-case';
 import { ConfirmPasswordRecoveryCase } from './auth/application/use-cases/confirm-password-recovery-case';
 import { PasswordRecoveryCase } from './auth/application/use-cases/password-recovery-case';
+import { ResendingEmailCase } from './auth/application/use-cases/resending-email-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
@@ -119,6 +120,7 @@ const useCasesAuth = [
   RegistrationConfirmationCase,
   PasswordRecoveryCase,
   ConfirmPasswordRecoveryCase,
+  ResendingEmailCase,
 ];
 
 const useCasesUser = [CreateUserCase, GetAllUsersCase, DeleteUserCase];

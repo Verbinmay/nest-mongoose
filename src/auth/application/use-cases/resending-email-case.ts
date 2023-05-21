@@ -22,23 +22,27 @@ export class ResendingEmailCase
 
   async execute(command: ResendingEmailCommand) {
     const userFind = await this.userRepository.findUserByEmail(command.email);
-
+    console.log(userFind, 'userFind');
     if (!userFind) {
       return false;
     }
+
     if (userFind.emailConfirmation.isConfirmed) {
       return false;
     }
+
     const confirmationCode = randomUUID();
     const expirationDate = add(new Date(), {
       hours: 1,
       minutes: 3,
     });
+
     const userUpdate: boolean = await this.authRepository.updateCodeAndDate({
       confirmationCode: confirmationCode,
       expirationDate: expirationDate,
       user: userFind,
     });
+
     if (!userUpdate) return false;
 
     await this.mailService.sendUserConfirmation(
