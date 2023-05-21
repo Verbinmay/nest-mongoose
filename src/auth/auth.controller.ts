@@ -160,7 +160,7 @@ export class AuthController {
         ),
       );
     }
-    return;
+    return emailResendingPost;
   }
 
   @Throttle(5, 10)
