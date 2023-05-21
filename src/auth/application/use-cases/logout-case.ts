@@ -10,8 +10,7 @@ export class LogoutCase implements ICommandHandler<LogoutCommand> {
   constructor(private sessionRepository: SessionRepository) {}
 
   async execute(command: LogoutCommand) {
-    const tokenRevoked = await this.sessionRepository.deleteSessionLogout(
-      command.payload.userId,
+    const tokenRevoked = await this.sessionRepository.deleteSessionsByDeviceId(
       command.payload.deviceId,
     );
 
