@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { Blog, BlogsModelType as BlogModelType } from './entities/blog.entity';
+import {
+  Blog,
+  BlogsModelType as BlogModelType,
+} from '../blog/entities/blog.entity';
 
 @Injectable()
 export class BlogRepository {
@@ -20,7 +23,7 @@ export class BlogRepository {
 
   async save(blog: Blog) {
     const blogModel = new this.BlogModel(blog);
-    return blogModel.save();
+    return await blogModel.save();
   }
 
   async delete(id: string) {

@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class BasicPagination {
   @IsOptional()
@@ -38,5 +39,11 @@ export class PaginationQuery extends BasicPagination {
   searchEmailTerm = '';
   public createFilterName() {
     return { name: { $regex: '(?i)' + this.searchNameTerm + '(?-i)' } };
+  }
+  public createFilterNameAndId(id: string) {
+    return {
+      name: { $regex: '(?i)' + this.searchNameTerm + '(?-i)' },
+      _id: new Types.ObjectId(id),
+    };
   }
 }

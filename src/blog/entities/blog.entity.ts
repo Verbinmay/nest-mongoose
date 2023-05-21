@@ -2,16 +2,17 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { CreateBlogDto } from '../dto/create-blog.dto';
-import { UpdateBlogDto } from '../dto/update-blog.dto';
+import { CreateBlogDto } from '../../blogger/blogs/dto/create-blog.dto';
+import { UpdateBlogDto } from '../../blogger/blogs/dto/update-blog.dto';
 import { ViewBlogDto } from '../dto/view-blog.dto';
 
 @Schema()
 export class Blog {
-  constructor(inputModel: CreateBlogDto) {
+  constructor(userId: string, inputModel: CreateBlogDto) {
     this.name = inputModel.name;
     this.description = inputModel.description;
     this.websiteUrl = inputModel.websiteUrl;
+    this.userId = userId;
   }
   @Prop({ default: new Types.ObjectId(), type: mongoose.Schema.Types.ObjectId })
   public _id: Types.ObjectId = new Types.ObjectId();
@@ -24,6 +25,9 @@ export class Blog {
 
   @Prop({ required: true })
   public websiteUrl: string;
+
+  @Prop({ required: true })
+  public userId: string;
 
   @Prop({ default: new Date().toISOString() })
   public createdAt: string = new Date().toISOString();

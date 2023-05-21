@@ -2,21 +2,23 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { PaginationQuery } from '../../../pagination/base-pagination';
 import { PaginatorBlog } from '../../../pagination/paginatorType';
-import { ViewBlogDto } from '../../dto/view-blog.dto';
-import { Blog } from '../../entities/blog.entity';
+import { ViewBlogDto } from '../../../blog/dto/view-blog.dto';
+import { Blog } from '../../../blog/entities/blog.entity';
 import { BlogRepository } from '../../../db/blog.repository';
 
-export class GetAllBlogsCommand {
-  constructor(public query: PaginationQuery) {}
+export class GetCurrentUserBlogsCommand {
+  constructor(public userId: string, public query: PaginationQuery) {}
 }
 
-@CommandHandler(GetAllBlogsCommand)
-export class GetAllBlogsCase implements ICommandHandler<GetAllBlogsCommand> {
+@CommandHandler(GetCurrentUserBlogsCommand)
+export class GetCurrentUserBlogsCase
+  implements ICommandHandler<GetCurrentUserBlogsCommand>
+{
   constructor(private readonly blogRepository: BlogRepository) {}
 
-  async execute(command: GetAllBlogsCommand) {
+  async execute(command: GetCurrentUserBlogsCommand) {
     const filterName: { name: { $regex: string } } =
-      command.query.createFilterName();
+      command.query.createFilterNameAndId(command.userId);
 
     const filterSort: { [x: string]: number } = command.query.sortFilter();
 

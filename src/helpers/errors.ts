@@ -55,6 +55,6 @@ export function makeAnswerInController(response: any) {
       throw new NotFoundException();
       break;
     default:
-      return numberOfError;
+      return `Error ${numberOfError}, sorry, try again`;
   }
 }

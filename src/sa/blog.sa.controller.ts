@@ -16,8 +16,8 @@ import { BasicAuthGuard } from '../guard/auth-passport/guard-passport/basic-auth
 import { CreateBlogCommand } from '../blogger/blogs/use-cases/create-blog-case';
 import { CreatePostByBlogIdCommand } from '../blogger/blogs/use-cases/create-post-by-blog-id-case';
 import { DeleteBlogCommand } from '../blogger/blogs/use-cases/delete-blog-case';
-import { GetAllBlogsCommand } from './application/use-cases/get-all-blogs-case';
-import { GetBlogByBlogIdCommand } from './application/use-cases/get-blog-by-blog-id-case';
+import { GetAllBlogsCommand } from '../blog/application/use-cases/get-all-blogs-case';
+import { GetBlogByBlogIdCommand } from '../blog/application/use-cases/get-blog-by-blog-id-case';
 import { GetAllPostsByBlogIdCommand } from '../post/application/use-cases/get-post-by-blog-id-case';
 import { UpdateBlogCommand } from '../blogger/blogs/use-cases/update-blog-case';
 import { CurrentUserId } from '../decorator/currentUser.decorator';

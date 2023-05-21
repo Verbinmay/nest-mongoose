@@ -1,10 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { Post } from '../../entities/post.entity';
-import { PostRepository } from '../../post.repository';
-import { CreatePostBlogDto } from '../../../blog/dto/create-post-in-blog.dto';
+import { Post } from '../../../post/entities/post.entity';
+import { PostRepository } from '../../../post/post.repository';
+import { CreatePostBlogDto } from '../dto/create-post-in-blog.dto';
 import { Blog } from '../../../blog/entities/blog.entity';
-import { BlogRepository } from '../../../blog/blog.repository';
+import { BlogRepository } from '../../../db/blog.repository';
 
 export class CreatePostByBlogIdCommand {
   constructor(
@@ -27,16 +27,20 @@ export class CreatePostByBlogIdCase
     const blog: Blog | null = await this.blogRepository.findBlogById(
       command.blogId,
     );
-    if (!blog) {
-      return 'Error 404';
-    }
-    const post: Post = Post.createPost(
-      blog.name,
-      command.inputModel,
-      command.blogId,
-    );
-    const result = await this.postRepository.save(post);
+    if (!blog) return 'Error 404';
+    if (blog.userId !== command.userId) return 'Error 403';
 
-    return result.getViewModel(command.userId);
+    const post: Post = new Post(
+      command.blogId,
+      blog.name,
+      command.userId,
+      command.inputModel,
+    );
+    try {
+      const result = await this.postRepository.save(post);
+      return result.getViewModel(command.userId);
+    } catch (error) {
+      return 'Error 500';
+    }
   }
 }

@@ -12,8 +12,8 @@ import { Post, PostSchema } from './post/entities/post.entity';
 import { Session, SessionSchema } from './session/entities/session.entity';
 import { User, UserSchema } from './user/entities/user.entity';
 import { AuthController } from './auth/auth.controller';
-import { BlogController } from './blog/blog.controller';
-import { BlogRepository } from './blog/blog.repository';
+import { BlogController } from './sa/blog.sa.controller';
+import { BlogRepository } from './db/blog.repository';
 import { CommentController } from './comment/comment.controller';
 import { CommentRepository } from './comment/comment.repository';
 import { JWTService } from './jwt/jwt.service';
@@ -42,16 +42,16 @@ import { BasicStrategy } from './guard/auth-passport/strategy-passport/basic.str
 import { GetBlogByBlogIdCase } from './blog/application/use-cases/get-blog-by-blog-id-case';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GetAllBlogsCase } from './blog/application/use-cases/get-all-blogs-case';
-import { CreateBlogCase } from './blog/application/use-cases/create-blog-case';
-import { UpdateBlogCase } from './blog/application/use-cases/update-blog-case';
-import { DeleteBlogCase } from './blog/application/use-cases/delete-blog-case';
-import { CreatePostByBlogIdCase } from './post/application/use-cases/create-post-by-blog-id-case';
+import { CreateBlogCase } from './blogger/blogs/use-cases/create-blog-case';
+import { UpdateBlogCase } from './blogger/blogs/use-cases/update-blog-case';
+import { DeleteBlogCase } from './blogger/blogs/use-cases/delete-blog-case';
+import { CreatePostByBlogIdCase } from './blogger/blogs/use-cases/create-post-by-blog-id-case';
 import { GetAllPostsByBlogIdCase } from './post/application/use-cases/get-post-by-blog-id-case';
 import { CreatePostCase } from './post/application/use-cases/create-post-case';
 import { GetAllPostsCase } from './post/application/use-cases/get-all-posts-case';
 import { GetPostByIdCase } from './post/application/use-cases/get-post-by-id-case';
-import { UpdatePostCase } from './post/application/use-cases/update-post-case';
-import { DeletePostCase } from './post/application/use-cases/delete-post-case';
+import { UpdatePostCase } from './blogger/blogs/use-cases/update-post-case';
+import { DeletePostCase } from './blogger/blogs/use-cases/delete-post-case';
 import { LikePostCase } from './post/application/use-cases/like-post-case';
 import { GetAllCommentsByBlogIdCase } from './comment/application/use-cases/get-all-comments-by-post-id-case';
 import { CreateCommentByBlogIdCase } from './comment/application/use-cases/create-comment-by-post-id-case';
@@ -74,6 +74,7 @@ import { RegistrationConfirmationCase } from './auth/application/use-cases/regis
 import { ConfirmPasswordRecoveryCase } from './auth/application/use-cases/confirm-password-recovery-case';
 import { PasswordRecoveryCase } from './auth/application/use-cases/password-recovery-case';
 import { ResendingEmailCase } from './auth/application/use-cases/resending-email-case';
+import { GetCurrentUserBlogsCase } from './blogger/blogs/use-cases/get-current-user-blogs-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
@@ -83,6 +84,7 @@ const useCasesBlog = [
   GetAllBlogsCase,
   GetBlogByBlogIdCase,
   UpdateBlogCase,
+  GetCurrentUserBlogsCase,
 ];
 
 const useCasesPost = [

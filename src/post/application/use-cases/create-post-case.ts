@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { Blog } from '../../../blog/entities/blog.entity';
-import { BlogRepository } from '../../../blog/blog.repository';
+import { BlogRepository } from '../../../db/blog.repository';
 import { CreatePostDto } from '../../dto/create-post.dto';
 import { Post } from '../../entities/post.entity';
 import { PostRepository } from '../../post.repository';

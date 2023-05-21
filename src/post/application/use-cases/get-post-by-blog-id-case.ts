@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { Blog } from '../../../blog/entities/blog.entity';
-import { BlogRepository } from '../../../blog/blog.repository';
+import { BlogRepository } from '../../../db/blog.repository';
 import { PaginationQuery } from '../../../pagination/base-pagination';
 import { PaginatorPost } from '../../../pagination/paginatorType';
 import { ViewPostDto } from '../../dto/view-post.dto';
