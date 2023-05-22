@@ -167,10 +167,10 @@ const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
       { name: User.name, schema: UserSchema },
     ]),
 
-    ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
-    }),
+    // ThrottlerModule.forRoot({
+    //   ttl: 60,
+    //   limit: 10,
+    // }),
   ],
   controllers: [
     AppController,
@@ -185,10 +185,10 @@ const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
     UserSAController,
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
     ...strategies /* стратегия */,
     ...useCasesBlog /* кейсы */,
     ...useCasesComment /* кейсы */,
