@@ -6,7 +6,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
-import { GetBlogByBlogIdCommand } from '../blog/application/use-cases/get-blog-by-blog-id-case';
+import { GetBlogByBlogIdCommand } from '../public/use-cases/blog/get-blog-by-blog-id-case';
 
 @ValidatorConstraint({ name: 'ValidationBlogId', async: true })
 @Injectable()

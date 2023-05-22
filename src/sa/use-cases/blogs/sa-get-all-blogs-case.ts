@@ -1,21 +1,22 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { PaginationQuery } from '../../../pagination/base-pagination';
+
 import { BlogRepository } from '../../../db/blog.repository';
 import { Blog } from '../../../entities/blog.entity';
-import { SAViewBlogDto } from '../../dto/sa-view-blog.dto';
+import { PaginationQuery } from '../../../pagination/base-pagination';
 import { PaginatorBlog } from '../../../pagination/paginatorType';
+import { SAViewBlogDto } from '../../dto/blog/sa-view-blog.dto';
 
-export class SAGetAllBlogsCommand {
+export class SA_GetAllBlogsCommand {
   constructor(public query: PaginationQuery) {}
 }
 
-@CommandHandler(SAGetAllBlogsCommand)
-export class SAGetAllBlogsCase
-  implements ICommandHandler<SAGetAllBlogsCommand>
+@CommandHandler(SA_GetAllBlogsCommand)
+export class SA_GetAllBlogsCase
+  implements ICommandHandler<SA_GetAllBlogsCommand>
 {
   constructor(private readonly blogRepository: BlogRepository) {}
 
-  async execute(command: SAGetAllBlogsCommand) {
+  async execute(command: SA_GetAllBlogsCommand) {
     const filterName: { name: { $regex: string } } =
       command.query.createFilterName();
 

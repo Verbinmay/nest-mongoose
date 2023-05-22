@@ -28,6 +28,7 @@ export function errorMaker(strings): ErrorResult {
 }
 
 export function makeAnswerInController(response: any) {
+  if (typeof response !== 'object') return response;
   if (!('s' in response) || typeof response.s !== 'number') return response;
 
   switch (response.s) {

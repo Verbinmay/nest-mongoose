@@ -2,8 +2,8 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { CreateSessionDto } from '../session/dto/create-session.dto';
-import { ViewSessionDto } from '../session/dto/view-session.dto';
+import { CreateSessionDto } from '../public/dto/session/create-session.dto';
+import { ViewSessionDto } from '../public/dto/session/view-session.dto';
 
 @Schema()
 export class Session {

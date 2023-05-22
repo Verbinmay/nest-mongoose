@@ -1,8 +1,9 @@
-import { ViewBlogDto } from '../blogger/blogs/dto/view-blog.dto';
-import { ViewCommentDto } from '../comment/dto/view-comment.dto';
-import { ViewPostDto } from '../post/dto/view-post.dto';
-import { SAViewBlogDto } from '../sa/dto/sa-view-blog.dto';
-import { SAViewUserDto } from '../sa/dto/sa-view-user.dto';
+import { ViewBlogDto } from '../blogger/dto/blog/view-blog.dto';
+import { ViewCommentDto } from '../public/dto/comment/view-comment.dto';
+import { ViewPostDto } from '../public/dto/post/view-post.dto';
+import { SAViewBlogDto } from '../sa/dto/blog/sa-view-blog.dto';
+
+import { SAViewUserDto } from '../sa/dto/user/sa-view-user.dto';
 
 export type PaginatorEnd = {
   pagesCount: number;

@@ -2,11 +2,11 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { CreatePostBlogDto } from '../blogger/blogs/dto/create-post-in-blog.dto';
+import { CreatePostBlogDto } from '../blogger/dto/post/create-post-in-blog.dto';
 import { like, likeSchema } from './like.entity';
 
-import { ViewPostDto } from '../post/dto/view-post.dto';
-import { UpdatePostByBlogDto } from '../blogger/blogs/dto/update-post-by-blog.dto';
+import { ViewPostDto } from '../public/dto/post/view-post.dto';
+import { UpdatePostByBlogDto } from '../blogger/dto/post/update-post-by-blog.dto';
 
 @Schema()
 export class Post {
@@ -70,15 +70,15 @@ export class Post {
       if (like) status = like.status;
 
       likesCount = this.extendedLikesInfo.filter(
-        (m) => m.status === 'Like',
+        (m) => m.status === 'Like' && m.isBaned === false,
       ).length;
 
       dislikeCount = this.extendedLikesInfo.filter(
-        (m) => m.status === 'Dislike',
+        (m) => m.status === 'Dislike' && m.isBaned === false,
       ).length;
 
       newestLikes = this.extendedLikesInfo
-        .filter((m) => m.status === 'Like')
+        .filter((m) => m.status === 'Like' && m.isBaned === false)
         .sort((a, b) => {
           const dateA = new Date(a.addedAt).getTime();
           const dateB = new Date(b.addedAt).getTime();

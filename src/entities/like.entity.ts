@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class like {
-  @Prop() addedAt: string;
-  @Prop() userId: string;
-  @Prop() login: string;
-  @Prop() status: 'Like' | 'Dislike';
+  @Prop() public addedAt: string;
+  @Prop() public userId: string;
+  @Prop() public login: string;
+  @Prop() public status: 'Like' | 'Dislike';
   @Prop({ type: Boolean, default: false })
   public isBaned = false;
 }

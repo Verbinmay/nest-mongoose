@@ -10,22 +10,20 @@ import {
 import { CommandBus } from '@nestjs/cqrs';
 
 import { BasicAuthGuard } from '../../guard/auth-passport/guard-passport/basic-auth.guard';
-
 import { makeAnswerInController } from '../../helpers/errors';
 import { PaginationQuery } from '../../pagination/base-pagination';
-
-import { SAGetAllBlogsCommand } from '../use-cases/blogs/sa-get-all-blogs-case';
-import { BindBlogWithUserCommand } from '../use-cases/blogs/bind-blog-with-user-case';
+import { SA_BindBlogWithUserCommand } from '../use-cases/blogs/sa-bind-blog-with-user-case';
+import { SA_GetAllBlogsCommand } from '../use-cases/blogs/sa-get-all-blogs-case';
 
 @Controller('sa/blogs')
-export class BlogController {
+export class BlogSAController {
   constructor(private commandBus: CommandBus) {}
 
   @UseGuards(BasicAuthGuard)
   @Get()
   async SA_GetAllBlogs(@Query() query: PaginationQuery) {
     const result = await this.commandBus.execute(
-      new SAGetAllBlogsCommand(query),
+      new SA_GetAllBlogsCommand(query),
     );
     return makeAnswerInController(result);
   }
@@ -38,7 +36,7 @@ export class BlogController {
     @Param('userId') userId: string,
   ) {
     const result = await this.commandBus.execute(
-      new BindBlogWithUserCommand(blogId, userId),
+      new SA_BindBlogWithUserCommand(blogId, userId),
     );
     return makeAnswerInController(result);
   }

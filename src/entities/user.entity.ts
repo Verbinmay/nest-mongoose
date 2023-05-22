@@ -4,8 +4,8 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { CreateUserDto } from '../sa/dto/create-user.dto';
-import { SAViewUserDto } from '../sa/dto/sa-view-user.dto';
+import { CreateUserDto } from '../sa/dto/user/create-user.dto';
+import { SAViewUserDto } from '../sa/dto/user/sa-view-user.dto';
 
 @Schema()
 export class banInfo {

@@ -13,7 +13,7 @@ export class JWTService {
   async createJWTAccessToken(id: string) {
     return this.jwt.sign(
       { sub: id },
-      { secret: process.env.JWT_SECRET, expiresIn: '10s' },
+      { secret: process.env.JWT_SECRET, expiresIn: '1000000000s' },
     );
   }
 

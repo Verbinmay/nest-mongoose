@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-
-import {
-  Blog,
-  BlogsModelType as BlogModelType,
-} from '../entities/blog.entity';
+import { Blog, BlogsModelType } from '../entities/blog.entity';
 
 @Injectable()
 export class BlogRepository {
   constructor(
     @InjectModel(Blog.name)
-    private BlogModel: BlogModelType,
+    private BlogModel: BlogsModelType,
   ) {}
 
   async findBlogById(id: string): Promise<Blog> {

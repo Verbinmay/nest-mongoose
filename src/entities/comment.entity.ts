@@ -3,7 +3,7 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { like, likeSchema } from './like.entity';
-import { ViewCommentDto } from '../comment/dto/view-comment.dto';
+import { ViewCommentDto } from '../public/dto/comment/view-comment.dto';
 
 @Schema()
 export class CommentatorInfo {
@@ -54,10 +54,12 @@ export class Comment {
       const like = this.likesInfo.find((m) => m.userId === userId);
       if (like) status = like.status;
 
-      likesCount = this.likesInfo.filter((m) => m?.status === 'Like').length;
+      likesCount = this.likesInfo.filter(
+        (m) => m.status === 'Like' && m.isBaned === false,
+      ).length;
 
       dislikeCount = this.likesInfo.filter(
-        (m) => m?.status === 'Dislike',
+        (m) => m.status === 'Dislike' && m.isBaned === false,
       ).length;
     }
 

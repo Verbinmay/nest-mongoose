@@ -2,10 +2,10 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { CreateBlogDto } from '../blogger/blogs/dto/create-blog.dto';
-import { UpdateBlogDto } from '../blogger/blogs/dto/update-blog.dto';
-import { ViewBlogDto } from '../blogger/blogs/dto/view-blog.dto';
-import { SAViewBlogDto } from '../sa/dto/sa-view-blog.dto';
+import { CreateBlogDto } from '../blogger/dto/blog/create-blog.dto';
+import { UpdateBlogDto } from '../blogger/dto/blog/update-blog.dto';
+import { ViewBlogDto } from '../blogger/dto/blog/view-blog.dto';
+import { SAViewBlogDto } from '../sa/dto/blog/sa-view-blog.dto';
 
 @Schema()
 export class Blog {

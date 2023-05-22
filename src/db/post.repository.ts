@@ -42,4 +42,22 @@ export class PostRepository {
       return null;
     }
   }
+
+  async banPostByUserId(userId: string, isBanned: boolean) {
+    try {
+      await this.PostModel.updateMany(
+        { userId: userId },
+        { $set: { isBaned: isBanned } },
+      );
+      await this.PostModel.updateMany(
+        {},
+        { $set: { 'extendedLikesInfo.$[elem].isBaned': isBanned } },
+        { arrayFilters: [{ 'elem.userId': userId }] },
+      );
+
+      return true;
+    } catch (error) {
+      return null;
+    }
+  }
 }

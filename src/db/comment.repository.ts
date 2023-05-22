@@ -60,4 +60,21 @@ export class CommentRepository {
       return false;
     }
   }
+
+  async banCommentByUserId(userId: string, isBanned: boolean) {
+    try {
+      await this.CommentModel.updateMany(
+        { 'commentatorInfo.userId': userId },
+        { $set: { isBaned: isBanned } },
+      );
+      await this.CommentModel.updateMany(
+        {},
+        { $set: { 'likesInfo.$[elem].isBaned': isBanned } },
+        { arrayFilters: [{ 'elem.userId': userId }] },
+      );
+      return true;
+    } catch (error) {
+      return null;
+    }
+  }
 }
