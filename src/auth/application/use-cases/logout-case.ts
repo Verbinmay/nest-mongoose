@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { SessionRepository } from '../../../session/sessions.repository';
+import { SessionRepository } from '../../../db/sessions.repository';
 
 export class LogoutCommand {
   constructor(public payload: any) {}

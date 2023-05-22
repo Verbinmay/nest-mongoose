@@ -1,10 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import * as bcrypt from 'bcrypt';
-import { User } from '../../../user/entities/user.entity';
-import { UserRepository } from '../../../user/user.repository';
+import { User } from '../../../entities/user.entity';
+import { UserRepository } from '../../../db/user.repository';
 import { MailService } from '../../../mail/mail.service';
-import { CreateUserDto } from '../../../user/dto/create-user.dto';
+import { CreateUserDto } from '../../../sa/dto/create-user.dto';
 
 export class RegistrationCommand {
   constructor(public inputModel: CreateUserDto) {}

@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { UserRepository } from '../../user.repository';
-import { User } from '../../entities/user.entity';
+import { UserRepository } from '../../../db/user.repository';
+import { User } from '../../../entities/user.entity';
 import { PaginationQuery } from '../../../pagination/base-pagination';
-import { ViewUserDto } from '../../dto/view-user.dto';
+import { SAViewUserDto } from '../../dto/sa-view-user.dto';
 import { PaginatorUser } from '../../../pagination/paginatorType';
 
 export class GetAllUsersCommand {
@@ -16,28 +16,20 @@ export class GetAllUsersCase implements ICommandHandler<GetAllUsersCommand> {
 
   async execute(command: GetAllUsersCommand) {
     let filter: object = {};
-    if (command.query.searchLoginTerm || command.query.searchEmailTerm) {
-      filter = {
-        $or: [
-          {
-            login: { $regex: '(?i)' + command.query.searchLoginTerm + '(?-i)' },
-          },
-          {
-            email: { $regex: '(?i)' + command.query.searchEmailTerm + '(?-i)' },
-          },
-        ],
-      };
-    } else if (command.query.searchLoginTerm) {
-      filter = {
-        login: { $regex: '(?i)' + command.query.searchLoginTerm + '(?-i)' },
-      };
-    } else if (command.query.searchEmailTerm) {
-      filter = {
-        email: { $regex: '(?i)' + command.query.searchEmailTerm + '(?-i)' },
-      };
-    } else {
-      filter = {};
-    }
+
+    filter = {
+      $and: [
+        {
+          login: { $regex: command.query.searchLoginTerm, $options: 'i' },
+        },
+        {
+          email: { $regex: command.query.searchEmailTerm, $options: 'i' },
+        },
+        {
+          'banInfo.isBanned': { $in: command.query.createBunStatus() },
+        },
+      ],
+    };
 
     const filterSort: { [x: string]: number } = command.query.sortFilter();
 
@@ -51,8 +43,9 @@ export class GetAllUsersCase implements ICommandHandler<GetAllUsersCommand> {
       skip: command.query.skip(),
       limit: command.query.pageSize,
     });
+    console.log(usersFromDB);
 
-    const users: ViewUserDto[] = usersFromDB.map((m) => m.getViewModel());
+    const users: SAViewUserDto[] = usersFromDB.map((m) => m.SAGetViewModel());
 
     const result: PaginatorUser = {
       pagesCount: pagesCount,

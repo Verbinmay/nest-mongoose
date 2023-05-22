@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { BlogRepository } from '../../../db/blog.repository';
-import { Post } from '../../../post/entities/post.entity';
-import { PostRepository } from '../../../post/post.repository';
+import { Post } from '../../../entities/post.entity';
+import { PostRepository } from '../../../db/post.repository';
 import { UpdatePostByBlogDto } from '../dto/update-post-by-blog.dto';
 
 export class UpdatePostCommand {

@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BlogRepository } from '../../db/blog.repository';
-import { Blog } from '../../blog/entities/blog.entity';
-import { UserRepository } from '../../user/user.repository';
-import { errorMaker } from '../../helpers/errors';
+import { BlogRepository } from '../../../db/blog.repository';
+import { Blog } from '../../../entities/blog.entity';
+import { UserRepository } from '../../../db/user.repository';
+import { errorMaker } from '../../../helpers/errors';
 
 export class BindBlogWithUserCommand {
   constructor(public blogId: string, public userId: string) {}

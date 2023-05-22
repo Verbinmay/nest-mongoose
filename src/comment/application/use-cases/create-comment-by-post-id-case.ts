@@ -1,12 +1,12 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { CreateCommentDto } from '../../dto/create-comment.dto';
-import { Comment } from '../../entities/comment.entity';
-import { User } from '../../../user/entities/user.entity';
-import { CommentRepository } from '../../comment.repository';
-import { UserRepository } from '../../../user/user.repository';
-import { Post } from '../../../post/entities/post.entity';
-import { PostRepository } from '../../../post/post.repository';
+import { Comment } from '../../../entities/comment.entity';
+import { User } from '../../../entities/user.entity';
+import { CommentRepository } from '../../../db/comment.repository';
+import { UserRepository } from '../../../db/user.repository';
+import { Post } from '../../../entities/post.entity';
+import { PostRepository } from '../../../db/post.repository';
 
 export class PostCommentByBlogIdCommand {
   constructor(

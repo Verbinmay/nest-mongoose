@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { UserRepository } from '../../../user/user.repository';
+import { UserRepository } from '../../../db/user.repository';
 import { MailService } from '../../../mail/mail.service';
-import { AuthRepository } from '../../auth.repository';
+import { AuthRepository } from '../../../db/auth.repository';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
 import { errorMaker } from '../../../helpers/errors';

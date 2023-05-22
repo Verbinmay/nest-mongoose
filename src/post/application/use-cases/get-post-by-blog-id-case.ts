@@ -1,12 +1,12 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { Blog } from '../../../blog/entities/blog.entity';
+import { Blog } from '../../../entities/blog.entity';
 import { BlogRepository } from '../../../db/blog.repository';
 import { PaginationQuery } from '../../../pagination/base-pagination';
 import { PaginatorPost } from '../../../pagination/paginatorType';
 import { ViewPostDto } from '../../dto/view-post.dto';
-import { Post } from '../../entities/post.entity';
-import { PostRepository } from '../../post.repository';
+import { Post } from '../../../entities/post.entity';
+import { PostRepository } from '../../../db/post.repository';
 
 export class GetAllPostsByBlogIdCommand {
   constructor(

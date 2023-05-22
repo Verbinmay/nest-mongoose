@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { User } from '../../../user/entities/user.entity';
-import { UserRepository } from '../../../user/user.repository';
+import { User } from '../../../entities/user.entity';
+import { UserRepository } from '../../../db/user.repository';
 
 export class GetMeCommand {
   constructor(public userId: string) {}

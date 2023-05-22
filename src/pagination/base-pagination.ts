@@ -37,8 +37,22 @@ export class PaginationQuery extends BasicPagination {
   @IsString()
   @IsOptional()
   searchEmailTerm = '';
+  @IsString()
+  @IsOptional()
+  banStatus: 'all' | 'banned' | 'notBanned' = 'all';
+
   public createFilterName() {
-    return { name: { $regex: '(?i)' + this.searchNameTerm + '(?-i)' } };
+    return { name: { $regex: this.searchNameTerm, $options: 'i' } };
+  }
+  public createBunStatus() {
+    switch (this.banStatus) {
+      case 'all':
+        return [true, false];
+      case 'banned':
+        return [true];
+      case 'notBanned':
+        return [false];
+    }
   }
   public createFilterNameAndId(id: string) {
     return {

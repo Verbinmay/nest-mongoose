@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { SessionRepository } from '../../sessions.repository';
+import { SessionRepository } from '../../../db/sessions.repository';
 
 export class DeleteAllSessionsWithoutCurrentCommand {
   constructor(public userId: string, public deviceId: string) {}
@@ -13,7 +13,7 @@ export class DeleteAllSessionsWithoutCurrentCase
   constructor(private readonly sessionRepository: SessionRepository) {}
 
   async execute(command: DeleteAllSessionsWithoutCurrentCommand) {
-    const sessionsDelete = await this.sessionRepository.deleteAll(
+    const sessionsDelete = await this.sessionRepository.deleteAllWithoutCurrent(
       command.userId,
       command.deviceId,
     );

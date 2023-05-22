@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   Blog,
   BlogsModelType as BlogModelType,
-} from '../blog/entities/blog.entity';
+} from '../entities/blog.entity';
 
 @Injectable()
 export class BlogRepository {

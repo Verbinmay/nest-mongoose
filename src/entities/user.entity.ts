@@ -4,8 +4,20 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { CreateUserDto } from '../dto/create-user.dto';
-import { ViewUserDto } from '../dto/view-user.dto';
+import { CreateUserDto } from '../sa/dto/create-user.dto';
+import { SAViewUserDto } from '../sa/dto/sa-view-user.dto';
+
+@Schema()
+export class banInfo {
+  @Prop({ type: Boolean, default: false })
+  isBanned = false;
+  @Prop({ type: String })
+  banDate = '';
+  @Prop({ type: String })
+  banReason = '';
+}
+
+export const banInfoSchema = SchemaFactory.createForClass(banInfo);
 
 @Schema()
 export class EmailConfirmation {
@@ -25,7 +37,7 @@ export const emailConfirmationSchema =
 
 @Schema()
 export class User {
-  /* здесь нужно типизировать inputModel как  any, иначе не подтянется name в встроенном конструкторе и не InjectModel не сработает, придется вручную прописывать все имена строками */
+  /* здесь нужно типизировать inputModel как  any, иначе не подтянется name в встроенном конструкторе и InjectModel не сработает, придется вручную прописывать все имена строками */
   constructor(inputModel: any, hash: string) {
     this.login = inputModel.login;
     this.email = inputModel.email;
@@ -52,12 +64,20 @@ export class User {
   @Prop({ type: emailConfirmationSchema, required: true })
   public emailConfirmation: EmailConfirmation = new EmailConfirmation();
 
-  getViewModel(): ViewUserDto {
+  @Prop({ type: banInfoSchema, required: true })
+  public banInfo: banInfo = new banInfo();
+
+  SAGetViewModel(): SAViewUserDto {
     const result = {
       id: this._id.toString(),
       login: this.login,
       email: this.email,
       createdAt: this.createdAt,
+      banInfo: {
+        isBanned: this.banInfo.isBanned,
+        banDate: this.banInfo.banDate,
+        banReason: this.banInfo.banReason,
+      },
     };
 
     return result;
@@ -79,7 +99,7 @@ export class User {
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.methods = {
-  getViewModel: User.prototype.getViewModel,
+  SAGetViewModel: User.prototype.SAGetViewModel,
 };
 
 UserSchema.statics = {
@@ -92,7 +112,7 @@ export type UsersModelStaticType = {
   createUser: (inputModel: CreateUserDto) => UsersDocument;
 };
 export type UsersModelMethodsType = {
-  getViewModel: (userId: string) => ViewUserDto;
+  SAGetViewModel: (userId: string) => SAViewUserDto;
 };
 
 export type UserModelType = Model<UsersDocument> &

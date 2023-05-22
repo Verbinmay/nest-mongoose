@@ -28,7 +28,7 @@ export function errorMaker(strings): ErrorResult {
 }
 
 export function makeAnswerInController(response: any) {
-  if ('s' in response && typeof response.s !== 'number') return response;
+  if (!('s' in response) || typeof response.s !== 'number') return response;
 
   switch (response.s) {
     case 400:

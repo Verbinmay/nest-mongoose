@@ -2,7 +2,7 @@ import { ViewBlogDto } from '../blogger/blogs/dto/view-blog.dto';
 import { ViewCommentDto } from '../comment/dto/view-comment.dto';
 import { ViewPostDto } from '../post/dto/view-post.dto';
 import { SAViewBlogDto } from '../sa/dto/sa-view-blog.dto';
-import { ViewUserDto } from '../user/dto/view-user.dto';
+import { SAViewUserDto } from '../sa/dto/sa-view-user.dto';
 
 export type PaginatorEnd = {
   pagesCount: number;
@@ -20,7 +20,7 @@ export type PaginatorPost = PaginatorEnd & {
 };
 
 export type PaginatorUser = PaginatorEnd & {
-  items: Array<ViewUserDto>;
+  items: Array<SAViewUserDto>;
 };
 
 export type PaginatorCommentWithLikeViewModel = PaginatorEnd & {

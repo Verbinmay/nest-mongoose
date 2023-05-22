@@ -3,6 +3,7 @@ import { SessionService } from '../../../session/session.service';
 import { randomUUID } from 'crypto';
 import { Tokens } from '../../dto/tokens.dto';
 import { JWTService } from '../../../jwt/jwt.service';
+import { UserRepository } from '../../../db/user.repository';
 
 export class LoginCommand {
   constructor(
@@ -19,9 +20,12 @@ export class LoginCase implements ICommandHandler<LoginCommand> {
   constructor(
     private sessionService: SessionService,
     private jwtService: JWTService,
+    private userRepository: UserRepository,
   ) {}
 
   async execute(command: LoginCommand) {
+    const user = await this.userRepository.findUserById(command.userId);
+    if (user.banInfo.isBanned === true) return { s: 404 };
     const deviceId: string = randomUUID();
 
     const tokens: Tokens = await this.jwtService.tokenCreator({

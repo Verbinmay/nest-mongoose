@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { ViewCommentDto } from '../../dto/view-comment.dto';
-import { Comment } from '../../entities/comment.entity';
-import { CommentRepository } from '../../comment.repository';
+import { Comment } from '../../../entities/comment.entity';
+import { CommentRepository } from '../../../db/comment.repository';
 import { PaginationQuery } from '../../../pagination/base-pagination';
 import { PaginatorCommentWithLikeViewModel } from '../../../pagination/paginatorType';
 

@@ -9,13 +9,13 @@ import {
 } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 
-import { BasicAuthGuard } from '../guard/auth-passport/guard-passport/basic-auth.guard';
+import { BasicAuthGuard } from '../../guard/auth-passport/guard-passport/basic-auth.guard';
 
-import { makeAnswerInController } from '../helpers/errors';
-import { PaginationQuery } from '../pagination/base-pagination';
+import { makeAnswerInController } from '../../helpers/errors';
+import { PaginationQuery } from '../../pagination/base-pagination';
 
-import { SAGetAllBlogsCommand } from './use-cases/sa-get-all-blogs-case';
-import { BindBlogWithUserCommand } from './use-cases/bind-blog-with-user-case';
+import { SAGetAllBlogsCommand } from '../use-cases/blogs/sa-get-all-blogs-case';
+import { BindBlogWithUserCommand } from '../use-cases/blogs/bind-blog-with-user-case';
 
 @Controller('sa/blogs')
 export class BlogController {

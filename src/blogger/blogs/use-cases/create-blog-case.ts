@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { CreateBlogDto } from '../dto/create-blog.dto';
-import { Blog } from '../../../blog/entities/blog.entity';
+import { Blog } from '../../../entities/blog.entity';
 import { BlogRepository } from '../../../db/blog.repository';
-import { UserRepository } from '../../../user/user.repository';
+import { UserRepository } from '../../../db/user.repository';
 
 export class CreateBlogCommand {
   constructor(public userId: string, public inputModel: CreateBlogDto) {}

@@ -2,8 +2,8 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { like, likeSchema } from '../../likes/entities/like.entity';
-import { ViewCommentDto } from '../dto/view-comment.dto';
+import { like, likeSchema } from './like.entity';
+import { ViewCommentDto } from '../comment/dto/view-comment.dto';
 
 @Schema()
 export class CommentatorInfo {
@@ -39,6 +39,9 @@ export class Comment {
 
   @Prop({ default: new Date().toISOString() })
   public updatedAt: string = new Date().toISOString();
+
+  @Prop({ type: Boolean, default: false })
+  public isBaned = false;
 
   @Prop({ default: [], type: [likeSchema] })
   public likesInfo: Array<like> = [];

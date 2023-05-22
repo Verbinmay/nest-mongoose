@@ -1,9 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { PaginationQuery } from '../../pagination/base-pagination';
-import { BlogRepository } from '../../db/blog.repository';
-import { Blog } from '../../blog/entities/blog.entity';
-import { SAViewBlogDto } from '../dto/sa-view-blog.dto';
-import { PaginatorBlog } from '../../pagination/paginatorType';
+import { PaginationQuery } from '../../../pagination/base-pagination';
+import { BlogRepository } from '../../../db/blog.repository';
+import { Blog } from '../../../entities/blog.entity';
+import { SAViewBlogDto } from '../../dto/sa-view-blog.dto';
+import { PaginatorBlog } from '../../../pagination/paginatorType';
 
 export class SAGetAllBlogsCommand {
   constructor(public query: PaginationQuery) {}

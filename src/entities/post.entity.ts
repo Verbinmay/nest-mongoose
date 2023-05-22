@@ -2,11 +2,11 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { CreatePostBlogDto } from '../../blogger/blogs/dto/create-post-in-blog.dto';
-import { like, likeSchema } from '../../likes/entities/like.entity';
+import { CreatePostBlogDto } from '../blogger/blogs/dto/create-post-in-blog.dto';
+import { like, likeSchema } from './like.entity';
 
-import { ViewPostDto } from '../dto/view-post.dto';
-import { UpdatePostByBlogDto } from '../../blogger/blogs/dto/update-post-by-blog.dto';
+import { ViewPostDto } from '../post/dto/view-post.dto';
+import { UpdatePostByBlogDto } from '../blogger/blogs/dto/update-post-by-blog.dto';
 
 @Schema()
 export class Post {
@@ -37,6 +37,8 @@ export class Post {
   @Prop({ required: true })
   public userId: string;
 
+  @Prop({ type: Boolean, default: false })
+  public isBaned = false;
   @Prop({ default: new Types.ObjectId(), type: mongoose.Schema.Types.ObjectId })
   public _id: Types.ObjectId = new Types.ObjectId();
 

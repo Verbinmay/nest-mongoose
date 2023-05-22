@@ -13,29 +13,29 @@ import { Response } from 'express';
 
 import { Throttle } from '@nestjs/throttler';
 
-import { JwtAuthGuard } from '../guard/auth-passport/guard-passport/jwt-auth.guard';
-import { LocalAuthGuard } from '../guard/auth-passport/guard-passport/local-auth.guard';
-import { CreateUserDto } from '../user/dto/create-user.dto';
-import { CurrentUserId } from '../decorator/currentUser.decorator';
-import { RefreshTokenGuard } from '../guard/refresh-token.guard';
-import { makeAnswerInController } from '../helpers/errors';
-import { InputLogin } from './dto/input-login.dto';
-import { NewPassword } from './dto/input-newpassword.dto';
-import { RegistrationConfirmationCode } from './dto/input-registration-confirmation.dto';
-import { ResendingConfirmation } from './dto/input-resending-confirmation.dto';
-import { Tokens } from './dto/tokens.dto';
-import { ViewMe } from './dto/view-me.dto';
+import { JwtAuthGuard } from '../../guard/auth-passport/guard-passport/jwt-auth.guard';
+import { LocalAuthGuard } from '../../guard/auth-passport/guard-passport/local-auth.guard';
+import { CreateUserDto } from '../../sa/dto/create-user.dto';
+import { CurrentUserId } from '../../decorator/currentUser.decorator';
+import { RefreshTokenGuard } from '../../guard/refresh-token.guard';
+import { makeAnswerInController } from '../../helpers/errors';
+import { InputLogin } from '../../auth/dto/input-login.dto';
+import { NewPassword } from '../../auth/dto/input-newpassword.dto';
+import { RegistrationConfirmationCode } from '../../auth/dto/input-registration-confirmation.dto';
+import { ResendingConfirmation } from '../../auth/dto/input-resending-confirmation.dto';
+import { Tokens } from '../../auth/dto/tokens.dto';
+import { ViewMe } from '../../auth/dto/view-me.dto';
 
 import { CommandBus } from '@nestjs/cqrs';
-import { LoginCommand } from './application/use-cases/login-case';
-import { GetNewTokensCommand } from './application/use-cases/get-new-refresh-token-case';
-import { LogoutCommand } from './application/use-cases/logout-case';
-import { GetMeCommand } from './application/use-cases/get-me-case';
-import { RegistrationCommand } from './application/use-cases/registration-case';
-import { RegistrationConfirmationCommand } from './application/use-cases/registration-confirmation-case';
-import { ResendingEmailCommand } from './application/use-cases/resending-email-case';
-import { PasswordRecoveryCommand } from './application/use-cases/password-recovery-case';
-import { ConfirmPasswordRecoveryCommand } from './application/use-cases/confirm-password-recovery-case';
+import { LoginCommand } from '../../auth/application/use-cases/login-case';
+import { GetNewTokensCommand } from '../../auth/application/use-cases/get-new-refresh-token-case';
+import { LogoutCommand } from '../../auth/application/use-cases/logout-case';
+import { GetMeCommand } from '../../auth/application/use-cases/get-me-case';
+import { RegistrationCommand } from '../../auth/application/use-cases/registration-case';
+import { RegistrationConfirmationCommand } from '../../auth/application/use-cases/registration-confirmation-case';
+import { ResendingEmailCommand } from '../../auth/application/use-cases/resending-email-case';
+import { PasswordRecoveryCommand } from '../../auth/application/use-cases/password-recovery-case';
+import { ConfirmPasswordRecoveryCommand } from '../../auth/application/use-cases/confirm-password-recovery-case';
 
 @Controller('auth')
 export class AuthController {

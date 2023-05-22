@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcrypt';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateUserDto } from '../../dto/create-user.dto';
-import { UserRepository } from '../../user.repository';
-import { User } from '../../entities/user.entity';
+import { UserRepository } from '../../../db/user.repository';
+import { User } from '../../../entities/user.entity';
 
 export class CreateUserCommand {
   constructor(public inputModel: CreateUserDto) {}
@@ -23,7 +23,7 @@ export class CreateUserCase implements ICommandHandler<CreateUserCommand> {
 
     const result = await this.userRepository.save(user);
 
-    return result.getViewModel();
+    return result.SAGetViewModel();
   }
 }
 

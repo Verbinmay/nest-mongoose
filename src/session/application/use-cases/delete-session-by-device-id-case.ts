@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { SessionRepository } from '../../sessions.repository';
-import { Session } from '../../entities/session.entity';
+import { SessionRepository } from '../../../db/sessions.repository';
+import { Session } from '../../../entities/session.entity';
 
 export class DeleteSessionByDeviceIdCommand {
   constructor(public userId: string, public deviceId: string) {}

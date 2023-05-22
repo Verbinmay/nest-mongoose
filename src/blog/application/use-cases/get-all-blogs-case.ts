@@ -3,7 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PaginationQuery } from '../../../pagination/base-pagination';
 import { PaginatorBlog } from '../../../pagination/paginatorType';
 import { ViewBlogDto } from '../../../blogger/blogs/dto/view-blog.dto';
-import { Blog } from '../../entities/blog.entity';
+import { Blog } from '../../../entities/blog.entity';
 import { BlogRepository } from '../../../db/blog.repository';
 
 export class GetAllBlogsCommand {

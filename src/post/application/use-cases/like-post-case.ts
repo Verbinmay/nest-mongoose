@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { LikeDto } from '../../../likes/dto/like.dto';
-import { UserRepository } from '../../../user/user.repository';
-import { PostRepository } from '../../post.repository';
+import { UserRepository } from '../../../db/user.repository';
+import { PostRepository } from '../../../db/post.repository';
 
 export class LikePostCommand {
   constructor(
@@ -67,6 +67,7 @@ export class LikePostCase implements ICommandHandler<LikePostCommand> {
           userId: command.userId,
           login: user.login,
           status: command.inputModel.likeStatus,
+          isBaned: false,
         });
       }
     }

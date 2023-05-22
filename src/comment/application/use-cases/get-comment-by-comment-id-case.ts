@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { CommentRepository } from '../../comment.repository';
+import { CommentRepository } from '../../../db/comment.repository';
 
 export class GetCommentByCommentIdCommand {
   constructor(public id: string, public userId: string) {}

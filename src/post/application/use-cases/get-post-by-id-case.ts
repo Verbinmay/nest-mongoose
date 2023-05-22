@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
-import { PostRepository } from '../../post.repository';
+import { PostRepository } from '../../../db/post.repository';
 
 export class GetPostByIdCommand {
   constructor(public id: string, public userId: string) {}

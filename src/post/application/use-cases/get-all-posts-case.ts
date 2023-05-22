@@ -3,8 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PaginationQuery } from '../../../pagination/base-pagination';
 import { PaginatorPost } from '../../../pagination/paginatorType';
 import { ViewPostDto } from '../../dto/view-post.dto';
-import { Post } from '../../entities/post.entity';
-import { PostRepository } from '../../post.repository';
+import { Post } from '../../../entities/post.entity';
+import { PostRepository } from '../../../db/post.repository';
 
 export class GetAllPostsCommand {
   constructor(public userId: string, public query: PaginationQuery) {}

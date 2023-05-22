@@ -1,4 +1,4 @@
-import { Comment, CommentsModelType } from './entities/comment.entity';
+import { Comment, CommentsModelType } from '../entities/comment.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 

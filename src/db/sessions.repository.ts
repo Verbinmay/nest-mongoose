@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Injectable } from '@nestjs/common';
 
-import { Session, SessionModelType } from './entities/session.entity';
+import { Session, SessionModelType } from '../entities/session.entity';
 
 @Injectable()
 export class SessionRepository {
@@ -31,11 +31,21 @@ export class SessionRepository {
     }
   }
 
-  async deleteAll(userId: string, deviceId: string) {
+  async deleteAllWithoutCurrent(userId: string, deviceId: string) {
     try {
       await this.SessionModel.deleteMany({
         userId: userId,
         deviceId: { $ne: deviceId },
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+  async deleteAll(userId: string) {
+    try {
+      await this.SessionModel.deleteMany({
+        userId: userId,
       });
       return true;
     } catch (error) {
@@ -72,13 +82,5 @@ export class SessionRepository {
     } catch (error) {
       return null;
     }
-  }
-
-  async deleteSessionLogout(userId: string, deviceId: string) {
-    const result = await this.SessionModel.deleteOne({
-      userId: userId,
-      deviceId: deviceId,
-    });
-    return result.deletedCount === 1;
   }
 }

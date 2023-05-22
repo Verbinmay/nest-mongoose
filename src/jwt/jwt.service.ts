@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { SessionRepository } from '../session/sessions.repository';
+import { SessionRepository } from '../db/sessions.repository';
 
 @Injectable()
 export class JWTService {
