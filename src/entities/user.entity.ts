@@ -75,8 +75,9 @@ export class User {
       createdAt: this.createdAt,
       banInfo: {
         isBanned: this.banInfo.isBanned,
-        banDate: this.banInfo.banDate,
-        banReason: this.banInfo.banReason,
+        banDate: this.banInfo.banDate === '' ? null : this.banInfo.banDate,
+        banReason:
+          this.banInfo.banReason === '' ? null : this.banInfo.banReason,
       },
     };
 
