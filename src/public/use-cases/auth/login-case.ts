@@ -1,9 +1,11 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { SessionService } from '../../services/session.service';
 import { randomUUID } from 'crypto';
-import { Tokens } from '../../dto/auth/tokens.dto';
-import { JWTService } from '../../../jwt/jwt.service';
+
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import { UserRepository } from '../../../db/user.repository';
+import { JWTService } from '../../../jwt/jwt.service';
+import { Tokens } from '../../dto/auth/tokens.dto';
+import { SessionService } from '../../services/session.service';
 
 export class LoginCommand {
   constructor(
@@ -24,8 +26,6 @@ export class LoginCase implements ICommandHandler<LoginCommand> {
   ) {}
 
   async execute(command: LoginCommand) {
-    const user = await this.userRepository.findUserById(command.userId);
-    if (user.banInfo.isBanned === true) return { s: 404 };
     const deviceId: string = randomUUID();
 
     const tokens: Tokens = await this.jwtService.tokenCreator({

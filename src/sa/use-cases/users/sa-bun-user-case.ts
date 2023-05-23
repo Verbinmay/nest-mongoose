@@ -28,8 +28,12 @@ export class SA_BunUserCase implements ICommandHandler<SA_BunUserCommand> {
     if (user.banInfo.isBanned === command.inputModel.isBanned) return true;
 
     user.banInfo.isBanned = command.inputModel.isBanned;
-    user.banInfo.banReason = command.inputModel.banReason;
-    user.banInfo.banDate = new Date().toISOString();
+    user.banInfo.banReason =
+      command.inputModel.isBanned === true
+        ? command.inputModel.banReason
+        : null;
+    user.banInfo.banDate =
+      command.inputModel.isBanned === true ? new Date().toISOString() : null;
     try {
       await this.userRepository.save(user);
 

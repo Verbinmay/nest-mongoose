@@ -20,7 +20,7 @@ export class SA_GetAllUsersCase
     let filter: object = {};
 
     filter = {
-      $and: [
+      $or: [
         {
           login: { $regex: command.query.searchLoginTerm, $options: 'i' },
         },

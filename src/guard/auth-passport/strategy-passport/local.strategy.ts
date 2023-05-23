@@ -17,7 +17,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     loginOrEmail = loginOrEmail.trim();
 
     const user = await this.userRepository.findUserByLoginOrEmail(loginOrEmail);
-    if (!user) return null;
+    if (!user || user.banInfo.isBanned === true) return null;
 
     const match: boolean = await bcrypt.compare(password, user.hash);
 
