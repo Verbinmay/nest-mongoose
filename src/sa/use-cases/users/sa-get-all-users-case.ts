@@ -20,12 +20,16 @@ export class SA_GetAllUsersCase
     let filter: object = {};
 
     filter = {
-      $or: [
+      $and: [
         {
-          login: { $regex: command.query.searchLoginTerm, $options: 'i' },
-        },
-        {
-          email: { $regex: command.query.searchEmailTerm, $options: 'i' },
+          $or: [
+            {
+              login: { $regex: command.query.searchLoginTerm, $options: 'i' },
+            },
+            {
+              email: { $regex: command.query.searchEmailTerm, $options: 'i' },
+            },
+          ],
         },
         {
           'banInfo.isBanned': { $in: command.query.createBunStatus() },
@@ -45,7 +49,6 @@ export class SA_GetAllUsersCase
       skip: command.query.skip(),
       limit: command.query.pageSize,
     });
-    console.log(usersFromDB);
 
     const users: SAViewUserDto[] = usersFromDB.map((m) => m.SAGetViewModel());
 
