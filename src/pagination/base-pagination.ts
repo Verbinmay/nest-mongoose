@@ -55,10 +55,12 @@ export class PaginationQuery extends BasicPagination {
         return [false];
     }
   }
-  public createFilterNameAndId(id: string) {
+  public createFilterNameAndUserId(userId: string) {
     return {
-      name: { $regex: '(?i)' + this.searchNameTerm + '(?-i)' },
-      _id: new Types.ObjectId(id),
+      $and: [
+        { name: { $regex: '(?i)' + this.searchNameTerm + '(?-i)' } },
+        { userId: userId },
+      ],
     };
   }
 }

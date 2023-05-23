@@ -17,8 +17,7 @@ export class GetCurrentUserBlogsCase
   constructor(private readonly blogRepository: BlogRepository) {}
 
   async execute(command: GetCurrentUserBlogsCommand) {
-    const filterName: { name: { $regex: string } } =
-      command.query.createFilterNameAndId(command.userId);
+    const filterName = command.query.createFilterNameAndUserId(command.userId);
 
     const filterSort: { [x: string]: number } = command.query.sortFilter();
 
