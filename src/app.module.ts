@@ -77,6 +77,7 @@ import { UpdateBlogCase } from './blogger/use-cases/blog/update-blog-case';
 import { CreatePostByBlogIdCase } from './blogger/use-cases/post/create-post-by-blog-id-case';
 import { DeletePostCase } from './blogger/use-cases/post/delete-post-case';
 import { UpdatePostCase } from './blogger/use-cases/post/update-post-case';
+import { GetCommentsWithPostInfoByUserIdCase } from './blogger/use-cases/comment/get-comments-with-post-info-for-current-user';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
@@ -103,7 +104,6 @@ const useCasesPost = [
   LikePostCase,
   DeletePostCase,
   UpdatePostCase,
-
   CreatePostByBlogIdCase,
 ];
 
@@ -114,6 +114,7 @@ const useCasesComment = [
   GetCommentByCommentIdCase,
   LikeCommentCase,
   UpdateCommentCase,
+  GetCommentsWithPostInfoByUserIdCase,
 ];
 
 const useCasesSession = [

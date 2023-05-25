@@ -44,7 +44,7 @@ export class GetAllPostsByBlogIdCase
 
     const pagesCount = command.query.countPages(totalCount);
 
-    const postsFromDB: Post[] = await this.postRepository.findPosts({
+    const postsFromDB: Post[] = await this.postRepository.findPostsWithPagination({
       find: filter,
       sort: filterSort,
       skip: command.query.skip(),

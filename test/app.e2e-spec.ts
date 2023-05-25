@@ -13,8 +13,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 
+import { BlogRepository } from '../src/db/blog.repository';
 import { createApp } from '../src/helpers/createApp';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
 
 describe('AppController (e2e)', () => {
   jest.setTimeout(1000 * 1000);
@@ -39,7 +40,7 @@ describe('AppController (e2e)', () => {
     await fullApp.close();
   });
 
-  describe.skip('BLOGS Create', () => {
+  describe('BLOGS Create', () => {
     beforeAll(async () => {
       await agent.delete(info.url.testingDelete);
     });
@@ -51,7 +52,7 @@ describe('AppController (e2e)', () => {
     });
   });
 
-  describe.skip('BLOGS Get All Blogs', () => {
+  describe('BLOGS Get All Blogs', () => {
     const number = 2;
 
     beforeAll(async () => {

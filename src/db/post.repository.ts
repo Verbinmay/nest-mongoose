@@ -19,12 +19,21 @@ export class PostRepository {
     return await this.PostModel.countDocuments(filter);
   }
 
-  async findPosts(a: { find: object; sort: any; skip: number; limit: number }) {
+  async findPostsWithPagination(a: {
+    find: object;
+    sort: any;
+    skip: number;
+    limit: number;
+  }) {
     const result: Array<Post> = await this.PostModel.find(a.find)
       .sort(a.sort)
       .skip(a.skip)
       .limit(a.limit);
 
+    return result;
+  }
+  async findPostsByUserId(filter) {
+    const result: Array<Post> = await this.PostModel.find(filter);
     return result;
   }
   async findPostById(id: string): Promise<Post> {

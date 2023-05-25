@@ -24,6 +24,7 @@ import { CreateBlogCommand } from '../use-cases/blog/create-blog-case';
 import { DeleteBlogCommand } from '../use-cases/blog/delete-blog-case';
 import { GetCurrentUserBlogsCommand } from '../use-cases/blog/get-current-user-blogs-case';
 import { UpdateBlogCommand } from '../use-cases/blog/update-blog-case';
+import { GetCommentsWithPostInfoByUserIdCommand } from '../use-cases/comment/get-comments-with-post-info-for-current-user';
 import { CreatePostByBlogIdCommand } from '../use-cases/post/create-post-by-blog-id-case';
 import { DeletePostCommand } from '../use-cases/post/delete-post-case';
 import { UpdatePostCommand } from '../use-cases/post/update-post-case';
@@ -128,6 +129,19 @@ export class BlogBloggersController {
 
     const result: boolean | string = await this.commandBus.execute(
       new DeletePostCommand(blogId, postId, userId),
+    );
+    return makeAnswerInController(result);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getAllCommentsWithPostInfoByUserId(
+    @Query() query: PaginationQuery,
+    @CurrentPayload() payload,
+  ) {
+    const userId = payload ? payload.sub : '';
+    const result = await this.commandBus.execute(
+      new GetCommentsWithPostInfoByUserIdCommand(userId, query),
     );
     return makeAnswerInController(result);
   }
