@@ -35,14 +35,19 @@ export class GetBannedUsersByBlogIdCase
         );
       }
       const key = command.query.sortBy;
+      console.log(key, 'key');
       if (command.query.sortDirection === 'asc') {
+        console.log('asc');
         usersBanned = blog.banedUsers.sort((a, b) =>
           a[key] > b[key] ? 1 : -1,
         );
+        console.log(usersBanned, 'usersBanned');
       } else {
+        console.log('desc');
         usersBanned = blog.banedUsers.sort((a, b) =>
           a[key] > b[key] ? -1 : 1,
         );
+        console.log(usersBanned, 'usersBanned');
       }
 
       totalCount = usersBanned.length;
