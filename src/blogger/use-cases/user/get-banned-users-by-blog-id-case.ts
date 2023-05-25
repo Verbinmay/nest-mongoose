@@ -34,13 +34,14 @@ export class GetBannedUsersByBlogIdCase
           (a) => a.userLogin.includes(command.query.searchLoginTerm) === true,
         );
       }
+      const key = command.query.sortBy;
       if (command.query.sortDirection === 'asc') {
-        usersBanned = blog.banedUsers.sort(
-          (a, b) => a[command.query.sortBy] - b[command.query.sortBy],
+        usersBanned = blog.banedUsers.sort((a, b) =>
+          a[key].localeCompare(b[key]),
         );
       } else {
-        usersBanned = blog.banedUsers.sort(
-          (a, b) => b[command.query.sortBy] - a[command.query.sortBy],
+        usersBanned = blog.banedUsers.sort((a, b) =>
+          b[key].localeCompare(a[key]),
         );
       }
 

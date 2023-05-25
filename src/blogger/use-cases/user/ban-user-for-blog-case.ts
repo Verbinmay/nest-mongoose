@@ -1,10 +1,8 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { BlogRepository } from '../../../db/blog.repository';
-import { PostRepository } from '../../../db/post.repository';
 import { UserRepository } from '../../../db/user.repository';
 import { BanedUsers } from '../../../entities/blog.entity';
-import { Post } from '../../../entities/post.entity';
 import { BanUserForBlogDto } from '../../dto/blog/ban-user-for-blog.dto';
 
 export class BanUserForBlogByUserIdCommand {
@@ -33,14 +31,20 @@ export class BanUserForBlogByUserIdCase
 
     const userBan = await this.userRepository.findUserById(command.userIdBlock);
     if (!userBan) return { s: 404 };
-
-    const userBanInfo: BanedUsers = {
-      userId: userBan._id.toString(),
-      userLogin: userBan.login,
-      banReason: command.inputModel.banReason,
-      banDate: new Date().toISOString(),
-    };
-    blog.banedUsers.push(userBanInfo);
+    if (command.inputModel.isBanned === true) {
+      const userBanInfo: BanedUsers = {
+        userId: userBan._id.toString(),
+        userLogin: userBan.login,
+        banReason: command.inputModel.banReason,
+        banDate: new Date().toISOString(),
+      };
+      blog.banedUsers.push(userBanInfo);
+    } else {
+      const index = blog.banedUsers.findIndex(
+        (a) => a.userId === command.userIdBlock,
+      );
+      blog.banedUsers = blog.banedUsers.splice(index, 1);
+    }
 
     try {
       this.blogRepository.save(blog);
