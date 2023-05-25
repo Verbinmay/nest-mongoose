@@ -34,30 +34,6 @@ export class GetBannedUsersByBlogIdCase
           (a) => a.userLogin.includes(command.query.searchLoginTerm) === true,
         );
       }
-      const key = command.query.sortBy;
-      console.log(key, 'key');
-      if (command.query.sortDirection === 'asc') {
-        console.log('asc');
-        usersBanned = blog.banedUsers.sort((a, b) =>
-          a[key] > b[key] ? 1 : -1,
-        );
-        console.log(usersBanned, 'usersBanned');
-      } else {
-        console.log('desc');
-        usersBanned = blog.banedUsers.sort((a, b) =>
-          a[key] > b[key] ? -1 : 1,
-        );
-        console.log(usersBanned, 'usersBanned');
-      }
-
-      totalCount = usersBanned.length;
-
-      pagesCount = command.query.countPages(totalCount);
-
-      usersBanned = usersBanned.slice(
-        command.query.skip(),
-        command.query.pageSize,
-      );
 
       blogs = usersBanned.map((m) => {
         return {
@@ -70,6 +46,19 @@ export class GetBannedUsersByBlogIdCase
           },
         };
       });
+      const key = command.query.sortBy;
+
+      if (command.query.sortDirection === 'asc') {
+        blogs = blogs.sort((a, b) => (a[key] > b[key] ? 1 : -1));
+      } else {
+        blogs = blogs.sort((a, b) => (a[key] > b[key] ? -1 : 1));
+      }
+
+      totalCount = blogs.length;
+
+      pagesCount = command.query.countPages(totalCount);
+
+      blogs = blogs.slice(command.query.skip(), command.query.pageSize);
     }
 
     const result: PaginatorBannedUsersViewModel = {
