@@ -14,7 +14,7 @@ export class GetBlogByBlogIdCase
 
   async execute(command: GetBlogByBlogIdCommand) {
     const blog = await this.blogRepository.findBlogById(command.id);
-    if (!blog) {
+    if (!blog || blog.isBanned === true) {
       return { s: 404 };
     }
     return blog.getViewModel();

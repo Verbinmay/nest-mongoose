@@ -18,7 +18,7 @@ export class SA_GetAllBlogsCase
 
   async execute(command: SA_GetAllBlogsCommand) {
     const filterName: { name: { $regex: string } } =
-      command.query.createFilterName();
+      command.query.SAcreateFilterName();
 
     const filterSort: { [x: string]: number } = command.query.sortFilter();
 

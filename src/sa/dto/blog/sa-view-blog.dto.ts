@@ -5,4 +5,8 @@ export class SAViewBlogDto extends ViewBlogDto {
     userId: string;
     userLogin: string;
   };
+  banInfo: {
+    isBanned: boolean;
+    banDate: string | null;
+  };
 }

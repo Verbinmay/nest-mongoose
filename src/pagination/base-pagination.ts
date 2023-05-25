@@ -42,6 +42,12 @@ export class PaginationQuery extends BasicPagination {
   banStatus: 'all' | 'banned' | 'notBanned' = 'all';
 
   public createFilterName() {
+    return {
+      name: { $regex: this.searchNameTerm, $options: 'i' },
+      isBanned: false,
+    };
+  }
+  public SAcreateFilterName() {
     return { name: { $regex: this.searchNameTerm, $options: 'i' } };
   }
 

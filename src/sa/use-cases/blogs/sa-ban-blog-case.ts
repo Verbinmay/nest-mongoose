@@ -33,6 +33,9 @@ export class SA_BanBlogCase implements ICommandHandler<SA_BanBlogCommand> {
       };
     }
     blog.isBanned = command.inputModel.isBanned;
+    if (command.inputModel.isBanned === true) {
+      blog.banDate = new Date().toISOString();
+    } else blog.banDate = null;
     try {
       await this.blogRepository.save(blog);
       await this.postRepository.banPostByBlogId(

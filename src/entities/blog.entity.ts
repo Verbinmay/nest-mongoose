@@ -60,6 +60,9 @@ export class Blog {
   @Prop({ type: Boolean, default: false })
   public isBanned = false;
 
+  @Prop({ default: null })
+  public banDate: string | null;
+
   @Prop({ type: [BanedUsersSchema], default: [] })
   public banedUsers: Array<BanedUsers> = [];
 
@@ -94,6 +97,10 @@ export class Blog {
       blogOwnerInfo: {
         userId: this.userId,
         userLogin: this.userLogin,
+      },
+      banInfo: {
+        isBanned: this.isBanned,
+        banDate: this.banDate,
       },
     };
     return result;
