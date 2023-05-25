@@ -12,7 +12,7 @@ export class CommentBloggersController {
   constructor(private commandBus: CommandBus) {}
 
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('comments')
   async getAllCommentsWithPostInfoByUserId(
     @Query() query: PaginationQuery,
     @CurrentPayload() payload,

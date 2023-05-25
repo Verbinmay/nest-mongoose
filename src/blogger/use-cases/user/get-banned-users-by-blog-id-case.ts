@@ -21,50 +21,51 @@ export class GetBannedUsersByBlogIdCase
 
   async execute(command: GetBannedUsersByBlogIdCommand) {
     const blog = await this.blogRepository.findBlogById(command.blogId);
+    if (blog.userId !== command.userId) return { s: 403 };
     let blogs: Array<ViewBannedUserDto> = [];
     let pagesCount = 0;
     let totalCount = 0;
-    if (blog) {
-      if (blog.banedUsers.length > 0) {
-        let usersBanned = blog.banedUsers;
+    if (!blog) return { s: 404 };
+    if (blog.banedUsers.length > 0) {
+      let usersBanned = blog.banedUsers;
 
-        if (command.query.searchLoginTerm !== '') {
-          usersBanned = usersBanned.filter(
-            (a) => a.userLogin.includes(command.query.searchLoginTerm) === true,
-          );
-        }
-        if (command.query.sortDirection === 'asc') {
-          usersBanned = blog.banedUsers.sort(
-            (a, b) => a[command.query.sortBy] - b[command.query.sortBy],
-          );
-        } else {
-          usersBanned = blog.banedUsers.sort(
-            (a, b) => b[command.query.sortBy] - a[command.query.sortBy],
-          );
-        }
-
-        totalCount = usersBanned.length;
-
-        pagesCount = command.query.countPages(totalCount);
-
-        usersBanned = usersBanned.slice(
-          command.query.skip(),
-          command.query.pageSize,
+      if (command.query.searchLoginTerm !== '') {
+        usersBanned = usersBanned.filter(
+          (a) => a.userLogin.includes(command.query.searchLoginTerm) === true,
         );
-
-        blogs = usersBanned.map((m) => {
-          return {
-            id: m.userId,
-            login: m.userLogin,
-            banInfo: {
-              isBanned: true,
-              banDate: m.banDate,
-              banReason: m.banReason,
-            },
-          };
-        });
       }
+      if (command.query.sortDirection === 'asc') {
+        usersBanned = blog.banedUsers.sort(
+          (a, b) => a[command.query.sortBy] - b[command.query.sortBy],
+        );
+      } else {
+        usersBanned = blog.banedUsers.sort(
+          (a, b) => b[command.query.sortBy] - a[command.query.sortBy],
+        );
+      }
+
+      totalCount = usersBanned.length;
+
+      pagesCount = command.query.countPages(totalCount);
+
+      usersBanned = usersBanned.slice(
+        command.query.skip(),
+        command.query.pageSize,
+      );
+
+      blogs = usersBanned.map((m) => {
+        return {
+          id: m.userId,
+          login: m.userLogin,
+          banInfo: {
+            isBanned: true,
+            banDate: m.banDate,
+            banReason: m.banReason,
+          },
+        };
+      });
     }
+
     const result: PaginatorBannedUsersViewModel = {
       pagesCount: pagesCount,
       page: command.query.pageNumber,
