@@ -69,4 +69,15 @@ export class PostRepository {
       return null;
     }
   }
+  async banPostByBlogId(blogId: string, isBanned: boolean) {
+    try {
+      await this.PostModel.updateMany(
+        { blogId: blogId },
+        { $set: { isBaned: isBanned } },
+      );
+      return true;
+    } catch (error) {
+      return null;
+    }
+  }
 }

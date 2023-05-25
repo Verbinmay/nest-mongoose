@@ -83,6 +83,7 @@ import { PostBloggersController } from './blogger/controllers/post.blogger.contr
 import { UserBloggersController } from './blogger/controllers/user.blogger.controller';
 import { BanUserForBlogByUserIdCase } from './blogger/use-cases/user/ban-user-for-blog-case';
 import { GetBannedUsersByBlogIdCase } from './blogger/use-cases/user/get-banned-users-by-blog-id-case';
+import { SA_BanBlogCase } from './sa/use-cases/blogs/sa-ban-blog-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
@@ -99,7 +100,7 @@ const useCasesBlog = [
   SA_GetAllBlogsCase,
   SA_GetAllUsersCase,
   UpdateBlogCase,
-  ,
+  SA_BanBlogCase,
 ];
 
 const useCasesPost = [

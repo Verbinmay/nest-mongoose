@@ -23,12 +23,13 @@ export class GetAllPostsCase implements ICommandHandler<GetAllPostsCommand> {
 
     const pagesCount = command.query.countPages(totalCount);
 
-    const postsFromDB: Post[] = await this.postRepository.findPostsWithPagination({
-      find: filter,
-      sort: filterSort,
-      skip: command.query.skip(),
-      limit: command.query.pageSize,
-    });
+    const postsFromDB: Post[] =
+      await this.postRepository.findPostsWithPagination({
+        find: filter,
+        sort: filterSort,
+        skip: command.query.skip(),
+        limit: command.query.pageSize,
+      });
 
     const posts: ViewPostDto[] = postsFromDB.map((m) =>
       m.getViewModel(command.userId),

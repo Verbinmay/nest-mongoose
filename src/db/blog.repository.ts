@@ -33,6 +33,7 @@ export class BlogRepository {
   async findCountBlogs(filter: any) {
     return await this.BlogModel.countDocuments(filter);
   }
+
   async findBlogs(a: {
     find: { name: { $regex: string } } | object;
     sort: any;

@@ -57,6 +57,9 @@ export class Blog {
   @Prop({ type: Boolean, default: false })
   public isMembership = false;
 
+  @Prop({ type: Boolean, default: false })
+  public isBanned = false;
+
   @Prop({ type: BanedUsersSchema, default: [] })
   public banedUsers: Array<BanedUsers> = [];
 
