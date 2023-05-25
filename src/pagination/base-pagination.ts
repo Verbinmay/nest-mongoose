@@ -45,7 +45,7 @@ export class PaginationQuery extends BasicPagination {
     return { name: { $regex: this.searchNameTerm, $options: 'i' } };
   }
 
-  public createBunStatus() {
+  public createBanStatus() {
     switch (this.banStatus) {
       case 'all':
         return [true, false];

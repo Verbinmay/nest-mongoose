@@ -4,14 +4,14 @@ import { CommentRepository } from '../../../db/comment.repository';
 import { PostRepository } from '../../../db/post.repository';
 import { SessionRepository } from '../../../db/sessions.repository';
 import { UserRepository } from '../../../db/user.repository';
-import { BanUserDto } from '../../dto/user/ban-user.dto copy';
+import { BanDto } from '../../dto/user/ban-user.dto copy';
 
-export class SA_BunUserCommand {
-  constructor(public userId: string, public inputModel: BanUserDto) {}
+export class SA_BanUserCommand {
+  constructor(public userId: string, public inputModel: BanDto) {}
 }
 
-@CommandHandler(SA_BunUserCommand)
-export class SA_BunUserCase implements ICommandHandler<SA_BunUserCommand> {
+@CommandHandler(SA_BanUserCommand)
+export class SA_BanUserCase implements ICommandHandler<SA_BanUserCommand> {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly sessionRepository: SessionRepository,
@@ -19,7 +19,7 @@ export class SA_BunUserCase implements ICommandHandler<SA_BunUserCommand> {
     private readonly commentRepository: CommentRepository,
   ) {}
 
-  async execute(command: SA_BunUserCommand) {
+  async execute(command: SA_BanUserCommand) {
     const user = await this.userRepository.findUserById(command.userId);
     if (!user) {
       return { s: 404 };

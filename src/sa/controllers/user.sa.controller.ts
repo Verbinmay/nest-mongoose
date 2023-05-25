@@ -15,9 +15,9 @@ import { CommandBus } from '@nestjs/cqrs';
 import { BasicAuthGuard } from '../../guard/auth-passport/guard-passport/basic-auth.guard';
 import { makeAnswerInController } from '../../helpers/errors';
 import { PaginationQuery } from '../../pagination/base-pagination';
-import { BanUserDto } from '../dto/user/ban-user.dto copy';
+import { BanDto } from '../dto/user/ban-user.dto copy';
 import { CreateUserDto } from '../dto/user/create-user.dto';
-import { SA_BunUserCommand } from '../use-cases/users/sa-bun-user-case';
+import { SA_BanUserCommand } from '../use-cases/users/sa-ban-user-case';
 import { SA_CreateUserCommand } from '../use-cases/users/sa-create-user-case';
 import { SA_DeleteUserCommand } from '../use-cases/users/sa-delete-user-case';
 import { SA_GetAllUsersCommand } from '../use-cases/users/sa-get-all-users-case';
@@ -57,9 +57,9 @@ export class UserSAController {
   @UseGuards(BasicAuthGuard)
   @Put(':id/ban')
   @HttpCode(204)
-  async banUser(@Param('id') userId: string, @Body() inputModel: BanUserDto) {
+  async banUser(@Param('id') userId: string, @Body() inputModel: BanDto) {
     const result: boolean | string = await this.commandBus.execute(
-      new SA_BunUserCommand(userId, inputModel),
+      new SA_BanUserCommand(userId, inputModel),
     );
     return makeAnswerInController(result);
   }

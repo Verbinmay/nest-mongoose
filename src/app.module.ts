@@ -22,7 +22,7 @@ import { SessionsController } from './public/controllers/session.controller';
 import { SessionService } from './public/services/session.service';
 import { SessionRepository } from './db/sessions.repository';
 import { TestController } from './public/controllers/test.controller';
-import { ValidationBlogId } from './validation/validationId';
+import { ValidationBlogId } from './validation/validationBlogId';
 import { ValidationLoginEmail } from './validation/validationLoginEmail';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -66,7 +66,7 @@ import { GetAllSessionsCase } from './public/use-cases/session/get-all-sessions-
 import { BlogSAController } from './sa/controllers/blog.sa.controller';
 import { SA_BindBlogWithUserCase } from './sa/use-cases/blogs/sa-bind-blog-with-user-case';
 import { SA_GetAllBlogsCase } from './sa/use-cases/blogs/sa-get-all-blogs-case';
-import { SA_BunUserCase } from './sa/use-cases/users/sa-bun-user-case';
+import { SA_BanUserCase } from './sa/use-cases/users/sa-ban-user-case';
 import { SA_CreateUserCase } from './sa/use-cases/users/sa-create-user-case';
 import { SA_DeleteUserCase } from './sa/use-cases/users/sa-delete-user-case';
 import { SA_GetAllUsersCase } from './sa/use-cases/users/sa-get-all-users-case';
@@ -78,33 +78,37 @@ import { CreatePostByBlogIdCase } from './blogger/use-cases/post/create-post-by-
 import { DeletePostCase } from './blogger/use-cases/post/delete-post-case';
 import { UpdatePostCase } from './blogger/use-cases/post/update-post-case';
 import { GetCommentsWithPostInfoByUserIdCase } from './blogger/use-cases/comment/get-comments-with-post-info-for-current-user';
+import { CommentBloggersController } from './blogger/controllers/comment.blogger.controller';
+import { PostBloggersController } from './blogger/controllers/post.blogger.controller';
+import { UserBloggersController } from './blogger/controllers/user.blogger.controller';
+import { BanUserForBlogByUserIdCase } from './blogger/use-cases/user/ban-user-for-blog-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
 const useCasesBlog = [
-  GetAllBlogsCase,
-  GetBlogByBlogIdCase,
   CreateBlogCase,
   DeleteBlogCase,
+  GetAllBlogsCase,
+  GetBlogByBlogIdCase,
   GetCurrentUserBlogsCase,
-  UpdateBlogCase,
-
   SA_BindBlogWithUserCase,
-  SA_GetAllBlogsCase,
-  SA_BunUserCase,
+  SA_BanUserCase,
   SA_CreateUserCase,
   SA_DeleteUserCase,
+  SA_GetAllBlogsCase,
   SA_GetAllUsersCase,
+  UpdateBlogCase,
+  BanUserForBlogByUserIdCase,
 ];
 
 const useCasesPost = [
-  GetAllPostsCase,
+  CreatePostByBlogIdCase,
+  DeletePostCase,
   GetAllPostsByBlogIdCase,
+  GetAllPostsCase,
   GetPostByIdCase,
   LikePostCase,
-  DeletePostCase,
   UpdatePostCase,
-  CreatePostByBlogIdCase,
 ];
 
 const useCasesComment = [
@@ -112,9 +116,9 @@ const useCasesComment = [
   DeleteCommentCase,
   GetAllCommentsByBlogIdCase,
   GetCommentByCommentIdCase,
+  GetCommentsWithPostInfoByUserIdCase,
   LikeCommentCase,
   UpdateCommentCase,
-  GetCommentsWithPostInfoByUserIdCase,
 ];
 
 const useCasesSession = [
@@ -179,10 +183,13 @@ const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
     BlogBloggersController,
     BlogController,
     BlogSAController,
+    CommentBloggersController,
     CommentController,
+    PostBloggersController,
     PostController,
     SessionsController,
     TestController,
+    UserBloggersController,
     UserSAController,
   ],
   providers: [

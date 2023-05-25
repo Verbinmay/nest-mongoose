@@ -32,7 +32,7 @@ export class SA_GetAllUsersCase
           ],
         },
         {
-          'banInfo.isBanned': { $in: command.query.createBunStatus() },
+          'banInfo.isBanned': { $in: command.query.createBanStatus() },
         },
       ],
     };

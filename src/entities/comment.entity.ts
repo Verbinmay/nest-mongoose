@@ -2,8 +2,8 @@ import mongoose, { HydratedDocument, Model, Types } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { like, likeSchema } from './like.entity';
 import { ViewCommentDto } from '../public/dto/comment/view-comment.dto';
+import { like, likeSchema } from './like.entity';
 
 @Schema()
 export class CommentatorInfo {

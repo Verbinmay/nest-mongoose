@@ -7,6 +7,16 @@ import { UpdateBlogDto } from '../blogger/dto/blog/update-blog.dto';
 import { ViewBlogDto } from '../blogger/dto/blog/view-blog.dto';
 import { SAViewBlogDto } from '../sa/dto/blog/sa-view-blog.dto';
 
+@Schema({ _id: false, versionKey: false })
+export class BanedUsers {
+  @Prop()
+  userId: string;
+  @Prop()
+  banReason: string;
+}
+
+export const BanedUsersSchema = SchemaFactory.createForClass(BanedUsers);
+
 @Schema()
 export class Blog {
   constructor(userId: string, userLogin: string, inputModel: CreateBlogDto) {
@@ -42,6 +52,9 @@ export class Blog {
 
   @Prop({ type: Boolean, default: false })
   public isMembership = false;
+
+  @Prop({ type: BanedUsersSchema, default: [] })
+  public banedUsers: Array<BanedUsers> = [];
 
   updateInfo(inputModel: UpdateBlogDto) {
     this.name = inputModel.name;

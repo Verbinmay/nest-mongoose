@@ -1,7 +1,7 @@
 import { IsBoolean, IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 
-export class BanUserDto {
+export class BanDto {
   @IsNotEmpty()
   @IsBoolean()
   isBanned: boolean;
