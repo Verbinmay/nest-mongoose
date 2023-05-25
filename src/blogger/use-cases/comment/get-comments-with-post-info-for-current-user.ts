@@ -1,4 +1,3 @@
-import { PaginatorCommentWithWithPostInfoViewModel } from '../../../pagination/paginatorType';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { CommentRepository } from '../../../db/comment.repository';
@@ -6,6 +5,7 @@ import { PostRepository } from '../../../db/post.repository';
 import { Comment } from '../../../entities/comment.entity';
 import { Post } from '../../../entities/post.entity';
 import { PaginationQuery } from '../../../pagination/base-pagination';
+import { PaginatorCommentWithWithPostInfoViewModel } from '../../../pagination/paginatorType';
 import { ViewCommentWithPostInfoDto } from '../../dto/comment/view-comment-with-post-info.dto';
 
 export class GetCommentsWithPostInfoByUserIdCommand {
@@ -51,24 +51,50 @@ export class GetCommentsWithPostInfoByUserIdCase
       });
 
     /** Не знаю, насколько правильно было бы добавлять его функцией в entity */
-    const comments: ViewCommentWithPostInfoDto[] = commentsFromDb.map((m) => {
-      const post: Post = postsFromDB.find((a) => a._id.toString() === m.postId);
-      return {
-        id: m._id.toString(),
-        content: m.content,
-        commentatorInfo: {
-          userId: m.commentatorInfo.userId,
-          userLogin: m.commentatorInfo.userLogin,
-        },
-        createdAt: m.createdAt,
-        postInfo: {
-          id: post._id.toString(),
-          title: post.title,
-          blogId: post.blogId,
-          blogName: post.blogName,
-        },
-      };
-    });
+    const comments: ViewCommentWithPostInfoDto[] = commentsFromDb.map(
+      (comment) => {
+        const post: Post = postsFromDB.find(
+          (post) => post._id.toString() === comment.postId,
+        );
+        let status: 'None' | 'Like' | 'Dislike' = 'None';
+        let likesCount = 0;
+        let dislikeCount = 0;
+        if (comment.likesInfo.length !== 0) {
+          const like = comment.likesInfo.find(
+            (like) => like.userId === command.userId,
+          );
+          if (like) status = like.status;
+
+          likesCount = comment.likesInfo.filter(
+            (like) => like.status === 'Like' && like.isBaned === false,
+          ).length;
+
+          dislikeCount = comment.likesInfo.filter(
+            (like) => like.status === 'Dislike' && like.isBaned === false,
+          ).length;
+        }
+        return {
+          id: comment._id.toString(),
+          content: comment.content,
+          commentatorInfo: {
+            userId: comment.commentatorInfo.userId,
+            userLogin: comment.commentatorInfo.userLogin,
+          },
+          createdAt: comment.createdAt,
+          postInfo: {
+            id: post._id.toString(),
+            title: post.title,
+            blogId: post.blogId,
+            blogName: post.blogName,
+          },
+          likesInfo: {
+            likesCount: likesCount,
+            dislikesCount: dislikeCount,
+            myStatus: status,
+          },
+        };
+      },
+    );
 
     const result: PaginatorCommentWithWithPostInfoViewModel = {
       pagesCount: pagesCount,
