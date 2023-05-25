@@ -12,7 +12,11 @@ export class BanedUsers {
   @Prop()
   userId: string;
   @Prop()
+  userLogin: string;
+  @Prop()
   banReason: string;
+  @Prop()
+  banDate: string;
 }
 
 export const BanedUsersSchema = SchemaFactory.createForClass(BanedUsers);

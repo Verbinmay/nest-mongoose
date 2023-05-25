@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+
 import { Blog, BlogsModelType } from '../entities/blog.entity';
 
 @Injectable()
@@ -29,7 +30,7 @@ export class BlogRepository {
       return null;
     }
   }
-  async findCountBlogs(filter: { name: { $regex: string } } | object) {
+  async findCountBlogs(filter: any) {
     return await this.BlogModel.countDocuments(filter);
   }
   async findBlogs(a: {

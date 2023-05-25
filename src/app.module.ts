@@ -82,6 +82,7 @@ import { CommentBloggersController } from './blogger/controllers/comment.blogger
 import { PostBloggersController } from './blogger/controllers/post.blogger.controller';
 import { UserBloggersController } from './blogger/controllers/user.blogger.controller';
 import { BanUserForBlogByUserIdCase } from './blogger/use-cases/user/ban-user-for-blog-case';
+import { GetBannedUsersByBlogIdCase } from './blogger/use-cases/user/get-banned-users-by-blog-id-case';
 
 const validations = [ValidationBlogId, ValidationLoginEmail];
 
@@ -98,7 +99,7 @@ const useCasesBlog = [
   SA_GetAllBlogsCase,
   SA_GetAllUsersCase,
   UpdateBlogCase,
-  BanUserForBlogByUserIdCase,
+  ,
 ];
 
 const useCasesPost = [
@@ -139,7 +140,7 @@ const useCasesAuth = [
   ResendingEmailCase,
 ];
 
-const useCasesUser = [];
+const useCasesUser = [BanUserForBlogByUserIdCase, GetBannedUsersByBlogIdCase];
 
 const strategies = [BasicStrategy, JwtStrategy, LocalStrategy];
 
