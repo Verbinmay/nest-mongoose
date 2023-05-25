@@ -13,18 +13,18 @@ import { CommandBus } from '@nestjs/cqrs';
 import { JwtAuthGuard } from '../../guard/auth-passport/guard-passport/jwt-auth.guard';
 import { CurrentUserId as CurrentPayload } from '../../decorator/currentUser.decorator';
 import { makeAnswerInController } from '../../helpers/errors';
+import { PaginationQuery } from '../../pagination/base-pagination';
 import { BanUserForBlogDto } from '../dto/blog/ban-user-for-blog.dto';
 import { BanUserForBlogByUserIdCommand } from '../use-cases/user/ban-user-for-blog-case';
-import { PaginationQuery } from '../../pagination/base-pagination';
 import { GetBannedUsersByBlogIdCommand } from '../use-cases/user/get-banned-users-by-blog-id-case';
 
-@Controller('blogger')
+@Controller('blogger/users')
 export class UserBloggersController {
   constructor(private commandBus: CommandBus) {}
 
   @UseGuards(JwtAuthGuard)
   @HttpCode(204)
-  @Put('users/:id/ban')
+  @Put(':id/ban')
   async banUserForBlogByUserId(
     @Param('id') userIdBlock: string,
     @Body() inputModel: BanUserForBlogDto,
