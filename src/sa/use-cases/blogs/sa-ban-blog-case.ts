@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { BlogRepository } from '../../../db/blog.repository';
