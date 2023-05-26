@@ -5,16 +5,17 @@ import { faker } from '@faker-js/faker';
 import { ViewBlogDto } from '../src/blogger/dto/blog/view-blog.dto';
 
 export const info = {
-  public: {
-    blogs: '/blogs/',
-    testingDelete: '/testing/all-data',
-    auth: {
-      registration: '/auth/registration',
-      login: '/auth/login',
-    },
+  blogs: '/blogs/',
+  posts: '/posts/',
+  comments: '/comments/',
+  testingDelete: '/testing/all-data',
+  auth: {
+    registration: '/auth/registration',
+    login: '/auth/login',
   },
   blogger: {
     blogs: '/blogger/blogs/',
+    comments: '/blogger/blogs/comments',
   },
   sa: {
     saLogin: 'admin',
@@ -74,7 +75,7 @@ export function createBlogInput() {
 // }
 
 //POST
-export function testInputInfoPost() {
+export function createPostInput() {
   return {
     title: faker.word.noun(6),
     shortDescription: faker.lorem.sentence(5),
@@ -140,11 +141,11 @@ export function createUserInput() {
 
 // //COMMENTS
 
-// export function testInputInfoComments() {
-//   return {
-//     content: faker.lorem.sentences(4),
-//   };
-// }
+export function createCommentInput() {
+  return {
+    content: faker.lorem.sentences(4),
+  };
+}
 
 // export async function testCreateComments(a: {
 //   number: number;

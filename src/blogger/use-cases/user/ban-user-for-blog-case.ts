@@ -5,6 +5,8 @@ import { UserRepository } from '../../../db/user.repository';
 import { BanedUsers } from '../../../entities/blog.entity';
 import { BanUserForBlogDto } from '../../dto/blog/ban-user-for-blog.dto';
 
+/**Блоггер может банить пользователя для конкретного (своего) блога. Забаненный пользователь не может оставлять комментарии к постам блога, для которого он забанен */
+
 export class BanUserForBlogByUserIdCommand {
   constructor(
     public userId: string,

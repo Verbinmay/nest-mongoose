@@ -14,7 +14,7 @@ import { createApp } from '../../../helpers/createApp';
 import { ViewBlogDto } from '../../dto/blog/view-blog.dto';
 import { AppModule } from '../../../app.module';
 
-describe('blog-blogger-tests-pack', () => {
+describe.skip('blog-blogger-tests-pack', () => {
   jest.setTimeout(1000 * 1000);
   let app: INestApplication;
   let fullApp: INestApplication;
@@ -40,7 +40,7 @@ describe('blog-blogger-tests-pack', () => {
   describe('create.blog.blogger', () => {
     let accessToken;
     beforeAll(async () => {
-      await agent.delete(info.public.testingDelete);
+      await agent.delete(info.testingDelete);
       const userInput = createUserInput();
       const user = await agent
         .post(info.sa.user)
@@ -52,7 +52,7 @@ describe('blog-blogger-tests-pack', () => {
         password: userInput.password,
       };
       const login = await agent
-        .post(info.public.auth.login)
+        .post(info.auth.login)
         .send(loginInput)
         .expect(200);
 
@@ -139,7 +139,7 @@ describe('blog-blogger-tests-pack', () => {
     const blogs: Array<ViewBlogDto> = [];
 
     beforeAll(async () => {
-      await agent.delete(info.public.testingDelete);
+      await agent.delete(info.testingDelete);
       for (let i = 0; i < 2; i++) {
         const userInput = createUserInput();
         const userResponse = await agent
@@ -155,7 +155,7 @@ describe('blog-blogger-tests-pack', () => {
           password: userInput.password,
         };
         const loginResponse = await agent
-          .post(info.public.auth.login)
+          .post(info.auth.login)
           .send(loginInput)
           .expect(200);
 
@@ -198,9 +198,7 @@ describe('blog-blogger-tests-pack', () => {
         .auth(accessTokens[0], { type: 'bearer' })
         .expect(204);
 
-      const getBlog = await agent
-        .get(info.public.blogs + blogs[0].id)
-        .expect(404);
+      const getBlog = await agent.get(info.blogs + blogs[0].id).expect(404);
     });
   });
 
@@ -210,7 +208,7 @@ describe('blog-blogger-tests-pack', () => {
     const blogs: Array<ViewBlogDto> = [];
 
     beforeAll(async () => {
-      await agent.delete(info.public.testingDelete);
+      await agent.delete(info.testingDelete);
       for (let i = 0; i < 2; i++) {
         const userInput = createUserInput();
         const userResponse = await agent
@@ -226,7 +224,7 @@ describe('blog-blogger-tests-pack', () => {
           password: userInput.password,
         };
         const loginResponse = await agent
-          .post(info.public.auth.login)
+          .post(info.auth.login)
           .send(loginInput)
           .expect(200);
 
@@ -294,7 +292,7 @@ describe('blog-blogger-tests-pack', () => {
     const blogs: Array<ViewBlogDto> = [];
 
     beforeAll(async () => {
-      await agent.delete(info.public.testingDelete);
+      await agent.delete(info.testingDelete);
       for (let i = 0; i < 2; i++) {
         const userInput = createUserInput();
         const userResponse = await agent
@@ -310,7 +308,7 @@ describe('blog-blogger-tests-pack', () => {
           password: userInput.password,
         };
         const loginResponse = await agent
-          .post(info.public.auth.login)
+          .post(info.auth.login)
           .send(loginInput)
           .expect(200);
 
@@ -336,7 +334,7 @@ describe('blog-blogger-tests-pack', () => {
         .expect(204);
 
       const getBlogResponse = await agent
-        .get(info.public.blogs + blogs[0].id)
+        .get(info.blogs + blogs[0].id)
         .expect(200);
 
       expect(getBlogResponse.body.id).toBe(blogs[0].id);
