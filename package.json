@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json --coverage --runInBand --detectOpenHandles --forceExit"
+    "test:e2estop": "jest --config ./test/jest-e2e.json --coverage --runInBand --detectOpenHandles --forceExit",
+    "test:e2e": "jest --runInBand --coverage --detectOpenHandles --forceExit"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
@@ -81,13 +82,13 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "roots": ["test", "src"],
     "testRegex": ".*(-|.)spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "src/**/*.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

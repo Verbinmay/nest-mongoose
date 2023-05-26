@@ -5,31 +5,44 @@ import { faker } from '@faker-js/faker';
 import { ViewBlogDto } from '../src/blogger/dto/blog/view-blog.dto';
 
 export const info = {
-  url: {
+  public: {
     blogs: '/blogs/',
-    posts: '/posts/',
-    comments: '/comments/',
-    like: '/like-status/',
-    users: '/users/',
-    auth: {
-      login: '/auth/login',
-      logout: '/auth/logout',
-      refreshToken: '/auth/refresh-token',
-      me: '/auth/me',
-      registration: '/auth/registration',
-      registrationConfirmation: '/auth/registration-confirmation',
-      emailResending: '/auth/registration-email-resending',
-    },
-    security: '/security/devices/',
     testingDelete: '/testing/all-data',
+    auth: {
+      registration: '/auth/registration',
+      login: '/auth/login',
+    },
   },
-  headers: {
-    authorization: 'Basic YWRtaW46cXdlcnR5',
+  blogger: {
+    blogs: '/blogger/blogs/',
+  },
+  sa: {
+    saLogin: 'admin',
+    saPassword: 'qwerty',
+    user: '/sa/users',
   },
 };
+// url: {
+// blogs: '/blogs/',
+// posts: '/posts/',
+// comments: '/comments/',
+// like: '/like-status/',
+// users: '/users/',
+// auth: {
+// login: '/auth/login',
+// logout: '/auth/logout',
+// refreshToken: '/auth/refresh-token',
+// me: '/auth/me',
+// registration: '/auth/registration',
+// registrationConfirmation: '/auth/registration-confirmation',
+// emailResending: '/auth/registration-email-resending',
+//   },
+//   security: '/security/devices/',
+//   testingDelete: '/testing/all-data',
+// },
 
 //BLOG
-export function testInputInfoBlog() {
+export function createBlogInput() {
   return {
     name: faker.word.noun(6),
     description: faker.lorem.sentence(6),
@@ -37,28 +50,28 @@ export function testInputInfoBlog() {
   };
 }
 
-export async function testCreateBlogs(
-  agent: supertest.SuperAgentTest,
-  number: number,
-) {
-  const blogs: any = [];
-  for (let i = 0; i < number; i++) {
-    const createdBlog = {
-      name: faker.word.noun(6),
-      description: faker.lorem.sentence(6),
-      websiteUrl: faker.internet.url(),
-    };
+// export async function testCreateBlogs(
+//   agent: supertest.SuperAgentTest,
+//   number: number,
+// ) {
+//   const blogs: any = [];
+//   for (let i = 0; i < number; i++) {
+//     const createdBlog = {
+//       name: faker.word.noun(6),
+//       description: faker.lorem.sentence(6),
+//       websiteUrl: faker.internet.url(),
+//     };
 
-    const result = await agent
-      .post(info.url.blogs)
-      .set('Authorization', info.headers.authorization)
-      .send(createdBlog)
-      .expect(201);
-    blogs.push(result.body);
-  }
+//     const result = await agent
+//       .post(info.url.blogs)
+//       .set('Authorization', info.headers.authorization)
+//       .send(createdBlog)
+//       .expect(201);
+//     blogs.push(result.body);
+//   }
 
-  return blogs;
-}
+//   return blogs;
+// }
 
 //POST
 export function testInputInfoPost() {
@@ -69,34 +82,34 @@ export function testInputInfoPost() {
   };
 }
 
-export async function testCreatePosts(
-  agent: supertest.SuperAgentTest,
-  number: number,
-  blog: ViewBlogDto,
-) {
-  const posts: any = [];
-  for (let i = 0; i < number; i++) {
-    const createdPost = {
-      title: faker.word.noun(6),
-      shortDescription: faker.lorem.sentence(5),
-      content: faker.lorem.sentences(5),
-      blogId: blog.id,
-    };
+// export async function testCreatePosts(
+//   agent: supertest.SuperAgentTest,
+//   number: number,
+//   blog: ViewBlogDto,
+// ) {
+//   const posts: any = [];
+//   for (let i = 0; i < number; i++) {
+//     const createdPost = {
+//       title: faker.word.noun(6),
+//       shortDescription: faker.lorem.sentence(5),
+//       content: faker.lorem.sentences(5),
+//       blogId: blog.id,
+//     };
 
-    const result = await agent
-      .post(info.url.posts)
-      .set('Authorization', info.headers.authorization)
-      .send(createdPost)
-      .expect(201);
-    posts.push(result.body);
-  }
+//     const result = await agent
+//       .post(info.url.posts)
+//       .set('Authorization', info.headers.authorization)
+//       .send(createdPost)
+//       .expect(201);
+//     posts.push(result.body);
+//   }
 
-  return posts;
-}
+//   return posts;
+// }
 
 //USERS
 
-export function testInputInfoUser() {
+export function createUserInput() {
   return {
     login: faker.word.noun(6),
     password: faker.word.noun(8),
@@ -104,26 +117,26 @@ export function testInputInfoUser() {
   };
 }
 
-export async function testCreateUsers(
-  agent: supertest.SuperAgentTest,
-  number: number,
-) {
-  const users: any = [];
-  for (let i = 0; i < number; i++) {
-    const createdPost = testInputInfoUser();
+// export async function testCreateUsers(
+//   agent: supertest.SuperAgentTest,
+//   number: number,
+// ) {
+//   const users: any = [];
+//   for (let i = 0; i < number; i++) {
+//     const createdPost = createUserInput();
 
-    const result = await agent
-      .post(info.url.users)
-      .set('Authorization', info.headers.authorization)
-      .send(createdPost)
-      .expect(201);
-    if (result.body) {
-      users.push(result.body);
-    }
-  }
+//     const result = await agent
+//       .post(info.url.users)
+//       .set('Authorization', info.headers.authorization)
+//       .send(createdPost)
+//       .expect(201);
+//     if (result.body) {
+//       users.push(result.body);
+//     }
+//   }
 
-  return users;
-}
+//   return users;
+// }
 
 // //COMMENTS
 
