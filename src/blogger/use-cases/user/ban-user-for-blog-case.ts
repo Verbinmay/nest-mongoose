@@ -45,7 +45,9 @@ export class BanUserForBlogByUserIdCase
       const index = blog.banedUsers.findIndex(
         (a) => a.userId === command.userIdBlock,
       );
-      blog.banedUsers = blog.banedUsers.splice(index, 1);
+      if (index < 0) return true;
+
+      blog.banedUsers.splice(index, 1);
     }
 
     try {

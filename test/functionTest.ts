@@ -7,6 +7,7 @@ import { ViewBlogDto } from '../src/blogger/dto/blog/view-blog.dto';
 export const info = {
   blogs: '/blogs/',
   posts: '/posts/',
+  ban: '/ban/',
   comments: '/comments/',
   testingDelete: '/testing/all-data',
   auth: {
@@ -15,6 +16,8 @@ export const info = {
   },
   blogger: {
     blogs: '/blogger/blogs/',
+    users: '/blogger/users/',
+    usersBlog: '/blogger/users/blog/',
     comments: '/blogger/blogs/comments',
   },
   sa: {
