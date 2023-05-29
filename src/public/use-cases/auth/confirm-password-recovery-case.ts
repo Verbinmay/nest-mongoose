@@ -1,9 +1,10 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import * as bcrypt from 'bcrypt';
 
-import { NewPassword } from '../../dto/auth/input-newpassword.dto';
-import { errorMaker } from '../../../helpers/errors';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+
 import { UserRepository } from '../../../db/user.repository';
+import { errorMaker } from '../../../helpers/errors';
+import { NewPassword } from '../../dto/auth/input-newpassword.dto';
 
 export class ConfirmPasswordRecoveryCommand {
   constructor(public inputModel: NewPassword) {}
@@ -20,9 +21,9 @@ export class ConfirmPasswordRecoveryCase
       command.inputModel.recoveryCode,
     );
     if (
-      !userFind &&
+      !userFind ||
       userFind.emailConfirmation.confirmationCode !==
-        command.inputModel.recoveryCode &&
+        command.inputModel.recoveryCode ||
       userFind.emailConfirmation.expirationDate < new Date()
     ) {
       return {

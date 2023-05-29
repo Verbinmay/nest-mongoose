@@ -44,7 +44,7 @@ import { GetMeCase } from './public/use-cases/auth/get-me-case';
 import { GetNewTokensCase } from './public/use-cases/auth/get-new-refresh-token-case';
 import { LoginCase } from './public/use-cases/auth/login-case';
 import { LogoutCase } from './public/use-cases/auth/logout-case';
-import { PasswordRecoveryCommand } from './public/use-cases/auth/password-recovery-case';
+import { PasswordRecoveryCase } from './public/use-cases/auth/password-recovery-case';
 import { RegistrationCase } from './public/use-cases/auth/registration-case';
 import { RegistrationConfirmationCase } from './public/use-cases/auth/registration-confirmation-case';
 import { ResendingEmailCase } from './public/use-cases/auth/resending-email-case';
@@ -135,7 +135,7 @@ const useCasesAuth = [
   GetNewTokensCase,
   LoginCase,
   LogoutCase,
-  PasswordRecoveryCommand,
+  PasswordRecoveryCase,
   RegistrationCase,
   RegistrationConfirmationCase,
   ResendingEmailCase,

@@ -16,6 +16,8 @@ export const info = {
     registration: '/auth/registration',
     login: '/auth/login',
     registrationConfirmation: '/auth/registration-confirmation',
+    passwordRecovery: '/auth/password-recovery',
+    newPassword: '/auth/new-password',
   },
   blogger: {
     blogs: '/blogger/blogs/',
