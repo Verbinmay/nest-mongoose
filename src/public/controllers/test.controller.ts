@@ -1,4 +1,4 @@
-import { Controller, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Delete, Get, HttpCode, Param } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { Blog, BlogsModelType } from '../../entities/blog.entity';
@@ -31,5 +31,10 @@ export class TestController {
     await this.commentsModel.deleteMany({});
     await this.sessionsModel.deleteMany({});
     return;
+  }
+
+  @Get('user/:login')
+  async getUsers(@Param('login') login: string) {
+    return await this.usersModel.find({ login: login });
   }
 }

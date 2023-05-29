@@ -49,7 +49,7 @@ describe('post-blogger-tests-pack', () => {
       for (let i = 0; i < 2; i++) {
         const userInput = createUserInput();
         const userResponse = await agent
-          .post(info.sa.user)
+          .post(info.sa.users)
           .auth(info.sa.saLogin, info.sa.saPassword)
           .send(userInput)
           .expect(201);
@@ -167,7 +167,7 @@ describe('post-blogger-tests-pack', () => {
       for (let i = 0; i < 2; i++) {
         const userInput = createUserInput();
         const userResponse = await agent
-          .post(info.sa.user)
+          .post(info.sa.users)
           .auth(info.sa.saLogin, info.sa.saPassword)
           .send(userInput)
           .expect(201);
@@ -329,7 +329,7 @@ describe('post-blogger-tests-pack', () => {
       for (let i = 0; i < 2; i++) {
         const userInput = createUserInput();
         const userResponse = await agent
-          .post(info.sa.user)
+          .post(info.sa.users)
           .auth(info.sa.saLogin, info.sa.saPassword)
           .send(userInput)
           .expect(201);

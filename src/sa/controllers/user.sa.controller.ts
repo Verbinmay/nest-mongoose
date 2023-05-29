@@ -40,7 +40,7 @@ export class UserSAController {
     const result = await this.commandBus.execute(
       new SA_GetAllUsersCommand(query),
     );
-    console.log(result);
+
     return makeAnswerInController(result);
   }
 

@@ -10,9 +10,12 @@ export const info = {
   ban: '/ban/',
   comments: '/comments/',
   testingDelete: '/testing/all-data',
+  test: { user: '/testing/user/' },
   auth: {
+    resendingConfirmation: '/auth/registration-email-resending',
     registration: '/auth/registration',
     login: '/auth/login',
+    registrationConfirmation: '/auth/registration-confirmation',
   },
   blogger: {
     blogs: '/blogger/blogs/',
@@ -23,7 +26,7 @@ export const info = {
   sa: {
     saLogin: 'admin',
     saPassword: 'qwerty',
-    user: '/sa/users',
+    users: '/sa/users',
   },
 };
 // url: {
