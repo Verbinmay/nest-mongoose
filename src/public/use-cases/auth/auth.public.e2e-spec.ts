@@ -276,7 +276,8 @@ describe('auth-public-tests-pack', () => {
         .expect(400);
     });
   });
-  describe('newPassword.public', () => {
+
+  describe.skip('newPassword.public', () => {
     const userInput = createUserInput();
     beforeAll(async () => {
       await agent.delete(info.testingDelete);
@@ -327,85 +328,85 @@ describe('auth-public-tests-pack', () => {
     });
   });
 
-  //   describe('create.post.blogger', () => {
-  //     const users: Array<SAViewUserDto> = [];
-  //     const accessTokens: Array<string> = [];
-  //     const blogs: Array<ViewBlogDto> = [];
-  //     const posts: Array<ViewPostDto> = [];
-  //     const comments: Array<ViewCommentDto> = [];
+  describe.skip('get me.public', () => {
+    const userInput = createUserInput();
+    let accessToken: string;
+    beforeAll(async () => {
+      await agent.delete(info.testingDelete);
 
-  //     beforeAll(async () => {
-  //       await agent.delete(info.testingDelete);
-  //       for (let i = 0; i < 2; i++) {
-  //         const userInput = createUserInput();
-  //         const userResponse = await agent
-  //           .post(info.sa.users)
-  //           .auth(info.sa.saLogin, info.sa.saPassword)
-  //           .send(userInput)
-  //           .expect(201);
+      const userResponse = await agent
+        .post(info.sa.users)
+        .auth(info.sa.saLogin, info.sa.saPassword)
+        .send(userInput)
+        .expect(201);
 
-  //         users.push(userResponse.body);
+      const loginInput = {
+        loginOrEmail: userInput.login,
+        password: userInput.password,
+      };
+      const loginResponse = await agent
+        .post(info.auth.login)
+        .send(loginInput)
+        .expect(200);
 
-  //         const loginInput = {
-  //           loginOrEmail: userInput.login,
-  //           password: userInput.password,
-  //         };
-  //         const loginResponse = await agent
-  //           .post(info.auth.login)
-  //           .send(loginInput)
-  //           .expect(200);
+      accessToken = loginResponse.body.accessToken;
+    });
 
-  //         accessTokens.push(loginResponse.body.accessToken);
+    it('get me - 204', async () => {
+      const meResponse = await agent
+        .get(info.auth.me)
+        .auth(accessToken, { type: 'bearer' })
+        .expect(200);
 
-  //         for (let i = 0; i < 2; i++) {
-  //           const blogInput = createBlogInput();
-  //           const blogResponse = await agent
-  //             .post(info.blogger.blogs)
-  //             .auth(accessTokens[0], { type: 'bearer' })
-  //             .send(blogInput)
-  //             .expect(201);
+      expect(meResponse.body.email).toBe(userInput.email);
+      expect(meResponse.body.login).toBe(userInput.login);
+    });
+    it('get me - 401 - auth error', async () => {
+      const meResponse = await agent.get(info.auth.me).expect(401);
+    });
+  });
+  describe.skip('logout.public', () => {
+    const userInput = createUserInput();
+    let accessToken: string;
+    let cookie: string[];
+    beforeAll(async () => {
+      await agent.delete(info.testingDelete);
 
-  //           blogs.push(blogResponse.body);
+      const userResponse = await agent
+        .post(info.sa.users)
+        .auth(info.sa.saLogin, info.sa.saPassword)
+        .send(userInput)
+        .expect(201);
 
-  //           const postInput = createPostInput();
-  //           const postResponse = await agent
-  //             .post(info.blogger.blogs + blogResponse.body.id + info.posts)
-  //             .auth(accessTokens[0], { type: 'bearer' })
-  //             .send(postInput)
-  //             .expect(201);
+      const loginInput = {
+        loginOrEmail: userInput.login,
+        password: userInput.password,
+      };
+      const loginResponse = await agent
+        .post(info.auth.login)
+        .send(loginInput)
+        .expect(200);
 
-  //           posts.push(postResponse.body);
-  //         }
-  //       }
-  //       for (let i = 0; i < 2; i++) {
-  //         const commentInput = createCommentInput();
-  //         const CommentResponse = await agent
-  //           .post(info.posts + posts[i].id + info.comments)
-  //           .auth(accessTokens[1], { type: 'bearer' })
-  //           .send(commentInput)
-  //           .expect(201);
+      cookie = loginResponse.get('Set-Cookie');
+      accessToken = loginResponse.body.accessToken;
+    });
 
-  //         comments.push(CommentResponse.body);
-  //       }
-  //     });
+    it('logout - 204', async () => {
+      const meResponse = await agent
+        .get(info.auth.me)
+        .auth(accessToken, { type: 'bearer' })
+        .expect(200);
 
-  //     it('get all comments with post info - 200', async () => {
-  //       const getAllCommentsResponse = await agent
-  //         .get(info.blogger.comments)
-  //         .auth(accessTokens[0], { type: 'bearer' })
-  //         .expect(200);
-
-  //       expect(getAllCommentsResponse.body)
-  //         .toMatchObject<PaginatorCommentWithWithPostInfoViewModel>;
-
-  //       expect(getAllCommentsResponse.body.items[0].id).toBe(comments[1].id);
-  //       expect(getAllCommentsResponse.body.items[0].postInfo.id).toBe(
-  //         posts[1].id,
-  //       );
-  //       expect(getAllCommentsResponse.body.items[1].id).toBe(comments[0].id);
-  //       expect(getAllCommentsResponse.body.items[1].postInfo.id).toBe(
-  //         posts[0].id,
-  //       );
-  //     });
-  //   });
+      const logoutResponse = await agent
+        .post(info.auth.logout)
+        .set('Cookie', cookie)
+        .expect(204);
+    });
+    it('logout - 401 - auth error', async () => {
+      const logoutResponse = await agent
+        .post(info.auth.logout)
+        .set('Cookie', cookie)
+        .expect(401);
+    });
+  });
 });

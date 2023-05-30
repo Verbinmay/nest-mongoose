@@ -15,9 +15,11 @@ export const info = {
     resendingConfirmation: '/auth/registration-email-resending',
     registration: '/auth/registration',
     login: '/auth/login',
+    logout: '/auth/logout',
     registrationConfirmation: '/auth/registration-confirmation',
     passwordRecovery: '/auth/password-recovery',
     newPassword: '/auth/new-password',
+    me: '/auth/me',
   },
   blogger: {
     blogs: '/blogger/blogs/',
