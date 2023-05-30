@@ -11,6 +11,7 @@ export const info = {
   comments: '/comments/',
   testingDelete: '/testing/all-data',
   test: { user: '/testing/user/' },
+  like: '/like-status/',
   auth: {
     resendingConfirmation: '/auth/registration-email-resending',
     registration: '/auth/registration',

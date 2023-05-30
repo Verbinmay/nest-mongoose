@@ -1,6 +1,5 @@
 import { Transform } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
-import { Types } from 'mongoose';
 
 export class BasicPagination {
   @IsOptional()
