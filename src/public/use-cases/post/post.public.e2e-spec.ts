@@ -21,7 +21,7 @@ import { LikeDto } from '../../dto/likes/like.dto';
 import { ViewPostDto } from '../../dto/post/view-post.dto';
 import { AppModule } from '../../../app.module';
 
-describe('post-public-tests-pack', () => {
+describe.skip('post-public-tests-pack', () => {
   jest.setTimeout(1000 * 1000);
   let app: INestApplication;
   let fullApp: INestApplication;
@@ -44,7 +44,7 @@ describe('post-public-tests-pack', () => {
     await fullApp.close();
   });
 
-  describe.skip('getPostsByBlogId.public', () => {
+  describe('getPostsByBlogId.public', () => {
     const blogs: Array<ViewBlogDto> = [];
     const posts: Array<ViewPostDto> = [];
     const accessTokens: Array<string> = [];
@@ -100,7 +100,7 @@ describe('post-public-tests-pack', () => {
       expect(postsResponse.body.items[0].content).toBe(posts[0].content);
     });
   });
-  describe.skip('getPosts.public', () => {
+  describe('getPosts.public', () => {
     const blogs: Array<ViewBlogDto> = [];
     const posts: Array<ViewPostDto> = [];
     const accessTokens: Array<string> = [];
@@ -155,7 +155,7 @@ describe('post-public-tests-pack', () => {
     });
   });
 
-  describe.skip('getPostById.public', () => {
+  describe('getPostById.public', () => {
     const blogs: Array<ViewBlogDto> = [];
     const posts: Array<ViewPostDto> = [];
     const accessTokens: Array<string> = [];

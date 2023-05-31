@@ -1,6 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 
 import { CommentRepository } from '../../../db/comment.repository';
+import { PostRepository } from '../../../db/post.repository';
 import { Comment } from '../../../entities/comment.entity';
 import { PaginationQuery } from '../../../pagination/base-pagination';
 import { PaginatorCommentWithLikeViewModel } from '../../../pagination/paginatorType';
@@ -18,9 +19,15 @@ export class GetAllCommentsByBlogIdCommand {
 export class GetAllCommentsByBlogIdCase
   implements ICommandHandler<GetAllCommentsByBlogIdCommand>
 {
-  constructor(private readonly commentRepository: CommentRepository) {}
+  constructor(
+    private readonly commentRepository: CommentRepository,
+    private readonly postRepository: PostRepository,
+  ) {}
 
   async execute(command: GetAllCommentsByBlogIdCommand) {
+    const post = await this.postRepository.findPostById(command.postId);
+    if (!post) return { s: 404 };
+
     const filter: { postId: string; isBaned: boolean } = {
       postId: command.postId,
       isBaned: false,
