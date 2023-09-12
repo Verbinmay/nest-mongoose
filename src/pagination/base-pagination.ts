@@ -29,12 +29,19 @@ export class BasicPagination {
 export class PaginationQuery extends BasicPagination {
   @IsString()
   @IsOptional()
+  @Transform(({ value }) => containsOnlyOneWord(value))
   searchNameTerm = '';
   @IsString()
   @IsOptional()
+  @Transform(({ value }) => containsOnlyOneWord(value))
+  bodySearchTerm = '';
+  @IsString()
+  @IsOptional()
+  @Transform(({ value }) => containsOnlyOneWord(value))
   searchLoginTerm = '';
   @IsString()
   @IsOptional()
+  @Transform(({ value }) => containsOnlyOneWord(value))
   searchEmailTerm = '';
   @IsString()
   @IsOptional()
